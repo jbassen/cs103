@@ -1,0 +1,15 @@
+.navbar.navbar-inverse.navbar-static-top(role='navigation')
+  .container
+    .navbar-header
+      button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+        span.sr-only Toggle navigation
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      a.navbar-brand(href='/')
+        span.ion-cube CS103
+    .collapse.navbar-collapse
+      ul.nav.navbar-nav.navbar-right
+        if user
+          li
+            a(href='/logout') Logout
