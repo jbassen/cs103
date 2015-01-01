@@ -1,0 +1,418 @@
+doctype html
+html
+  head
+    script(src='http://code.jquery.com/jquery-1.9.1.js')
+    | &#x9;
+    script(src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js')
+    | &#x9;
+    link(rel='stylesheet', href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/smoothness/jquery-ui.css')
+    | &#x9;
+    script(src='/javascript/jquery.ui.droppable.patched.js')
+    | &#x9;
+    script(src='/javascript/jquery.caret.1.02.js')
+    // FROM OLD VERSION The next script tag loads mathjax.  This has to follow the macros, etc.
+    script(type='text/javascript', src='http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML')
+    | &#x9;
+    script(src='/javascript/blocksworldstandalone.js')
+    | &#x9;
+    script(src='/javascript/submitstandalone.js')
+    | &#x9;
+    script(src='/javascript/srflaEval.js')
+    | &#x9;
+    script(src='/javascript/srflaMathParser.js')
+    | &#x9;
+    script(src='/javascript/blocksParser.js')
+    | &#x9;
+    script(src='/javascript/displayMath.js')
+    // The next script tag defines CS103-specific macros (like \implies) for MathJax.
+    script(type='text/x-mathjax-config', src='/javascript/mathJaxConfig.js')
+    | &#x9;
+    link(rel='stylesheet', type='text/css', href='style.css')
+  body
+    h3 CS 103 Blocks World
+    | &#x9;&nbsp;&nbsp;&nbsp;
+    | &#x9;
+    p#instructions
+      | Drag and drop the blocks to create a world. Enter a corresponding first order logic formula:
+    // MATH ENTRY HELP KEYBOARD
+    table(border='0', cellspacing='0', cellpadding='0', height='60')
+      tr
+        td(valign='center', align='left')
+          button.suggestion(id='\\forall', onclick='addSuggestion(event)')
+            img(src='images/forall.gif', height='14', width='14', id='\\forall')
+          | &#x9;&#x9;&#x9;
+          br
+          | &#x9;&#x9;&#x9;
+          button.suggestion(id='\\exists', onclick='addSuggestion(event)')
+            img(src='images/exists.gif', height='14', width='14', id='\\exists')
+        | &#x9;&#x9;
+        td &nbsp;&nbsp;&nbsp;
+        | &#x9;&#x9;
+        td(valign='center', align='left')
+          button#x.suggestion.letters(onclick='addSuggestion(event)')
+            span#x x
+          | &#x9;&#x9;&#x9;
+          button#y.suggestion.letters(onclick='addSuggestion(event)')
+            span#y y
+          | &#x9;&#x9;&#x9;
+          br
+          | &#x9;&#x9;&#x9;
+          button#z.suggestion.letters(onclick='addSuggestion(event)')
+            span#z z
+          | &#x9;&#x9;&#x9;
+          button#w.suggestion.letters(onclick='addSuggestion(event)')
+            span#w w
+        | &#x9;&#x9;
+        td &nbsp;&nbsp;&nbsp;
+        | &#x9;&#x9;
+        td(valign='center', align='left')
+          button.suggestion(id='\\vee', onclick='addSuggestion(event)')
+            img(src='images/vee.gif', height='14', width='14', id='\\vee')
+          | &#x9;&#x9;&#x9;
+          button.suggestion(id='\\implies', onclick='addSuggestion(event)')
+            img(src='images/implies.gif', height='14', width='14', id='\\implies')
+          | &#x9;&#x9;&#x9;
+          button.suggestion(id='\\bicond', onclick='addSuggestion(event)')
+            img(src='images/bicond.gif', height='14', width='14', id='\\bicond')
+          | &#x9;&#x9;&#x9;
+          button.suggestion(id='=', onclick='addSuggestion(event)')
+            img(src='images/equals.gif', height='14', width='12', id='=')
+          | &#x9;&#x9;&#x9;
+          br
+          | &#x9;&#x9;&#x9;
+          button.suggestion(id='\\wedge', onclick='addSuggestion(event)')
+            img(src='images/wedge.gif', height='14', width='14', id='\\wedge')
+          | &#x9;&#x9;&#x9;
+          button.suggestion(id='\\xor', onclick='addSuggestion(event)')
+            img(src='images/xor.gif', height='14', width='14', id='\\xor')
+          | &#x9;&#x9;&#x9;
+          button.suggestion(id='\\neg', onclick='addSuggestion(event)')
+            img(src='images/neg.gif', height='14', width='14', id='\\neg')
+          | &#x9;&#x9;&#x9;
+          button.suggestion(id='\\not=', onclick='addSuggestion(event)')
+            img(src='images/notequals.gif', height='14', width='12', id='\\not=')
+        | &#x9;&#x9;
+        | &#x9;&#x9;
+        td &nbsp;&nbsp;&nbsp;
+        | &#x9;&#x9;
+        td(valign='center', align='left')
+          button.suggestion.blockStyle(id='Red(x)', onclick='addSuggestion(event)')
+            span(id='Red(x)') Red(x)
+          | &#x9;&#x9;&#x9;
+          button.suggestion.blockStyle(id='Triangle(x)', onclick='addSuggestion(event)')
+            span(id='Triangle(x)') Triangle(x)
+          | &#x9;&#x9;&#x9;
+          button.suggestion.Pos_side(id='LeftOf(x,y)', onclick='addSuggestion(event)')
+            span(id='LeftOf(x,y)') LeftOf(x,y)
+          | &#x9;&#x9;&#x9;
+          button.suggestion.Pos_side(id='RightOf(x,y)', onclick='addSuggestion(event)')
+            span(id='RightOf(x,y)') RightOf(x,y)
+          | &#x9;&#x9;&#x9;
+          br
+          | &#x9;&#x9;&#x9;
+          button.suggestion.blockStyle(id='Blue(x)', onclick='addSuggestion(event)')
+            span(id='Blue(x)') Blue(x)
+          | &#x9;&#x9;&#x9;
+          button.suggestion.blockStyle(id='Square(x)', onclick='addSuggestion(event)')
+            span(id='Square(x)') Square(x)
+          | &#x9;&#x9;&#x9;
+          button.suggestion.Pos_up(id='Above(x,y)', onclick='addSuggestion(event)')
+            span(id='Above(x,y)') Above(x,y)
+          | &#x9;&#x9;&#x9;
+          button.suggestion.Pos_up(id='LeftOf(x,y)', onclick='addSuggestion(event)')
+            span(id='Below(x,y)') Below(x,y)
+          | &#x9;&#x9;&#x9;
+          br
+          | &#x9;&#x9;&#x9;
+          button.suggestion.blockStyle(id='Yellow(x)', onclick='addSuggestion(event)')
+            span(id='Yellow(x)') Yellow(x)
+          | &#x9;&#x9;&#x9;
+          button.suggestion.blockStyle(id='Circle(x)', onclick='addSuggestion(event)')
+            span(id='Circle(x)') Circle(x)
+          | &#x9;&#x9;&#x9;
+          button.suggestion.Pos_equal(id='SameRow(x,y)', onclick='addSuggestion(event)')
+            span(id='SameRow(x,y)') SameRow(x,y)
+          | &#x9;&#x9;&#x9;
+          button.suggestion.Pos_equal(id='SameCol(x,y)', onclick='addSuggestion(event)')
+            span(id='SameCol(x,y)') SameCol(x,y)
+    | &#x9;&#x9;
+    | &#x9;
+    p
+      textarea#inputFormula1(cols='83', rows='3')
+    p#mathdisplay.indent(style='color: red')
+      br
+    // CHECK RESULT DISPLAY
+    p#checkresult.indent
+    // ERROR MESSAGE DISPLAY(space to reserve screen area for later text?)
+    pre#error.
+
+    // &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    button(onclick='getHelp()') Need help?
+    p
+    | &#x9;
+    p
+      button#check(onclick='submitAndVerify(); saveCheckedFormulas()') Check World
+    // BLOCKSWORLD GRID
+    table(border='0')
+      tr
+        td
+          table(align='left', cellspacing='0', cellpadding='0', bordercolor='#BDBDBD', border='1')
+            tr
+              td(style='background-color: white')
+                img#0.block(src='images/whitesquare.gif')
+              | &#x9;&#x9;&#x9;
+              td(style='background-color: white')
+                img#1.block(src='images/whitesquare.gif')
+              | &#x9;&#x9;&#x9;
+              | &#x9;&#x9;&#x9;
+              td(style='background-color: white')
+                img#2.block(src='images/whitesquare.gif')
+              | &#x9;&#x9;&#x9;
+              td(style='background-color: white')
+                img#3.block(src='images/whitesquare.gif')
+              | &#x9;&#x9;&#x9;
+              td(style='background-color: white')
+                img#4.block(src='images/whitesquare.gif')
+            | &#x9;&#x9;
+            tr
+              td(style='background-color: white')
+                img#10.block(src='images/whitesquare.gif')
+              | &#x9;&#x9;&#x9;
+              td(style='background-color: white')
+                img#11.block(src='images/whitesquare.gif')
+              | &#x9;&#x9;&#x9;
+              td(style='background-color: white')
+                img#12.block(src='images/whitesquare.gif')
+              | &#x9;&#x9;&#x9;
+              td(style='background-color: white')
+                img#13.block(src='images/whitesquare.gif')
+              | &#x9;&#x9;&#x9;
+              td(style='background-color: white')
+                img#14.block(src='images/whitesquare.gif')
+            | &#x9;&#x9;
+            tr
+              td(style='background-color: white')
+                img#20.block(src='images/whitesquare.gif')
+              | &#x9;&#x9;&#x9;
+              td(style='background-color: white')
+                img#21.block(src='images/whitesquare.gif')
+              | &#x9;&#x9;&#x9;
+              td(style='background-color: white')
+                img#22.block(src='images/whitesquare.gif')
+              | &#x9;&#x9;&#x9;
+              td(style='background-color: white')
+                img#23.block(src='images/whitesquare.gif')
+              | &#x9;&#x9;&#x9;
+              td(style='background-color: white')
+                img#24.block(src='images/whitesquare.gif')
+            | &#x9;&#x9;
+            tr
+              td(style='background-color: white')
+                img#30.block(src='images/whitesquare.gif')
+              | &#x9;&#x9;&#x9;
+              td(style='background-color: white')
+                img#31.block(src='images/whitesquare.gif')
+              | &#x9;&#x9;&#x9;
+              td(style='background-color: white')
+                img#32.block(src='images/whitesquare.gif')
+              | &#x9;&#x9;&#x9;
+              td(style='background-color: white')
+                img#33.block(src='images/whitesquare.gif')
+              | &#x9;&#x9;&#x9;
+              td(style='background-color: white')
+                img#34.block(src='images/whitesquare.gif')
+            | &#x9;&#x9;
+            tr
+              td(style='background-color: white')
+                img#40.block(src='images/whitesquare.gif')
+              | &#x9;&#x9;&#x9;
+              td(style='background-color: white')
+                img#41.block(src='images/whitesquare.gif')
+              | &#x9;&#x9;&#x9;
+              td(style='background-color: white')
+                img#42.block(src='images/whitesquare.gif')
+              | &#x9;&#x9;&#x9;
+              td(style='background-color: white')
+                img#43.block(src='images/whitesquare.gif')
+              | &#x9;&#x9;&#x9;
+              td(style='background-color: white')
+                img#44.block(src='images/whitesquare.gif')
+        td(rowspan='2', valign='top')
+          table(align='left', border='0', height='200')
+            tr
+              td.spacer
+          // DRAGGABLE BLOCKS GRID
+          table(align='left', border='0', cellspacing='2', cellpadding='0', width='160')
+            tr
+              td
+                img.dragMe.COLOR_red.SHAPE_square(src='images/redsquare.gif')
+              | &#x9;&#x9;&#x9;
+              td
+                img.dragMe.COLOR_red.SHAPE_triangle(src='images/redtriangle.gif')
+              | &#x9;&#x9;&#x9;
+              td
+                img.dragMe.COLOR_red.SHAPE_circle(src='images/redcircle.gif')
+            | &#x9;&#x9;
+            tr
+              td
+                img.dragMe.COLOR_yellow.SHAPE_square(src='images/yellowsquare.gif')
+              | &#x9;&#x9;&#x9;
+              td
+                img.dragMe.COLOR_yellow.SHAPE_triangle(src='images/yellowtriangle.gif')
+              | &#x9;&#x9;&#x9;
+              td
+                img.dragMe.COLOR_yellow.SHAPE_circle(src='images/yellowcircle.gif')
+            | &#x9;
+            | &#x9;&#x9;
+            tr
+              td
+                img.dragMe.COLOR_blue.SHAPE_square(src='images/bluesquare.gif')
+              | &#x9;&#x9;&#x9;
+              td
+                img.dragMe.COLOR_blue.SHAPE_triangle(src='images/bluetriangle.gif')
+              | &#x9;&#x9;&#x9;
+              td
+                img.dragMe.COLOR_blue.SHAPE_circle(src='images/bluecircle.gif')
+            | &#x9;&#x9;
+            tr
+            | &lt;&lt;&lt;&lt;&lt;&lt;&lt; local
+            | =======
+            //
+              <tr valign = "bottom">
+              <td colspan = "3" valign = "bottom" id = "unusedNamesLabel">Unused Block Names:</td>
+              </tr>
+              <tr>
+              <td width = "20"><span class = "name" id = "a">a</span><br></td>
+              <td width = "20"><span class = "name" id = "b">b</span><br></td>
+              <td width = "20"><span class = "name" id = "c">c</span><br></td>
+              </tr>
+            | &gt;&gt;&gt;&gt;&gt;&gt;&gt; other
+            tr
+              td(colspan='3')
+                div(align='left')
+                  br
+                  button#clearTextbox.clearbutton(onclick='clearTextbox()') Clear Textbox
+                  | &#x9;&#x9;&#x9;&#x9;&#x9;
+                  button#resetWorld.clearbutton(onclick='resetWorld()') Clear World
+                  | &#x9;&#x9;&#x9;&#x9;&#x9;
+                  button#reset.clearbutton(onclick='resetState()') Reset All
+                  | &#x9;&#x9;&#x9;&#x9;&#x9;
+                  br
+                  button#getHistory(onclick='showCheckedFormulas()')  Get Input History
+                  // <br><button id = "resetState" onclick = "resetState()">Done</button>
+      //
+        <tr><td align  = "center">
+        <br>
+        <textarea align = "left" id="comment" cols="30" rows="5" >Enter a comment...</textarea>
+        </td></tr>
+    //
+      <table align = "left" border = "0"><tr><td class = "spacer"></td></tr></table>
+      <button id = "getWorldProb" class = "problemtype" onclick = "getWorldForProblem()">Get World</button>
+      <button id = "getFormulaProb" class = "problemtype" onclick = "getFormulaForProblem()">Get Formula</button>
+      <button id = "getOriginalProb" class = "problemtype" onclick = "getEmptyState()">Get Empty State</button>
+      <br><br>
+    // CONTENT FOR HELP BOX
+    #helpBox
+      p
+        | You can use the buttons to write a first-order formula.
+        | These fill in a text box.  After you learn the notation, you
+        | can skip the buttons type your formula directly.  The formula
+        | displays below the box in mathematical notation.  The color changes from red to blue when the notation is right.
+      | &#x9;
+      p
+        | Colored shapes (&quot;blocks&quot;) can be moved onto the grid (the &quot;world&quot;) using the mouse.
+      | &#x9;
+      p
+        | Press &quot;Check World&quot; to see whether the formula is true or
+        | false given in the world.
+      | &#x9;
+      p There must be at least one block in the world.
+      | &#x9;
+      p
+        | There are many ways to write operators and connectives, including Latex, Asciimath, and a few extensions of our own.
+      | &#x9;
+      p
+        | The
+        i connectives
+        |  are:
+      p
+        table
+          tr
+            th(align='left') Connective
+            | &#x9;&#x9;&#x9;
+            th(align='left') Input symbol
+          | &#x9;&#x9;
+          tr
+            td \(\neg\)
+            | &#x9;&#x9;&#x9;
+            td
+              code \neg
+          | &#x9;&#x9;
+          tr
+            td \(\wedge\)
+            | &#x9;&#x9;&#x9;
+            td
+              code \wedge ^^ and
+          | &#x9;&#x9;
+          tr
+            td \(\vee\)
+            | &#x9;&#x9;&#x9;
+            td
+              code \vee vv or
+          | &#x9;&#x9;
+          tr
+            td \(\implies\)
+            | &#x9;&#x9;&#x9;
+            td
+              code \implies -&gt;
+          | &#x9;&#x9;
+          tr
+            td \(\bicond\)
+            | &#x9;&#x9;&#x9;
+            td
+              code
+                | \bicond &lt;-&gt;
+          | &#x9;&#x9;
+          tr
+            td \(\xor\)
+            | &#x9;&#x9;&#x9;
+            td
+              code \xor o+
+          | &#x9;&#x9;
+          tr
+            td \(\forall x\) where \(x\) is a variable
+            | &#x9;&#x9;&#x9;
+            td
+              code \forall AA
+          | &#x9;&#x9;
+          tr
+            td \(\exists x\) where \(x\) is a variable
+            | &#x9;&#x9;&#x9;
+            td
+              code \exists EE
+      h3  Examples
+      | &#x9;
+      br
+      | &#x9;
+      p
+        code
+          | \forall x (Red(x) \implies \forall y (Below(x,y)))
+        | &#x9;
+        br
+        | &#x9;
+        code
+          | \exists x (Red(x) \wedge \forall y (Below(x,y)))
+      | &#x9;
+      h3  Common errors
+      | &#x9;
+      ul
+        li
+          | Syntax errors will print ugly messages that usually do a good job of
+          | locating the error, except sometimes for missing right parentheses.
+        | &#x9;
+        li
+          | Everything is case-sensitive.  Note that all predicates begin with a
+          | capital letter (e.g., &quot;Blue&quot; and &quot;LeftOf&quot;).  Anything other than the
+          | predicates listed above will produce an &quot;undefined error&quot; message.
+        | &#x9;
+        li Free variables generate &quot;undefined variable&quot; errors.

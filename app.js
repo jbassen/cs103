@@ -64,7 +64,7 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 var passportConf = require('./config/passport');
-
+var initData = require('./config/data');
 
 
 
@@ -82,7 +82,7 @@ app.use(function(req, res, next) {
   req.session.returnTo = req.path;
   next();
 });
-app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
+app.use(express.static(path.join(__dirname, 'public')));
 var userCtrl = require('./controllers/user');
 var homeCtrl = require('./controllers/home');
 var blocksCtrl = require('./controllers/blocks');
@@ -100,18 +100,19 @@ app.get('/reset/:token', userCtrl.getReset);
 app.post('/reset/:token', userCtrl.postReset);
 app.get('/signup', userCtrl.getSignup);
 app.post('/signup', userCtrl.postSignup);
-app.get('/blocksFixedFormula/:problemName', passportConf.isAuthenticated, blocksCtrl.getFixedFormula);
-//app.post('/blocksFixedFormula/:problemName', passportConf.isAuthenticated, blocksCtrl.postFixedFormula)
-app.get('/blocksFixedWorld/:problemName', passportConf.isAuthenticated, blocksCtrl.getFixedWorld);
-//app.post('/blocksFixedWorld/:problemName', passportConf.isAuthenticated, blocksCtrl.postFixedWorld);
-//app.get('/truefalse/:problemName', passportConf.isAuthenticated, formCtrl.getTrueFalse);
-//app.post('/truefalse/:problemName', passportConf.isAuthenticated, formCtrl.postTrueFalse);
-//app.get('/radiobutton/:problemName', passportConf.isAuthenticated, formCtrl.getRadioButton);
-//app.post('/radiobutton/:problemName', passportConf.isAuthenticated, formCtrl.postRadioButton);
-//app.get('/checkbox/:problemName', passportConf.isAuthenticated, formCtrl.getCheckBox);
-//app.post('/checkbox/:problemName', passportConf.isAuthenticated, formCtrl.postCheckBox);
-//app.get('/proof/:problemName', passportConf.isAuthenticated, proofCtrl.getProof);
-//app.post('/proof/:problemName', passportConf.isAuthenticated, proofCtrl.postProof);
+app.get('/fixedFormula/:name', passportConf.isAuthenticated, blocksCtrl.getFixedFormula);
+app.get('/fixedWorld/:name', passportConf.isAuthenticated, blocksCtrl.getFixedWorld);
+app.post('/checkBlocksWorld', passportConf.isAuthenticated, blocksCtrl.postBlocksWorld);
+//app.post('/fixedFormula/:name', passportConf.isAuthenticated, blocksCtrl.postFixedFormula)
+//app.post('/fixedWorld/:name', passportConf.isAuthenticated, blocksCtrl.postFixedWorld);
+//app.get('/truefalse/:name', passportConf.isAuthenticated, formCtrl.getTrueFalse);
+//app.post('/truefalse/:name', passportConf.isAuthenticated, formCtrl.postTrueFalse);
+//app.get('/radiobutton/:name', passportConf.isAuthenticated, formCtrl.getRadioButton);
+//app.post('/radiobutton/:name', passportConf.isAuthenticated, formCtrl.postRadioButton);
+//app.get('/checkbox/:name', passportConf.isAuthenticated, formCtrl.getCheckBox);
+//app.post('/checkbox/:name', passportConf.isAuthenticated, formCtrl.postCheckBox);
+//app.get('/proof/:name', passportConf.isAuthenticated, proofCtrl.getProof);
+//app.post('/proof/:name', passportConf.isAuthenticated, proofCtrl.postProof);
 
 //app.post('/api/interaction/', passportConf.isAuthenticated, apiCtrl.postInteraction);
 
