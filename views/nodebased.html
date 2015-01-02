@@ -1,0 +1,364 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/smoothness/jquery-ui.css" />
+
+	<script src = "/javascripts/jquery.ui.droppable.patched.js"></script>
+	<script src = "/javascripts/jquery.caret.1.02.js"></script>
+
+	<!-- FROM OLD VERSION The next script tag loads mathjax.  This has to follow the macros, etc.-->
+	<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+	<script src = "/javascripts/blocksworld.js"></script>
+	<script src = "/javascripts/nodesubmit.js"></script>
+	<script src= "/javascripts/srflaEval.js"></script>
+	<script src= "/javascripts/srflaMathParser.js"></script>
+	<script src= "/javascripts/blocksParser.js"></script>
+	<script src= "/javascripts/displayMath.js"></script>
+	<!--<script src= "nodeBlocksWorldServer.js"></script>-->
+
+	<!-- The next script tag defines CS103-specific macros (like \implies) for MathJax.  -->
+	<script type="text/x-mathjax-config">
+		MathJax.Hub.Config({
+  			TeX: {
+    				Macros: {
+      					T: "\\mathbf{T}",
+      					F: "\\mathbf{F}",
+      					implies: "\\to",
+    					bicond: "\\leftrightarrow",
+      					xor: "\\oplus"
+    				}
+  			}
+		});
+	</script>
+
+
+
+
+	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+</head>
+
+  <body>
+	<h3>CS 103 Blocks World</h3>
+	&nbsp;&nbsp;&nbsp;
+	<p id = "instructions">Drag and drop the blocks to create a world. Enter a corresponding first order logic formula:</p>
+
+	<!-- MATH ENTRY HELP KEYBOARD -->
+	<table border = "0" cellspacing = "0" cellpadding = "0" height = "60"><tr>
+		<td valign = "center" align = "left">
+			<button class = "suggestion" id = "\forall" onclick = "addSuggestion(event)"><img src = "/images/forall.gif" height = "14" width = "14" id = "\forall"></button>
+			<br>
+			<button class = "suggestion" id = "\exists" onclick = "addSuggestion(event)"><img src = "/images/exists.gif" height = "14" width = "14" id = "\exists"></button>
+		</td>
+		<td>&nbsp;&nbsp;&nbsp;</td>
+		<td valign = "center" align = "left">
+			<button class = "suggestion letters" id = "x" onclick = "addSuggestion(event)"><span id = "x">x</span></button>
+			<button class = "suggestion letters" id = "y" onclick = "addSuggestion(event)"><span id = "y">y</span></button>
+			<br>
+			<button class = "suggestion letters" id = "z" onclick = "addSuggestion(event)"><span id = "z">z</span></button>
+			<button class = "suggestion letters" id = "w" onclick = "addSuggestion(event)"><span id = "w">w</span></button>
+		</td>
+		<td>&nbsp;&nbsp;&nbsp;</td>
+		<td valign = "center" align = "left">
+			<button class = "suggestion" id = "\vee" onclick = "addSuggestion(event)"><img src = "/images/vee.gif" height = "14" width = "14" id = "\vee"></button>
+			<button class = "suggestion" id = "\implies" onclick = "addSuggestion(event)"><img src = "/images/implies.gif" height = "14" width = "14" id = "\implies"></button>
+			<button class = "suggestion" id = "\bicond" onclick = "addSuggestion(event)"><img src = "/images/bicond.gif" height = "14" width = "14" id = "\bicond"></button>
+			<button class = "suggestion" id = "=" onclick = "addSuggestion(event)"><img src = "/images/equals.gif" height = "14" width = "12" id = "="></button>
+			<br>
+			<button class = "suggestion" id = "\wedge" onclick = "addSuggestion(event)"><img src = "/images/wedge.gif" height = "14" width = "14" id = "\wedge"></button>
+			<button class = "suggestion" id = "\xor" onclick = "addSuggestion(event)"><img src = "/images/xor.gif" height = "14" width = "14" id = "\xor"></button>
+			<button class = "suggestion" id = "\neg" onclick = "addSuggestion(event)"><img src = "/images/neg.gif" height = "14" width = "14" id = "\neg"></button>
+			<button class = "suggestion" id = "\not=" onclick = "addSuggestion(event)"><img src = "/images/notequals.gif" height = "14" width = "12" id = "\not="></button>
+		</td>
+
+		<td>&nbsp;&nbsp;&nbsp;</td>
+
+		<td valign = "center" align = "left">
+			<button class = "suggestion blockStyle" id = "Red(x)" onclick = "addSuggestion(event)"><span id = "Red(x)">Red(x)</span></button>
+			<button class = "suggestion blockStyle" id = "Triangle(x)" onclick = "addSuggestion(event)"><span id = "Triangle(x)">Triangle(x)</span></button>
+			<button class = "suggestion Pos_side" id = "LeftOf(x,y)" onclick = "addSuggestion(event)"><span id = "LeftOf(x,y)">LeftOf(x,y)</span></button>
+			<button class = "suggestion Pos_side" id = "RightOf(x,y)" onclick = "addSuggestion(event)"><span id = "RightOf(x,y)">RightOf(x,y)</span></button>
+			<br>
+			<button class = "suggestion blockStyle" id = "Blue(x)" onclick = "addSuggestion(event)"><span id = "Blue(x)">Blue(x)</span></button>
+			<button class = "suggestion blockStyle" id = "Square(x)" onclick = "addSuggestion(event)"><span id = "Square(x)">Square(x)</span></button>
+			<button class = "suggestion Pos_up" id = "Above(x,y)" onclick = "addSuggestion(event)"><span id = "Above(x,y)">Above(x,y)</span></button>
+			<button class = "suggestion Pos_up" id = "LeftOf(x,y)" onclick = "addSuggestion(event)"><span id = "Below(x,y)">Below(x,y)</span></button>
+			<br>
+			<button class = "suggestion blockStyle" id = "Yellow(x)" onclick = "addSuggestion(event)"><span id = "Yellow(x)">Yellow(x)</span></button>
+			<button class = "suggestion blockStyle" id = "Circle(x)" onclick = "addSuggestion(event)"><span id = "Circle(x)">Circle(x)</span></button>
+			<button class = "suggestion Pos_equal" id = "SameRow(x,y)" onclick = "addSuggestion(event)"><span id = "SameRow(x,y)">SameRow(x,y)</span></button>
+			<button class = "suggestion Pos_equal" id = "SameCol(x,y)" onclick = "addSuggestion(event)"><span id = "SameCol(x,y)">SameCol(x,y)</span></button>
+
+		</td>
+	</tr></table>
+
+	<p>
+	<textarea id="inputFormula1" cols="83" rows="3" ></textarea></p>
+	<! -- MATH AND ERROR DISPLAYS -->
+	<p id="mathdisplay" class="indent" style = "color: red">&nbsp;<br>&nbsp;</p>
+
+	<!-- CHECK RESULT DISPLAY -->
+	<p id="checkresult" class ="indent"></p>
+
+	<!-- ERROR MESSAGE DISPLAY(space to reserve screen area for later text?) -->
+	<pre id="error"></pre>
+
+	<!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<button onclick = "getHelp()">Need help?</button></p>-->
+
+	<p><button id ="check" onclick="submitAndVerify(); saveCheckedFormulas()">Check World</button></p>
+
+
+	<!-- BLOCKSWORLD GRID -->
+  <table border = "0"><tr><td>
+	<table align = "left" cellspacing = "0" cellpadding = "0" bordercolor = "#BDBDBD" border = "1">
+		<tr>
+			<td style = "background-color: white">
+				<img src = "/images/whitesquare.gif" class = "block" id = "0">
+			</td>
+			<td style = "background-color: white">
+			  <img src = "/images/whitesquare.gif" class = "block" id = "1">
+			</td>
+			<td style = "background-color: white">
+				<img src = "/images/whitesquare.gif" class = "block" id = "2">
+			</td>
+			<td style = "background-color: white">
+				<img src = "/images/whitesquare.gif" class = "block" id = "3">
+			</td>
+			<td style = "background-color: white">
+				<img src = "/images/whitesquare.gif" class = "block" id = "4">
+			</td>
+		</tr>
+		<tr>
+			<td style = "background-color: white">
+				<img src = "/images/whitesquare.gif" class = "block" id = "10">
+			</td>
+			<td style = "background-color: white">
+				<img src = "/images/whitesquare.gif" class = "block" id = "11">
+			</td>
+			<td style = "background-color: white">
+				<img src = "/images/whitesquare.gif" class = "block" id = "12">
+			</td>
+			<td style = "background-color: white">
+				<img src = "/images/whitesquare.gif" class = "block" id = "13">
+			</td>
+			<td style = "background-color: white">
+				<img src = "/images/whitesquare.gif" class = "block" id = "14">
+			</td>
+		</tr>
+		<tr>
+			<td style = "background-color: white">
+				<img src = "/images/whitesquare.gif" class = "block" id = "20">
+			</td>
+			<td style = "background-color: white">
+				<img src = "/images/whitesquare.gif" class = "block" id = "21">
+			</td>
+			<td style = "background-color: white">
+				<img src = "/images/whitesquare.gif" class = "block" id = "22">
+			</td>
+			<td style = "background-color: white">
+				<img src = "/images/whitesquare.gif" class = "block" id = "23">
+			</td>
+			<td style = "background-color: white">
+				<img src = "/images/whitesquare.gif" class = "block" id = "24">
+			</td>
+		</tr>
+		<tr>
+			<td style = "background-color: white">
+				<img src = "/images/whitesquare.gif" class = "block" id = "30">
+			</td>
+			<td style = "background-color: white">
+				<img src = "/images/whitesquare.gif" class = "block" id = "31">
+			</td>
+			<td style = "background-color: white">
+				<img src = "/images/whitesquare.gif" class = "block" id = "32">
+			</td>
+			<td style = "background-color: white">
+				<img src = "/images/whitesquare.gif" class = "block" id = "33">
+			</td>
+			<td style = "background-color: white">
+				<img src = "/images/whitesquare.gif" class = "block" id = "34">
+			</td>
+		</tr>
+		<tr>
+			<td style = "background-color: white">
+				<img src = "/images/whitesquare.gif" class = "block" id = "40">
+			</td>
+			<td style = "background-color: white">
+				<img src = "/images/whitesquare.gif" class = "block" id = "41">
+			</td>
+			<td style = "background-color: white">
+				<img src = "/images/whitesquare.gif" class = "block" id = "42">
+			</td>
+			<td style = "background-color: white">
+				<img src = "/images/whitesquare.gif" class = "block" id = "43">
+			</td>
+			<td style = "background-color: white">
+				<img src = "/images/whitesquare.gif" class = "block" id = "44">
+			</td>
+		</tr>
+	</table>
+  </td>
+  <td rowspan = "2" valign = "top">
+
+	<table align = "left" border = "0" height = "200"><tr><td class = "spacer">
+</td></tr></table>
+
+<!-- DRAGGABLE BLOCKS GRID -->
+	<table align = "left" border = "0" cellspacing = "2" cellpadding = "0" width = "160">
+		<tr>
+			<td><img src = "/images/redsquare.gif" class = "dragMe COLOR_red SHAPE_square"></td>
+			<td><img src = "/images/redtriangle.gif" class = "dragMe COLOR_red SHAPE_triangle"></td>
+			<td><img src = "/images/redcircle.gif" class = "dragMe COLOR_red SHAPE_circle"></td>
+		</tr>
+		<tr>
+			<td><img src = "/images/yellowsquare.gif" class = "dragMe COLOR_yellow SHAPE_square"></td>
+			<td><img src = "/images/yellowtriangle.gif" class = "dragMe COLOR_yellow SHAPE_triangle"></td>
+			<td><img src = "/images/yellowcircle.gif" class = "dragMe COLOR_yellow SHAPE_circle"></td>
+		</tr>
+		<tr>
+			<td><img src = "/images/bluesquare.gif" class = "dragMe COLOR_blue SHAPE_square"></td>
+			<td><img src = "/images/bluetriangle.gif" class = "dragMe COLOR_blue SHAPE_triangle"></td>
+			<td><img src = "/images/bluecircle.gif" class = "dragMe COLOR_blue SHAPE_circle"></td>
+		</tr>
+		<tr></tr>
+		<tr valign = "bottom">
+			<td colspan = "3" valign = "bottom" id = "unusedNamesLabel">Unused Block Names:</td>
+		</tr>
+		<tr>
+			<td width = "20"><span class = "name" id = "a">a</span><br></td>
+			<td width = "20"><span class = "name" id = "b">b</span><br></td>
+			<td width = "20"><span class = "name" id = "c">c</span><br></td>
+		</tr>
+		<tr>
+			<td colspan = "3"><div align = "left">
+					<br><button id = "clearTextbox" class ="clearbutton" onclick = "clearTextbox()">Clear Textbox</button>
+					<button id = "resetWorld" class ="clearbutton" onclick = "resetWorld()">Clear World</button>
+					<button id = "reset" class ="clearbutton" onclick = "resetState()">Reset All</button>
+					<br><button id = "getHistory" onclick = "showCheckedFormulas()"> Get Input History</button>
+			    <!--<br><button id = "resetState" onclick = "resetState()">Done</button>-->
+			</div></td>
+		</tr>
+	 </table>
+  </td></tr>
+  <tr><td align  = "center">
+	<br>
+	<textarea align = "left" id="comment" cols="30" rows="5" >Enter a comment...</textarea>
+  </td></tr>
+ </table>
+
+
+<!--	<table align = "left" border = "0"><tr><td class = "spacer"></td></tr></table>
+
+	<button id = "getWorldProb" class = "problemtype" onclick = "getWorldForProblem()">Get World</button>
+	<button id = "getFormulaProb" class = "problemtype" onclick = "getFormulaForProblem()">Get Formula</button>
+	<button id = "getOriginalProb" class = "problemtype" onclick = "getEmptyState()">Get Empty State</button>
+	<br><br> -->
+
+	<!-- CONTENT FOR HELP BOX -->
+	<div id = "helpBox">
+	<p>The "blocks world" is a 5-by-5 grid of squares.  Various colors of
+	squares can be added, moved, or removed by moving the mouse around.</p>
+
+	<p>You can type a first-order logic formula into the text box, and the
+	program will parse it and check whether it holds in the current blocks
+	world.</p>
+
+	<p>After arranging your blocks and typing your formula, you can press
+	"Check World" to see whether the formula is true or false in the world.</p>
+
+	<p>There must be at least one block in the world, or an error is reported.</p>
+
+	<p>Quantified variables represent blocks in the world.  There are predicates
+	about the colors of the blocks:</p>
+
+	<p>\(Blue(x)\), \(Red(x)\), \(Gray(x)\), \(Green(x)\), and \(Yellow(x)\).</p>
+
+	<p>There are also predicates about the relative positions of blocks.
+	<ul>
+	<li> \( x = y \) says blocks \(x\) and \(y\) are the same.
+	<li> \( x \not= y \) (<code>x \not= y</code>)
+ 	says blocks \(x\) and \(y\) are the different (they occupy different squares).
+	<li> \(LeftOf(x,y)\) says that block \(x\) is to the left of block \(y\). </li>
+	<li> \(RightOf(x,y)\) says that block \(x\) is to the right of block \(y\). </li>
+	<li> \(Above(x,y)\) says that block \(x\) is above block \(y\). </li>
+	<li> \(Below(x,y)\) says that block \(x\) is below block \(y\). </li>
+	</ul>
+	</p>
+
+	<p>The syntax uses LaTeX notation.  The formula is printed by MathJax as it is typed.
+	However, the parser will not accept all formulas that MathJax accepts.</p>
+
+	<p>
+	The <i>connectives</i> are:
+	<p>
+	<table>
+		<tr>
+			<th align="left">Connective</Th>
+			<th align="left">Input symbol</th>
+		</tr>
+		<tr>
+			<td>\(\neg\)</td>
+			<td><code>\neg</code></td>
+		</tr>
+		<tr>
+			<td>\(\wedge\)</td>
+			<td><code>\wedge</code></td>
+		</tr>
+		<tr>
+			<td>\(\vee\)</td>
+			<td><code>\vee</code></td>
+		</tr>
+		<tr>
+			<td>\(\implies\)</td>
+			<td><code>\implies</code></td>
+		</tr>
+		<tr>
+			<td>\(\bicond\)</td>
+			<td><code>\bicond</code></td>
+		</tr>
+		<tr>
+			<td>\(\xor\)</td>
+			<td><code>\xor</code></td>
+		</tr>
+		<tr>
+			<td>\(\forall x\) where \(x\) is a variable</td>
+			<td><code>\forall x</code></td>
+		</tr>
+		<tr>
+			<td>\(\exists x\) where \(x\) is a variable</td>
+			<td><code>\exists x</code></td>
+		</tr>
+
+	</table>
+
+
+	<h3> Examples </h3>
+	<br>
+	<p>
+	<code>
+	\forall x (Red(x) \implies \forall y (Below(x,y)))
+	</code>
+	<br>
+	<code>
+	\exists x (Red(x) \wedge \forall y (Below(x,y)))
+	</code>
+	</p>
+
+	<h3> Common errors </h3>
+
+	<ul>
+	<li>Syntax errors will print ugly messages that usually do a good job of
+	locating the error, except sometimes for missing right parentheses.</li>
+
+	<li>Everything is case-sensitive.  Note that all predicates begin with a
+	capital letter (e.g., "Blue" and "LeftOf").  Anything other than the
+	predicates listed above will produce an "undefined error" message.</li>
+
+	<li>Free variables generate "undefined variable" errors.</li>
+	</ul>
+	</div>
+  </body>
+</html>

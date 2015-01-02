@@ -1,7 +1,11 @@
 var Assigned = require('../models/Assigned');
-//var FixedFormula = require('../models/problem_store/FixedFormula');
+var Extension = require('../models/Extension');
+var Interaction = require('../models/Interaction');
+var Saved = require('../models/Saved');
+var Submitted = require('../models/Submitted');
+var FixedFormula = require('../models/problem_store/FixedFormula');
 var FixedWorld = require('../models/problem_store/FixedWorld');
-//var Submitted = require('../models/Submitted');
+var Submitted = require('../models/Submitted');
 
 
 // var assigned = new Assigned({
