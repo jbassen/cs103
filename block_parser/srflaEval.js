@@ -43,7 +43,7 @@ function isLeaf (op)
 function isArray ( obj )
 {
     return toString.call(obj) === "[object Array]";
-};
+}
 
 // accessors for relations & functions
 function domain (e) { return e[1]; }
@@ -130,10 +130,12 @@ function compare (e1, e2) {
 		// expressions are identical
 		return 0;
 	    }
+	    break;
 	}
 	default: {
-	    console.log("Ilegal head: " + op1);
-	    console.log("e1 = " + e1);
+	    console.log("Illegal head: " + op1);
+	    console.log("e1 = " + JSON.stringify(e1, null, 2));
+	    console.trace("");
 	}
 	}
     }
@@ -189,9 +191,9 @@ function getField (e, int)
     var result;
     // console.log("evaluated e1 = ", e1);
     if (e1[0] === "Tuple") {
-	if (e2[0] === "Number"
-	    && e2[1] >= 1
-	    && e2[1] < e1.length) {
+	if (e2[0] === "Number" &&
+	    e2[1] >= 1 &&
+	    e2[1] < e1.length) {
 	    var num = e2[1];
 	    result = e1[num];	// tuple indexing is 1-based.
 	}
@@ -218,7 +220,10 @@ function getField (e, int)
 
 // Sort set members and eliminate duplicates
 function normalizeSet (e) {
+    // DD: Disabled 1/2/2015 for blocks world
+    // It fails on records, and sets don't need to be normalized for the blocks world.
     var args = e.slice(1); // copy suffix of array
+    return args;	   // DISABLES IT
     var j = 0;
     if (args.length === 0) {
 	return e;
@@ -342,7 +347,7 @@ function isSubset (e1, e2, needProper) {
 	}
     }
     if (i < args1.length) {
-	return SRFLAFALSE
+	return SRFLAFALSE;
     }
     isProper |= (j < args2.length);
     // subseteq if we got here.  base return value on whether we need proper.
@@ -391,7 +396,7 @@ function powerSetAr(ar, ind) {
 // of result and to result array.
 function powerSet(e) {
     // e = ["\\powset", ["Set", ...]]
-    var setargs = e[1].slice(1)
+    var setargs = e[1].slice(1);
     var ar = powerSetAr(setargs, setargs.length-1);
     // console.log("ar = ", ar);
     var ar1 = ar.map(function (a) { a.unshift("Set"); return a; });
@@ -459,7 +464,7 @@ function evalQuantifiers(init, vardecls, body, int) {
 	    // For AND, if it ever returns false, we're done.  Symmetrically with OR.
 	    // So, compare with init value (["\\T"] for AND) and exit if it's different.
 	    // FIXME: snag example here (counterexample for forall, example for exists).
-	    result = evalQuantifiers(init, newvardecls, body, int1)
+	    result = evalQuantifiers(init, newvardecls, body, int1);
 	    if (compare(init, result) !== 0) {
 		// this is a CROCK, but expedient (append model/countermodel to Boolean result).
 		// result.push(int);
@@ -729,7 +734,7 @@ var eval1 = {
     function(e, int) {
 	// ? int should be global interp?
 	var sym = e[1];
-	var val = srflaEval(e[2], int)
+	var val = srflaEval(e[2], int);
 	int[sym] = val;
 	// return is intentionally undefined
     },
@@ -743,8 +748,8 @@ var eval1 = {
     // substitute defined variables (or make a closure).
     // Oops -- don't want to substitute, because it breaks recursion!
     '\\lambda' : function (e) { return e; },
-    'call' : evalCall
-}
+    'call' : evalCall,
+};
 
 // recursive evaluator
 // FIXME: split into special eval function with default of switch going to bottom-up eval.
@@ -757,16 +762,16 @@ function srflaEval (e, int) {
 //    console.log("srflaEval e= ", JSON.stringify(e, undefined, 2) );
 //    console.log("srflaEval int= ", JSON.stringify(int, undefined, 2) );
     checkIsTerm(e);
-    if (!int) { throw new Error("int is undefined."); };
+    if (!int) { throw new Error("int is undefined."); }
     var op = e[0];
     var ee = e;
     // FIXME: evaluation strategy. This should be handled more generally.
     // perhaps a separate table for how to evaluate each operator?
     // Also, non-strict evaluation of if, and, or, etc. here.
     // first, evaluate children.
-    if (op === "\\forall" || op === "\\exists" || op === "comprehension" || op === 'var'
-        || op === 'recordfields' || op === 'Record' || op === 'getfield' || op === '\\lambda'
-	|| op === 'ite') {
+    if (op === "\\forall" || op === "\\exists" || op === "comprehension" || op === 'var' ||
+        op === 'recordfields' || op === 'Record' || op === 'getfield' || op === '\\lambda' ||
+	op === 'ite') {
 	// special evaluation to avoid messing with vardecl names.
 	// is this a special case of some kind of "do" operator? map/reduce?
 	// like a set comprehension, but with a special non-boolean accumulator
@@ -789,6 +794,8 @@ function srflaEval (e, int) {
 // exports.isTrue = isTrue;
 // exports.eval1 = eval1;
 exports.srflaEval = srflaEval;
+exports.SRFLATRUE = SRFLATRUE;
+exports.SRFLAFALSE = SRFLAFALSE;
 // exports.boolToSrfla = boolToSrfla;
 // exports.evalComprehension = evalComprehension;
 // exports.expt = expt;

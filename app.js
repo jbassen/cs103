@@ -103,7 +103,7 @@ app.post('/signup', userCtrl.postSignup);
 //app.get('/fixedFormula/:name', passportConf.isAuthenticated, blocksCtrl.getFixedFormula);
 //app.get('/fixedWorld/:name', passportConf.isAuthenticated, blocksCtrl.getFixedWorld);
 app.post('/checkBlocksWorld', passportConf.isAuthenticated, blocksCtrl.postBlocksWorld);
-app.post('/getBlocksWorld', passportConf.isAuthenticated, blocksCtrl.getBlocksWorld);
+app.get('/getBlocksWorld', passportConf.isAuthenticated, blocksCtrl.getBlocksWorld);
 //app.post('/fixedFormula/:name', passportConf.isAuthenticated, blocksCtrl.postFixedFormula)
 //app.post('/fixedWorld/:name', passportConf.isAuthenticated, blocksCtrl.postFixedWorld);
 //app.get('/truefalse/:name', passportConf.isAuthenticated, formCtrl.getTrueFalse);

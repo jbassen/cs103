@@ -70,12 +70,12 @@ $(document).ready(function(){
 	$('#c').offset(getUnusedNameOffset('c'));
 
 
-  if (fixedFormula) {
-    showProblemGivenFormula(fixedFormula);
-  } else if (fixedWorld) {
-    console.log(Object.prototype.toString.call(fixedWorld));
-    showProblemGivenWorld(fixedWorld);
-  }
+  // if (fixedFormula) {
+  //   showProblemGivenFormula(fixedFormula);
+  // } else if (fixedWorld) {
+  //   console.log(Object.prototype.toString.call(fixedWorld));
+  //   showProblemGivenWorld(fixedWorld);
+  // }
 
 });
 

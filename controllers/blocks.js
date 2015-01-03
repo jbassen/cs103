@@ -9,6 +9,7 @@ var Assigned = require('../models/Assigned');
 var Extension = require('../models/Extension');
 var FixedFormula = require('../models/problem_store/FixedFormula');
 var FixedWorld = require('../models/problem_store/FixedWorld');
+var blocksWorldChecker = require('../block_parser/blocksWorldChecker');
 
 // var escapeshellarg = function(arg) {
 //   //  discuss at: http://phpjs.org/functions/escapeshellarg/
@@ -113,7 +114,9 @@ exports.postBlocksWorld = function(req, res, next) {
   res.contentType('json');
   //$request = file_get_contents("php://input");
   //$arg = escapeshellarg($request);
-  console.log(req.body);
+  console.log("req.body: " + JSON.stringify(req.body));
+  result = blocksWorldChecker.processBlocksWorldRequest(req.body);
+  console.log("result: " + JSON.stringify(result));
   next();
   return;
   // console.log("here1!");
@@ -128,7 +131,7 @@ exports.postBlocksWorld = function(req, res, next) {
   //   res.json(output);
   //   console.log('stdout: %s', output);
   //   //continueWithYourCode();
-  });
+  // });
 
   // ob_start();
   // $output = system($commandStr, $retval);

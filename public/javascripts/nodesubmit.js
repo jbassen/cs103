@@ -30,7 +30,7 @@ function submitAndVerify()
 	//add the : automatically
         // DD: don't need ":" now.  Put it in the actual syntax?
         // logic = logic.replace(/((?:\\exists|\\forall|,)\s*\w+(?!\s*,|\s*\)))/g, "$1 :");
-	console.log(logic);
+	//console.log(logic);
 
         // DD commented out for node.
         // var world = worldToNewSrfla();
@@ -58,7 +58,7 @@ function submitAndVerify()
         // This should be stringified and sent to server.  The JSON
         // stringify is in the commented-out AJAX call below.
         var dataToServer = {world: world, logic: logic, blockNames: blockNames };
-
+        console.log("sending: " + JSON.stringify(dataToServer));
         // AJAX should get the value of "answer" back from the server
 
         // DD: temporarily commented out while I get js SRFLA to deal with this
