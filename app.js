@@ -15,6 +15,11 @@ var async = require('async');
 var expressValidator = require('express-validator');
 var hbs = require('hbs');
 
+
+// TODO: Use router instead of usual app.get/app.post
+// TODO: (this will significantly reduce duplicate code)
+
+
 // WEB FRAMEWORK (EXPRESS)
 var app = express();
 app.set('port', process.env.PORT || 3000);
