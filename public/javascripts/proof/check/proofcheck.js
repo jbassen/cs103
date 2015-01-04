@@ -5,6 +5,8 @@
 
 // Proof checker code.
 
+// This pointless commented was added to check git.
+
 "use strict";
 
 // Configuration parameters.
