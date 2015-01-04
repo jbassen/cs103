@@ -11,8 +11,9 @@ var nodemailer = require('nodemailer');
 var passport = require('passport');
 var bcrypt = require('bcrypt-nodejs');
 var async = require('async');
-var flash = require('express-flash');
+//var flash = require('express-flash');
 var expressValidator = require('express-validator');
+var hbs = require('hbs');
 
 // WEB FRAMEWORK (EXPRESS)
 var app = express();
@@ -21,9 +22,12 @@ app.set('port', process.env.PORT || 3000);
 // DATABASE
 mongoose.connect(process.env.MONGOHQ_URL);
 
-// VIEW ENGINE (JADE)
+//VIEW ENGINE (HANDLEBARS)
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'hbs');
+// no global layout
+app.set('view options', { layout: false });
+hbs.registerPartials(__dirname + '/views/partials');
 
 // FAVICON
 // User agents request favicon.ico frequently and indiscriminately;
@@ -52,25 +56,22 @@ app.use(session({
   saveUninitialized: true
 }));
 
-// FLASH MESSAGES
-// Requires that cookieParser and session are activated.
-// Flash messages are messages that are stored on the server *between* two
-// requests from the same client, and are only available in the next request.
-// Don’t try to req.flash(...) stuff and expect it to be available when
-// rendering the view immediately after. For that, use app.locals instead.
-app.use(flash());
+// // FLASH MESSAGES
+// // Requires that cookieParser and session are activated.
+// // Flash messages are messages that are stored on the server *between* two
+// // requests from the same client, and are only available in the next request.
+// // Don’t try to req.flash(...) stuff and expect it to be available when
+// // rendering the view immediately after. For that, use app.locals instead.
+// app.use(flash());
 
 // AUTHENTICATION (PASSPORT)
 app.use(passport.initialize());
 app.use(passport.session());
 var passportConf = require('./config/passport');
-var initData = require('./config/data');
 
-
-
-// DATA (MONGOOSE)
-//var Models = require()
-
+// // DATA (MONGOOSE)
+// // call to populate database
+// var initData = require('./config/data');
 
 // CONTROLLERS (EXPRESS)
 app.use(function(req, res, next) {
@@ -84,13 +85,18 @@ app.use(function(req, res, next) {
 });
 app.use(express.static(path.join(__dirname, 'public')));
 var userCtrl = require('./controllers/user');
-var homeCtrl = require('./controllers/home');
-var blocksCtrl = require('./controllers/blocks');
-//var formCtrl = require('./controllers/form');
-//var proofCtrl = require('./controllers/proof')
-//var apiCtrl = require('./controllers/api');
+var navCtrl = require('./controllers/navigation');
+//var blocksCtrl = require('./controllers/blocks');
+var proofCtrl = require('./controllers/proof');
 
-app.get('/', passportConf.isAuthenticated, homeCtrl.index);
+
+// ROUTES (EXPRESS)
+
+// main site navigation
+app.get('/', passportConf.isAuthed, navCtrl.getHome);
+// app.get('/assignment/:name', passportConf.isAuthed, navCtrl.getAssn);
+
+// for user auth
 app.get('/login', userCtrl.getLogin);
 app.post('/login', userCtrl.postLogin);
 app.get('/logout', userCtrl.logout);
@@ -100,22 +106,20 @@ app.get('/reset/:token', userCtrl.getReset);
 app.post('/reset/:token', userCtrl.postReset);
 app.get('/signup', userCtrl.getSignup);
 app.post('/signup', userCtrl.postSignup);
-//app.get('/fixedFormula/:name', passportConf.isAuthenticated, blocksCtrl.getFixedFormula);
-//app.get('/fixedWorld/:name', passportConf.isAuthenticated, blocksCtrl.getFixedWorld);
-app.post('/checkBlocksWorld', passportConf.isAuthenticated, blocksCtrl.postBlocksWorld);
-app.get('/getBlocksWorld', passportConf.isAuthenticated, blocksCtrl.getBlocksWorld);
-//app.post('/fixedFormula/:name', passportConf.isAuthenticated, blocksCtrl.postFixedFormula)
-//app.post('/fixedWorld/:name', passportConf.isAuthenticated, blocksCtrl.postFixedWorld);
-//app.get('/truefalse/:name', passportConf.isAuthenticated, formCtrl.getTrueFalse);
-//app.post('/truefalse/:name', passportConf.isAuthenticated, formCtrl.postTrueFalse);
-//app.get('/radiobutton/:name', passportConf.isAuthenticated, formCtrl.getRadioButton);
-//app.post('/radiobutton/:name', passportConf.isAuthenticated, formCtrl.postRadioButton);
-//app.get('/checkbox/:name', passportConf.isAuthenticated, formCtrl.getCheckBox);
-//app.post('/checkbox/:name', passportConf.isAuthenticated, formCtrl.postCheckBox);
-//app.get('/proof/:name', passportConf.isAuthenticated, proofCtrl.getProof);
-//app.post('/proof/:name', passportConf.isAuthenticated, proofCtrl.postProof);
 
-//app.post('/api/interaction/', passportConf.isAuthenticated, apiCtrl.postInteraction);
+// // for blocks world assignments
+// app.get('/blocksworld/:name', passportConf.isAuthed, blocksCtrl.getBlocks);
+// app.post('/blocksworld/:name', passportConf.isAuthed, blocksCtrl.postBlocks);
+// // TODO: add POST method for retrieving differet versions
+
+// for proof checker assignments
+app.get('/proofchecker/:name', passportConf.isAuthed, proofCtrl.getProof);
+app.post('/proofchecker/:name', passportConf.isAuthed, proofCtrl.postProof);
+// TODO: add POST method for retrieving differet versions
+
+// // empty, non-assignment versions
+app.get('/blocksworld', passportConf.isAuthed, blocksCtrl.getEmptyBlocks);
+//app.get('/proofchecker', passportConf.isAuthed, proofCtrl.getEmptyProof);
 
 
 // TODO: move error handlers to different file

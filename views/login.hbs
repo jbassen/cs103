@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  <title>{{title}}</title>
+</head>
+
+<body>
+
+  {{> navbar}}
+
+  <div class="container">
+
+    {{> flash}}
+    
+    <form method="POST">
+      <legend>Login</legend>
+      <div class="form-group">
+        <label for="username">SUNet ID</label>
+        <input type="text" name="username" autofocus class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="password">CS103 Password</label>
+        <input type="password" name="password" class="form-control">
+      </div>
+      <button type="submit" class="btn btn-primary">Login</button>
+      <a href="/signup" class="btn btn-link">Need to sign up?</a>
+      <a href="/forgot" class="btn btn-link">Forgot password?</a>
+    </form>
+  </div>
+
+</body>
+</html>

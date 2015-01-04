@@ -1,0 +1,3 @@
+P1: proof
+C1:  (P \wedge Q) \wedge R <=> P \wedge (Q \wedge R) by obvious
+end

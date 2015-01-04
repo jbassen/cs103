@@ -1,0 +1,32 @@
+{{#with messages}}
+  {{#if errors}}
+    {{#each errors}}
+      {{#with this}}
+      <div class="alert alert-danger fade in">
+        <span class="ion-close-circled"></span>
+        <div>{{msg}}</div>
+      </div>
+      {{/with}}
+    {{/each}}
+  {{/if}}
+  {{#if info}}
+    {{#each info}}
+      {{#with this}}
+      <div class="alert alert-info fade in">
+        <span class="ion-close-circled"></span>
+        <div>{{msg}}</div>
+      </div>
+      {{/with}}
+    {{/each}}
+  {{/if}}
+  {{#if success}}
+    {{#each success}}
+      {{#with this}}
+      <div class="alert alert-success fade in">
+        <span class="ion-close-circled"></span>
+        <div>{{msg}}</div>
+      </div>
+      {{/with}}
+    {{/each}}
+  {{/if}}
+{{/with}}

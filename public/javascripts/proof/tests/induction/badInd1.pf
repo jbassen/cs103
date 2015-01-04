@@ -1,0 +1,16 @@
+// Simplest possible induction proof.
+
+P1: proof
+   base: P(0) by trustMe
+
+   ind: proof
+        var n \in \integers
+
+	A1: n \ge 0 by assumption
+	A2: P(n) by assumption
+	C1: P(n+1) by trustMe
+   end
+
+  // Missing parenthesis: parse as (\implies (\forall ...) (P n))  
+  C2:  \forall n \in \integers: n \ge 0 \implies P(n) by simpleInduction(base, ind)
+end

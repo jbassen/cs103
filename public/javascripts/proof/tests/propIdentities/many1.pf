@@ -1,0 +1,32 @@
+P1: proof
+C1:    P \wedge (Q \vee R) <=> P \wedge Q \vee P \wedge R by distribAndOr
+C2:    P \vee (Q \wedge (R \vee S)) <=> P \vee Q \wedge R \vee Q \wedge S by distribAndOr
+C3:    P \wedge ((Q \wedge S) \vee (R \wedge S)) <=> P \wedge (Q \wedge S) \vee P \wedge (R \wedge S) by distribAndOr
+C4:    S \vee (P \wedge (Q \vee R)) <=> S \vee (P \wedge Q \vee P \wedge R )  by distribAndOr
+
+C5:    P \vee Q \wedge R <=> (P \vee Q) \wedge (P \vee R) by distribOrAnd
+C6:    P \wedge (Q \vee (R \wedge S)) <=> P \wedge (Q \vee R) \wedge (Q \vee S) by distribOrAnd
+C7:    P \vee ((Q \vee S) \wedge (R \vee S)) <=> (P \vee (Q \vee S)) \wedge (P \vee (R \vee S)) by distribOrAnd
+C8:    S \wedge (P \vee (Q \wedge R)) <=> S \wedge (P \vee Q) \wedge (P \vee R ) by distribOrAnd
+
+C9:    \neg P \vee Q \wedge R <=> (P \vee Q) \wedge (\neg P \vee R) by distribOrAnd
+C10:    P \wedge (Q \vee (R \wedge \neg \neg S)) <=> P \wedge (\neg \neg Q \vee R) \wedge (Q \vee S) by distribOrAnd
+C11:    P \vee ((\neg \neg \neg Q \vee S) \wedge (R \vee \neg S)) <=> (P \vee (\neg Q \vee S)) \wedge (P \vee (R \vee \neg S)) by distribOrAnd
+
+
+C12:   \neg (P \vee Q) <=> \neg P \wedge \neg Q by deMorganOr
+C13:   \neg P \wedge \neg Q   <=> \neg (P \vee Q) by deMorganOr
+C14:   \neg (P \wedge Q) <=> \neg P \vee \neg Q by deMorganAnd
+C15:   \neg P \vee \neg Q  <=> \neg (P \wedge Q) by deMorganAnd
+
+C16:   \neg (P \wedge \neg Q and R and S) <=> \neg P \vee  Q \vee \neg R  or \neg S by deMorganAnd
+
+C17:  P \wedge \neg (Q \vee R) <=> P \wedge \neg Q \wedge \neg R by deMorganOr
+C18:  P \wedge \neg (Q \vee R) \wedge S <=> P \wedge \neg Q \wedge \neg R \wedge S by deMorganOr
+C19:  P \wedge \neg (Q \vee R) \wedge S <=> P \wedge S \wedge \neg Q \wedge \neg R by deMorganOr
+
+C20:  P \implies Q <=> \neg P \vee Q by impliesOr
+C21:   \neg P \vee Q <=> P \implies Q  by impliesOr
+C22:   P \vee (Q \implies R) <=> P \vee R \vee \neg Q by impliesOr
+
+end
