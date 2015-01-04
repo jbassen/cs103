@@ -120,11 +120,12 @@ app.post('/signup', userCtrl.postSignup);
 // for proof checker assignments
 app.get('/proofchecker/:name', passportConf.isAuthed, proofCtrl.getProof);
 app.post('/proofchecker/:name', passportConf.isAuthed, proofCtrl.postProof);
-// TODO: add POST method for retrieving differet versions
+// TODO: add POST method for retrieving differet saved versions
 
 // // empty, non-assignment versions
-app.get('/blocksworld', passportConf.isAuthed, blocksCtrl.getEmptyBlocks);
+//app.get('/blocksworld', passportConf.isAuthed, blocksCtrl.getEmptyBlocks);
 //app.get('/proofchecker', passportConf.isAuthed, proofCtrl.getEmptyProof);
+// TODO: add POST method for retrieving differet saved versions
 
 
 // TODO: move error handlers to different file

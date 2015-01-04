@@ -1,3 +1,13 @@
+<li class="list-group-item">
+  <span class="badge">0 attempt(s)</span>
+  <a href="/blocksworld/Lena3">BLOCKS WORLD: Lena3</a>
+</li>
+<li class="list-group-item">
+  <span class="badge">0 attempt(s)</span>
+  <a href="/blocksworld/X">BLOCKS WORLD: X</a>
+</li>
+
+
 var srfla = ["Set",
 ["Record",
 { color: ["String", "blue"],
