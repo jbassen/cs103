@@ -20,19 +20,16 @@ exports.postLogin = function(req, res, next) {
   var errors = req.validationErrors();
 
   if (errors) {
-    //req.flash('errors', errors);
     return res.redirect('/login');
   }
 
   passport.authenticate('local', function(err, user, info) {
     if (err) return next(err);
     if (!user) {
-      //req.flash('errors', { msg: info.message });
       return res.redirect('/login');
     }
     req.logIn(user, function(err) {
       if (err) return next(err);
-      //req.flash('success', { msg: 'Success! You are logged in.' });
       res.redirect('/');
     });
   })(req, res, next);
@@ -61,7 +58,6 @@ exports.postSignup = function(req, res, next) {
   var errors = req.validationErrors();
 
   if (errors) {
-    //req.flash('errors', errors);
     return res.redirect('/signup');
   }
 
@@ -74,7 +70,6 @@ exports.postSignup = function(req, res, next) {
 
   User.findOne({ username: req.body.username }, function(err, existingUser) {
     if (existingUser) {
-      //req.flash('errors', { msg: 'Account already exists for this SUNet ID.' });
       return res.redirect('/signup');
     }
     user.save(function(err) {
@@ -108,7 +103,6 @@ exports.getReset = function(req, res) {
   .where('resetPasswordExpires').gt(Date.now())
   .exec(function(err, user) {
     if (!user) {
-      //req.flash('errors', { msg: 'Password reset token is invalid or has expired.' });
       return res.redirect('/forgot');
     }
     res.render('reset', {
@@ -126,7 +120,6 @@ exports.postReset = function(req, res, next) {
   var errors = req.validationErrors();
 
   if (errors) {
-    //req.flash('errors', errors);
     return res.redirect('back');
   }
 
@@ -137,7 +130,6 @@ exports.postReset = function(req, res, next) {
       .where('resetPasswordExpires').gt(Date.now())
       .exec(function(err, user) {
         if (!user) {
-          //req.flash('errors', { msg: 'Password reset token is invalid or has expired.' });
           return res.redirect('back');
         }
 
@@ -176,7 +168,6 @@ exports.postForgot = function(req, res, next) {
   var errors = req.validationErrors();
 
   if (errors) {
-    //req.flash('errors', errors);
     return res.redirect('/forgot');
   }
 
@@ -190,7 +181,6 @@ exports.postForgot = function(req, res, next) {
     function(token, done) {
       User.findOne({ email: req.body.username.toLowerCase() + "@stanford.edu"}, function(err, user) {
         if (!user) {
-          //req.flash('errors', { msg: 'No account with that SUNet ID exists.' });
           return res.redirect('/forgot');
         }
 
@@ -220,7 +210,6 @@ exports.postForgot = function(req, res, next) {
         'If you did not request this, please ignore this email and your password will remain unchanged.\n'
       };
       transporter.sendMail(mailOptions, function(err) {
-        //req.flash('info', { msg: 'An e-mail has been sent to ' + user.email + ' with further instructions.' });
         done(err, 'done');
       });
     }

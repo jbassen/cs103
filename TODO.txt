@@ -1,0 +1,19 @@
+DEFINITELY:
+- Home Page
+- Assignments Page
+- AJAX for Proof Checker
+- AJAX for Blocks World
+- Blocks World JSON
+- retrieve saved versions
+- empty, non-assignment versions of systems
+
+
+
+POSSIBLY: (need to investigate further)
+- limit string and object sizes in MongoDB?
+- use router to reduce redundant code in Express?
+- flush unnecessary session data?
+-- http://stackoverflow.com/questions/10760620/using-memorystore-in-production
+- move error handlers out of app.js
+-- consider using errorhandler package
+-- consider adding more error handlers?

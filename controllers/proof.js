@@ -2,8 +2,7 @@ var Assignment = require('../models/Assignment');
 var Comment = require('../models/Comment');
 var Exercise = require('../models/Exercise');
 var Extension = require('../models/Extension');
-var Save = require('../models/Save');
-var Submission = require('../models/Submission');
+var Interaction = require('../models/Interaction');
 var User = require('../models/User');
 var blocksWorldChecker = require('../server_blocks/blocksWorldChecker');
 
@@ -24,7 +23,7 @@ exports.getProof = function(req, res, next) {
 
     // make sure it's been released
     Assignment
-    .findOne({ number: exercise.assignmentNum })
+    .findOne({ assnum: exercise.assnum })
     .where('release').lt(Date.now())
     .exec(function(err, assignment) {
       if(!assignment) {
@@ -59,7 +58,7 @@ exports.postProof = function(req, res, next) {
 
     // make sure it's been released
     Assignment
-    .findOne({ number: exercise.assignmentNum })
+    .findOne({ assnum: exercise.assnum })
     .where('release').lt(Date.now())
     .exec(function(err, assignment) {
       if(!assignment) {

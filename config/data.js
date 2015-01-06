@@ -2,42 +2,44 @@ var Assignment = require('../models/Assignment');
 var Comment = require('../models/Comment');
 var Exercise = require('../models/Exercise');
 var Extension = require('../models/Extension');
-var Save = require('../models/Save');
-var Submission = require('../models/Submission');
+var Interaction = require('../models/Interaction');
 var User = require('../models/User');
 
 
 var assignment = new Assignment({
-  number: 0,
-  description: 'Assignment0 Description',
+  _id: 0,
   release: Date.now(),
-  deadline: Date.now()
+  deadline: Date.now(),
+  name: "Assignment0 Name",
+  description: 'Assignment0 Description',
+  exercises: JSON.stringify({"ids": [0]})
 });
 assignment.save();
 
-var comment = new Comment({
-  username: 'jbassen',
-  time: Date.now(),
-  type: Date.now(),
-  name: 'AndOrElim',
-  comment: 'This is cool!'
-});
-
-comment.save();
-
-var exercise = new Exercise({
-  assignmentNum: 0,
-  type: 'proofchecker',
-  name: 'AndOrElim',
-  verifier: 'default',
-  description: 'AndOrElim instructions here...',
-  problemJSON: '{"outline": "P1: proof\n\tA1: (P \\wedge Q) \\vee (P \\wedge R) by assumption\n\tP2: proof\n\t\tA2: P \\wedge Q by assumption\n\t\tC2: P by andElim(A2)\n\t\tend\n\tP3: proof\n\t\tA3: P \\wedge Q by assumption\n\t\tC3: P by andElim(A3)\n\t\tend\n\tC1: P by orElim(A1, P2, P3)\nend"}'
-});
-
-exercise.save();
+// var comment = new Comment({
+//   id: 0,
+//   username: 'jbassen',
+//   time: Date.now(),
+//   type: Date.now(),
+//   exercise: 0,
+//   comment: 'This is cool!'
+// });
+//
+// comment.save();
+//
+// var exercise = new Exercise({
+//   id: 0,
+//   type: 'proofchecker',
+//   name: 'AndOrElim',
+//   verifier: 'default',
+//   description: 'AndOrElim instructions here...',
+//   problemJSON: '{"outline": "P1: proof\n\tA1: (P \\wedge Q) \\vee (P \\wedge R) by assumption\n\tP2: proof\n\t\tA2: P \\wedge Q by assumption\n\t\tC2: P by andElim(A2)\n\t\tend\n\tP3: proof\n\t\tA3: P \\wedge Q by assumption\n\t\tC3: P by andElim(A3)\n\t\tend\n\tC1: P by orElim(A1, P2, P3)\nend"}'
+// });
+//
+// exercise.save();
 
 // var exercise = new Exercise({
-//   assignmentNum: 0,
+//   id: 0,
 //   type: 'blocksworld',
 //   name: 'Lena-3',
 //   verifier: 'default',
@@ -46,7 +48,7 @@ exercise.save();
 // });
 //
 // var exercise = new Exercise({
-//   assignmentNum: 0,
+//   id: 0,
 //   type: 'blocksworld',
 //   name: 'X',
 //   verifier: 'default',
@@ -54,15 +56,18 @@ exercise.save();
 //   problemJSON: '{}'
 // });
 
-var extension = new Extension({
-  username: 'jbassen',
-  assignmentNum: 0,
-  due: Date.now()
-});
-
-extension.save();
+// var extension = new Extension({
+//   id: 0,
+//   username: 'jbassen',
+//   assnum: 0,
+//   due: Date.now()
+// });
+//
+// extension.save();
 
 // var save = new Save({
+//     id: 0,
+//     interaction: "save",
 //     username: { type: String, required: true },
 //     time: { type: Date, required: true },
 //     type: {type: String, required: true },
@@ -71,23 +76,13 @@ extension.save();
 // });
 
 // var submission = new Submission({
+//   id: 0,
 //   username: { type: String, required: true },
 //   time: { type: Date, required: true },
 //   type: {type: String, required: true },
 //   name: { type: String, required: true }, //exercise
 //   answer: {type: String, required: true}
 // });
-
-
-
-// var assigned = new Assigned({
-//   type: 'fixedFormula',
-//   name: 'Lena3',
-//   release: Date.now(),
-//   deadline: Date.now()
-// });
-//
-// assigned.save();
 //
 // var fixedFormula = new FixedFormula({
 //   name: 'Lena3',
@@ -104,16 +99,6 @@ extension.save();
 // });
 //
 // fixedFormula.save()
-
-
-// var assigned = new Assigned({
-//   type: 'fixedWorld',
-//   name: 'X',
-//   release: Date.now(),
-//   deadline: Date.now()
-// });
-//
-// assigned.save();
 //
 // var fixedWorld = new FixedWorld({
 //   name: 'X',

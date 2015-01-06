@@ -1,10 +1,12 @@
 var mongoose = require('mongoose');
 
 var assignmentSchema = new mongoose.Schema({
-  number: {type: Number, required: true, unique: true},
-  description: {type: String, required: true},
+  _id: {type: Number, required: true, unique: true},
   release: { type: Date, required: true },
-  deadline: { type: Date, required: true }
+  deadline: { type: Date, required: true },
+  name: {type: String, required: true},
+  description: {type: String, required: true},
+  exercises: { type: Object, required: true}
 });
 
 module.exports = mongoose.model('Assignment', assignmentSchema);
