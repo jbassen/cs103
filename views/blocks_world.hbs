@@ -1,21 +1,25 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+	<!-- JON'S SCRIPTS -->
+	<script type="text/javascript">var problemObject = {{{problemJSON}}};</script>
+	<!-- / JON'S SCRIPTS -->
+
 	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
 
-	<script src = "/javascripts/blocks/jquery.ui.droppable.patched.js"></script>
-	<script src = "/javascripts/blocks/jquery.caret.1.02.js"></script>
+	<script src = "/javascripts/blocks_world/jquery.ui.droppable.patched.js"></script>
+	<script src = "/javascripts/blocks_world/jquery.caret.1.02.js"></script>
 
 	<!-- FROM OLD VERSION The next script tag loads mathjax.  This has to follow the macros, etc.-->
 	<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
-	<script src = "/javascripts/blocks/blocksworld.js"></script>
-	<script src = "/javascripts/blocks/nodesubmit.js"></script>
-	<script src= "/javascripts/blocks/srflaEval.js"></script>
-	<script src= "/javascripts/blocks/srflaMathParser.js"></script>
-	<script src= "/javascripts/blocks/blocksParser.js"></script>
-	<script src= "/javascripts/blocks/displayMath.js"></script>
+	<script src = "/javascripts/blocks_world/blocksworld.js"></script>
+	<script src = "/javascripts/blocks_world/nodesubmit.js"></script>
+	<script src= "/javascripts/blocks_world/srflaEval.js"></script>
+	<script src= "/javascripts/blocks_world/srflaMathParser.js"></script>
+	<script src= "/javascripts/blocks_world/blocksParser.js"></script>
+	<script src= "/javascripts/blocks_world/displayMath.js"></script>
 	<!--<script src= "nodeBlocksWorldServer.js"></script>-->
 
 	<!-- The next script tag defines CS103-specific macros (like \implies) for MathJax.  -->
@@ -35,13 +39,9 @@
 
 	<link rel="stylesheet" type="text/css" href="/stylesheets/blocksworld.css">
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/smoothness/jquery-ui.css" />
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-	<title>{{title}}</title>
 </head>
 
 <body>
-
-	{{> navbar}}
 
 	<h3>CS 103 Blocks World</h3>
 	&nbsp;&nbsp;&nbsp;
@@ -97,7 +97,7 @@
 	</tr></table>
 
 	<p>
-	<textarea id="inputFormula1" cols="83" rows="3" ></textarea></p>
+	<textarea id="inputFormula1" cols="83" rows="10" ></textarea></p>
 	<! -- MATH AND ERROR DISPLAYS -->
 	<p id="mathdisplay" class="indent" style = "color: red">&nbsp;<br>&nbsp;</p>
 
@@ -110,7 +110,8 @@
 	<!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	<button onclick = "getHelp()">Need help?</button></p>-->
 
-	<p><button id ="check" onclick="submitAndVerify(); saveCheckedFormulas()">Check World</button></p>
+	<!-- took out "; saveCheckedFormulas()"" -->
+	<p><button id ="check" onclick="submitAndVerify(this.id) ">Check World</button></p>
 
 
 	<!-- BLOCKSWORLD GRID -->
@@ -236,10 +237,10 @@
 		</tr>
 		<tr>
 			<td colspan = "3"><div align = "left">
-					<br><button id = "clearTextbox" class ="clearbutton" onclick = "clearTextbox()">Clear Textbox</button>
+					<!-- <br><button id = "clearTextbox" class ="clearbutton" onclick = "clearTextbox()">Clear Textbox</button>
 					<button id = "resetWorld" class ="clearbutton" onclick = "resetWorld()">Clear World</button>
 					<button id = "reset" class ="clearbutton" onclick = "resetState()">Reset All</button>
-					<br><button id = "getHistory" onclick = "showCheckedFormulas()"> Get Input History</button>
+					<br><button id = "getHistory" onclick = "showCheckedFormulas()"> Get Input History</button> -->
 			    <!--<br><button id = "resetState" onclick = "resetState()">Done</button>-->
 			</div></td>
 		</tr>
@@ -247,14 +248,18 @@
   </td></tr>
   <tr><td align  = "center">
 	<br>
-	<textarea align = "left" id="comment" cols="30" rows="5" >Enter a comment...</textarea>
+	<!-- <textarea align = "left" id="comment" cols="30" rows="5" >Enter a comment...</textarea> -->
   </td></tr>
  </table>
 
+	<button id ="submit" onclick="submitAndVerify(this.id) ">Submit</button>
+	<button id ="save" onclick="submitAndVerify(this.id) ">Save</button>
+	<button id = "resetProblem" class = "problemtype" onclick = "resetProblem()">Reset</button>
+	<!-- <button id ="check" onclick="submitAndVerify() ">Check</button> -->
 
-<!--	<table align = "left" border = "0"><tr><td class = "spacer"></td></tr></table>
+	<!-- <table align = "left" border = "0"><tr><td class = "spacer"></td></tr></table> -->
 
-	<button id = "getWorldProb" class = "problemtype" onclick = "getWorldForProblem()">Get World</button>
+	<!--<button id = "getWorldProb" class = "problemtype" onclick = "getWorldForProblem()">Get World</button>
 	<button id = "getFormulaProb" class = "problemtype" onclick = "getFormulaForProblem()">Get Formula</button>
 	<button id = "getOriginalProb" class = "problemtype" onclick = "getEmptyState()">Get Empty State</button>
 	<br><br> -->

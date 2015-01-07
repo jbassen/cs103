@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <!-- JON'S SCRIPTS -->
+  <script type="text/javascript">var problemObject = {{{problemJSON}}};</script>
+  <!-- / JON'S SCRIPTS -->
+
 <title>Propositional Identity Proof checker</title>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
-<script src="/javascripts/proof/util/arraysearch.js"></script>
-<script src="/javascripts/proof/util/es6-shim-master/es6-shim.js" ></script>
-<script src="/javascripts/proof/expr/expr.js"></script>
-<script src="/javascripts/proof/expr/match.js"></script>
-<script src="/javascripts/proof/expr/localrewrite.js"></script>
-<script src="/javascripts/proof/expr/simplify.js"></script>
-<script src="/javascripts/proof/prparse/prParse.js"></script>
-<script src="/javascripts/proof/prparse/mathparse.js"></script>
-<script src="/javascripts/proof/check/proofcheck.js"></script>
-<script src="/javascripts/proof/prprint/mathprint.js"></script>
-<script src="/javascripts/proof/prprint/proofprint.js"></script>
-<script src="/javascripts/proof/prparse/proofParseError.js">
+<script src="/javascripts/proof_checker/util/arraysearch.js"></script>
+<script src="/javascripts/proof_checker/util/es6-shim-master/es6-shim.js" ></script>
+<script src="/javascripts/proof_checker/expr/expr.js"></script>
+<script src="/javascripts/proof_checker/expr/match.js"></script>
+<script src="/javascripts/proof_checker/expr/localrewrite.js"></script>
+<script src="/javascripts/proof_checker/expr/simplify.js"></script>
+<script src="/javascripts/proof_checker/prparse/prParse.js"></script>
+<script src="/javascripts/proof_checker/prparse/mathparse.js"></script>
+<script src="/javascripts/proof_checker/check/proofcheck.js"></script>
+<script src="/javascripts/proof_checker/prprint/mathprint.js"></script>
+<script src="/javascripts/proof_checker/prprint/proofprint.js"></script>
+<script src="/javascripts/proof_checker/prparse/proofParseError.js">
 </script>
 
 <!-- The next script tag defines CS103-specific macros (like \implies) for
@@ -75,7 +79,7 @@ function parseEnteredFormula(selector) {
 // adds a click handler to the dom object with id = "checkProof", which is
 // the "Display Formula" button.
 $(document).ready(function () {
-  $("#checkProof").click(function () {
+  $("button.sendAJAX").click(function () {
     // We are in  the handler for clicks on the "Display Formula" button.
     // Next clears the mathdisplay, so it doesn't hang around when the user
     // enters a new erroneous input.
@@ -103,32 +107,25 @@ $(document).ready(function () {
 // build new string with appropriately placed error message.
       $("#mathdisplay").html("<b>There were errors processing this proof</b><p><pre>\n" + String(err) + "</pre>\n");
     }
-  });
 
-  <!-- Interaction Code Starts Here! -->
-  $("textarea.proofInputBox").text({{{problem_text}}});
-
-  $("button.sendAJAX").click(function () {
-    var method = $(this).attr('id');
-    var prooftext = $("textarea.proofInputBox").text();
-    var result = true;
-
-    var dataToServer = {method: method, prooftext: prooftext, result: result };
+    // JON'S SCRIPTS
+    var dataToServer = {
+      action: $(this).attr('id'),
+      answer: {
+        prooftext: $("textarea.proofInputBox").text(),
+        result: "OK"
+      }
+    };
     console.log("sending: " + JSON.stringify(dataToServer));
 
     var answer = $.ajax({
       type: 'POST',
-      url: $(location).attr('href'), //send to url with same embedded problem name
+      url: window.location.pathname,
       contentType: 'application/json',
       crossDomain: false,
       data: JSON.stringify(dataToServer),
       dataType: 'json',
       async: false,
-      headers: {
-        // Set any custom headers here.
-        // If you set any non-simple headers, your server must include these
-        // headers in the 'Access-Control-Allow-Headers' response header.
-      },
       success: function(result) {
         console.log("done: " + JSON.stringify(result));
       },
@@ -136,11 +133,18 @@ $(document).ready(function () {
         console.log("ajax failed: " + JSON.stringify(e));
       }
     }).responseText;
-
     console.log(answer);
+    // / JON'S SCRIPTS
 
   });
 
+
+  // JON'S SCRIPTS
+  $("textarea.proofInputBox")
+  .text(problemObject.instructions)
+  .append("\n")
+  .append(problemObject.outline);
+  // / JON'S SCRIPTS
 
 });
 </script>
@@ -338,9 +342,10 @@ textarea.proofInputBox
 <!-- container for input text area -->
 <div class='left-container'>
 <center>
-<button class="sendAJAX" id="saveProof">Save</button>
-<button class="sendAJAX" id="checkProof">Check Proof</button>
-<button class="sendAJAX" id="submitProof">Submit</button>
+<button class="sendAJAX" id="save">Save</button>
+<button class="sendAJAX" id="check">Check Proof</button>
+<button class="sendAJAX" id="submit">Submit</button>
+<button class="resetProblem">Reset</button>
 </center>
 <br>
 <!-- the text input area -->

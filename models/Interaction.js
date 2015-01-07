@@ -1,13 +1,13 @@
 var mongoose = require('mongoose');
 
-var saveSchema = new mongoose.Schema({
-  method: {type: String, required: true },
+var interactionSchema = new mongoose.Schema({
+  action: {type: String, required: true },
   username: { type: String, required: true },
   time: { type: Date, required: true },
   exercise: { type: Number, required: true },
-  answer: {type: Object, required: true}
+  answer: {type: String, required: true},
+  gradeGiven: {type: Number, required: true},
+  gradePossible: {type: Number, required: true}
 });
 
-module.exports = mongoose.model('Save', saveSchema);
-
-// TODO: uniqueness check
+module.exports = mongoose.model('Interaction', interactionSchema);

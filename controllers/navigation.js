@@ -13,8 +13,6 @@ exports.getHome = function(req, res, next) {
       next();
       return;
     }
-    console.log("ASSIGNMENTS:");
-    _.each(assignments, console.log);
 
     res.render('home', {
       title: 'Home',
@@ -27,19 +25,23 @@ exports.getHome = function(req, res, next) {
 };
 
 
-// exports.getAssignment = function(req, res) {
-//
-//   Assignment
-//   .findOne({ id: req.params.id })
-//   .where('release').lt(Date.now())
-//   .exec(function(err, assignment) {
-//     if(!assignment) {
-//       return;
-//       next();
-//     }
-//     res.render('assignment', {
-//       title: 'Assignment' + req.params.id.toString(),
-//
-//     });
-//   });
-// }
+exports.getAssignment = function(req, res) {
+
+  Assignment
+  .findOne({ id: req.params._id })
+  .where('release').lt(Date.now())
+  .exec(function(err, assignment) {
+    if(!assignment) {
+      return;
+      next();
+    }
+
+    res.render('assignment', {
+      title: 'Assignment' + assignment._id.toString(),
+      user: req.user,
+      _ids: JSON.parse(assignment.exercises)._ids
+    });
+
+  });
+
+};

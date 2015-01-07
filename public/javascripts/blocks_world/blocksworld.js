@@ -20,7 +20,7 @@ var constants = {
  */
 var blockNames = {}
 
-var inputFormulaSet=[];
+//var inputFormulaSet=[];
 
 /**
  * Sets the overall state for the blocks world. 'static-world' indicates that the world cannot be edited (as in a problem
@@ -58,34 +58,43 @@ $(document).ready(function(){
 	//register keyups to refresh the math
 	$("#inputFormula1").keyup(function() {
 		displayMath($('#inputFormula1').val()); //see displayMath.js
-      	});
+  });
 
 
-	$('#clearTextbox').hide();
+	// $('#clearTextbox').hide();
 	$("#getOriginalProb").hide();
 
-	//position names absolutely so that they are not shifted unnecessarily when error result appears
-	$('#a').offset(getUnusedNameOffset('a'));
-	$('#b').offset(getUnusedNameOffset('b'));
-	$('#c').offset(getUnusedNameOffset('c'));
+	// COMMENTED OUT BY JON BECAUSE THIS SETS THE NAMES TO THE WRONG POSITIONS
+	// //position names absolutely so that they are not shifted unnecessarily when error result appears
+	// $('#a').offset(getUnusedNameOffset('a'));
+	// $('#b').offset(getUnusedNameOffset('b'));
+	// $('#c').offset(getUnusedNameOffset('c'));
 
-
-  // if (fixedFormula) {
-  //   showProblemGivenFormula(fixedFormula);
-  // } else if (fixedWorld) {
-  //   console.log(Object.prototype.toString.call(fixedWorld));
-  //   showProblemGivenWorld(fixedWorld);
-  // }
+	// JON'S CODE
+	$('#instructions').text(problemObject.instructions);
+	$('#inputFormula1').val(problemObject.formula);
+	SRFLAtoWorld(problemObject.world);
+	// / JON'S CODE
 
 });
 
-function saveCheckedFormulas() {
-	$( "#inputformulas" ).append( "<p>"+ $('#inputFormula1').val() +"</p>" );
+// JON'S CODE
+function resetProblem() {
+	$('#inputFormula1').val('');
+	resetWorld();
+	$('#instructions').text(problemObject.instructions);
+	$('#inputFormula1').val(problemObject.formula);
+	SRFLAtoWorld(problemObject.world);
 }
+// / JON'S CODE
 
-function showCheckedFormulas() {
-	$('#inputformulas').dialog('open');
-}
+// function saveCheckedFormulas() {
+// 	$( "#inputformulas" ).append( "<p>"+ $('#inputFormula1').val() +"</p>" );
+// }
+//
+// function showCheckedFormulas() {
+// 	$('#inputformulas').dialog('open');
+// }
 
 /**
  * Called for suggestion buttons in the math entry help keyboard. Puts button's text into the text area.
@@ -362,33 +371,10 @@ function resetWorld() {
 	console.log('block names: ' + JSON.stringify(blockNames));
 }
 
-function clearTextbox() {
-	$('#inputFormula1').val('').keyup();
-}
+// function clearTextbox() {
+// 	$('#inputFormula1').val('').keyup();
+// }
 
-/**
- * World to SRFLA for new (python) SRFLA parser
- */
-function worldToNewSrfla() {
-	var result = "var world = {";
-	var row, col, color, shape, record;
-	$('.block').each(function() {
-		if ($(this).hasClass('ui-draggable')) {
-			row = Math.floor(this.id / 10);
-			col = this.id % 10;
-			shape = getType(this, 'shape');
-			color = getType(this, 'color');
-			record = "[x \\mapsto " + col.toString() + ", y \\mapsto " + row.toString() + ", color \\mapsto \"" + color + "\", shape \\mapsto \"" + shape + "\"]";
-			result += record;
-			result += ", ";
-		}
-
-	});
-	result = result.substring(0, result.length - 2);
-	result += "};";
-	console.log(result);
-	return result;
-}
 
 /**
  * Makes a SRFLA set of Records (stored as an array) representing the blocks world currently shown
@@ -421,7 +407,7 @@ function worldToSRFLA() {
  */
 function SRFLAtoWorld(set) {
   console.log(set);
-	resetWorld();
+	// resetWorld();  //commented out by JON
 	set.shift("Set"); //account for the unshift by "Set" in worldToSRFLA
 	for (var i = 0; i < set.length; i++) {
 		var rec = set[i][1];
@@ -435,69 +421,96 @@ function SRFLAtoWorld(set) {
 		//note that the acceptsSelf is not in the standard JQuery library
 		$(id).attr('src', img).droppable({tolerance:'pointer', drop: handleDrop, acceptsSelf: true}).draggable({cursor: 'move', helper: 'clone', opacity: constants.DRAG_OPACITY, start: handleMoveStart, stop: handleMoveStop}).css('cursor', 'move').addClass('COLOR_'+color).addClass('SHAPE_'+shape);
 	}
+	set.unshift("Set"); // if you don't put this back, bad things happen!!! JON
 }
 
-/**
- * Displays an exercise where the world is set and the user must create a formula
- */
-function showProblemGivenWorld(world) {
-	resetWorld();
-	$('#inputFormula1').val('').attr('disabled', false).keyup();
 
-	state = 'static-world';
-	//$('#resetState').show();
-	SRFLAtoWorld(world);
-	$('.ui-draggable').draggable('disable').css('cursor', 'auto');
-	//$('#reset').button('disable');
-	$('.dragMe').css('opacity', .5);
-	$('#instructions').text('Write a logic formula that applies to the given world:');
-}
+// /**
+//  * World to SRFLA for new (python) SRFLA parser
+//  */
+// function worldToNewSrfla() {
+// 	var result = "var world = {";
+// 	var row, col, color, shape, record;
+// 	$('.block').each(function() {
+// 		if ($(this).hasClass('ui-draggable')) {
+// 			row = Math.floor(this.id / 10);
+// 			col = this.id % 10;
+// 			shape = getType(this, 'shape');
+// 			color = getType(this, 'color');
+// 			record = "[x \\mapsto " + col.toString() + ", y \\mapsto " + row.toString() + ", color \\mapsto \"" + color + "\", shape \\mapsto \"" + shape + "\"]";
+// 			result += record;
+// 			result += ", ";
+// 		}
+//
+// 	});
+// 	result = result.substring(0, result.length - 2);
+// 	result += "};";
+// 	console.log(result);
+// 	return result;
+// }
+//
 
-/**
- * Displays an exercise where the formula is set and the user must create a world
- */
-function showProblemGivenFormula(formula) {
-	resetWorld();
-	state = 'static-formula';
-	//$('#resetState').show();
-	$('.suggestion').button('disable');
-	$('#tabs').tabs('disable');
-	$('#inputFormula1').val(formula).attr('disabled', true).keyup();
-	$('#instructions').text('Create a blocks world that satisfies the given logic formula:');
-}
-
-/**
- * Resets the state to 'default'
- */
-function resetState() {
-	//if (state === 'static-world') {
-		$('.ui-draggable').draggable('enable').css('cursor', 'move');
-		$('#reset').button('enable');
-		$('.dragMe').css('opacity', 1);
-	//} else if (
-		state === 'static-formula' //) {
-		$('.suggestion').button('enable');
-		$('#tabs').tabs('enable');
-		$('#inputFormula1').val('').attr('disabled', false).keyup();
-	//}
-	$('#instructions').text('Drag and drop the blocks to create a world. Enter a corresponding first order logic formula:');
-	resetWorld();
-	$('#inputFormula1').val('').keyup();
-	//$('#resetState').hide();
-	state = 'default';
-}
-
-function getEmptyState() {
-	resetState();
-	$('#getWorldProb').addClass('problemtype_left');
-	$('#getFormulaProb').removeClass('problemtype_left');
-	$("#getWorldProb").show();
-	$("#getOriginalProb").hide();
-	$("#getFormulaProb").show();
-
-	$('#reset').show();
-	$("#clearTextbox").hide();
-	$('#resetWorld').show();
-	$('#getHistory').show();
-
-}
+// /**
+//  * Displays an exercise where the world is set and the user must create a formula
+//  */
+// function showProblemGivenWorld(world) {
+// 	resetWorld();
+// 	$('#inputFormula1').val('').attr('disabled', false).keyup();
+//
+// 	state = 'static-world';
+// 	//$('#resetState').show();
+// 	SRFLAtoWorld(world);
+// 	$('.ui-draggable').draggable('disable').css('cursor', 'auto');
+// 	//$('#reset').button('disable');
+// 	$('.dragMe').css('opacity', .5);
+// 	$('#instructions').text('Write a logic formula that applies to the given world:');
+// }
+//
+// /**
+//  * Displays an exercise where the formula is set and the user must create a world
+//  */
+// function showProblemGivenFormula(formula) {
+// 	resetWorld();
+// 	state = 'static-formula';
+// 	//$('#resetState').show();
+// 	$('.suggestion').button('disable');
+// 	$('#tabs').tabs('disable');
+// 	$('#inputFormula1').val(formula).attr('disabled', true).keyup();
+// 	$('#instructions').text('Create a blocks world that satisfies the given logic formula:');
+// }
+//
+// /**
+//  * Resets the state to 'default'
+//  */
+// function resetState() {
+// 	//if (state === 'static-world') {
+// 		$('.ui-draggable').draggable('enable').css('cursor', 'move');
+// 		$('#reset').button('enable');
+// 		$('.dragMe').css('opacity', 1);
+// 	//} else if (
+// 		state === 'static-formula' //) {
+// 		$('.suggestion').button('enable');
+// 		$('#tabs').tabs('enable');
+// 		$('#inputFormula1').val('').attr('disabled', false).keyup();
+// 	//}
+// 	$('#instructions').text('Drag and drop the blocks to create a world. Enter a corresponding first order logic formula:');
+// 	resetWorld();
+// 	$('#inputFormula1').val('').keyup();
+// 	//$('#resetState').hide();
+// 	state = 'default';
+// }
+//
+// function getEmptyState() {
+// 	resetState();
+// 	$('#getWorldProb').addClass('problemtype_left');
+// 	$('#getFormulaProb').removeClass('problemtype_left');
+// 	$("#getWorldProb").show();
+// 	$("#getOriginalProb").hide();
+// 	$("#getFormulaProb").show();
+//
+// 	$('#reset').show();
+// 	$("#clearTextbox").hide();
+// 	$('#resetWorld').show();
+// 	$('#getHistory').show();
+//
+// }

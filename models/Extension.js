@@ -7,5 +7,3 @@ var extensionSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Extension', extensionSchema);
-
-// TODO: uniqueness check

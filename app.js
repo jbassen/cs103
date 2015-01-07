@@ -50,14 +50,17 @@ app.use(session({
   saveUninitialized: true
 }));
 
+
 // AUTHENTICATION (PASSPORT)
 app.use(passport.initialize());
 app.use(passport.session());
 var passportConf = require('./config/passport');
 
-// DATA (MONGOOSE)
-// call to populate database
-var initData = require('./config/data');
+// // DATA (MONGOOSE)
+// // call to populate database
+// // (comment out after populated)
+// var initData = require('./config/data');
+
 
 // CONTROLLERS (EXPRESS)
 app.use(express.static(path.join(__dirname, 'public')));
@@ -67,7 +70,6 @@ var exerciseCtrl = require('./controllers/exercise');
 
 
 // ROUTES (EXPRESS)
-
 app.get('/login', userCtrl.getLogin);
 app.post('/login', userCtrl.postLogin);
 app.get('/logout', userCtrl.logout);
@@ -77,12 +79,10 @@ app.get('/reset/:token', userCtrl.getReset);
 app.post('/reset/:token', userCtrl.postReset);
 app.get('/signup', userCtrl.getSignup);
 app.post('/signup', userCtrl.postSignup);
-
 app.get('/', passportConf.isAuthed, navigationCtrl.getHome);
-//app.get('/assignment/:id', passportConf.isAuthed, navigationCtrl.getAssignment);
-
+app.get('/assignment/:id', passportConf.isAuthed, navigationCtrl.getAssignment);
 app.get('/exercise/:_id', passportConf.isAuthed, exerciseCtrl.getExercise);
-// app.post('/exercise/:_id', passportConf.isAuthed, exerciseCtrl.getExercise);
+app.post('/exercise/:_id', passportConf.isAuthed, exerciseCtrl.postExercise);
 
 
 // ERROR HANDLERS
@@ -116,6 +116,8 @@ app.use(function(err, req, res, next) {
     });
 });
 
+
+// START LISTENING FROM SERVER
 var server = app.listen(app.get('port'), function() {
   console.log('Express server listening on port ' + server.address().port);
 });

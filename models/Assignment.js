@@ -6,7 +6,7 @@ var assignmentSchema = new mongoose.Schema({
   deadline: { type: Date, required: true },
   name: {type: String, required: true},
   description: {type: String, required: true},
-  exercises: { type: Object, required: true}
+  exercises: { type: String, required: true}
 });
 
 module.exports = mongoose.model('Assignment', assignmentSchema);

@@ -15,10 +15,10 @@
 
     <h1>Assignments</h1>
     <ul class="list-group">
-      {{#each assignments}}
+      {{#each _ids}}
       <li class="list-group-item">
-        <span class="badge">DUE: {{deadline}}</span>
-        <a href="/assignment/{{_id}}">{{name}}</a>
+        <span class="badge">0 ATTEMPT(S)</span>
+        <a href="/exercise/{{this}}">Exercise {{this}}</a>
       </li>
       {{/each}}
     </ul>

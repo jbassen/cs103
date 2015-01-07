@@ -1,9 +1,7 @@
 var _ = require('underscore');
-var proofCheckerCtrl = require('../server_scripts/proofchecker/ctrl');
-var blocksWorldCtrl = require('../server_scripts/blocksworld/ctrl');
-var Assignment = require('../models/Assignment');
+var proofCheckerCtrl = require('./proof_checker/controller');
+var blocksWorldCtrl = require('./blocks_world/controller');
 var Exercise = require('../models/Exercise');
-var User = require('../models/User');
 
 exports.getExercise = function(req, res, next) {
 
@@ -27,3 +25,25 @@ exports.getExercise = function(req, res, next) {
   });
 
 };
+
+exports.postExercise = function(req, res, next) {
+  Exercise
+  .findOne({ _id: req.params._id })
+  .exec(function(err, exercise) {
+    if(!exercise) {
+      next();
+      return;
+    }
+
+    if (exercise.type === "blocksworld") {
+      blocksWorldCtrl.postBlocksWorld(exercise, req, res, next);
+    } else if (exercise.type === "proofchecker") {
+      proofCheckerCtrl.postProofChecker(exercise, req, res, next);
+    } else{
+      next();
+      retrurn;
+    }
+
+  });
+
+}

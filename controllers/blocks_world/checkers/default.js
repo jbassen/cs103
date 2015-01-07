@@ -8,14 +8,14 @@
 /* global SRFLATRUE: false */
 /* global SRFLAFALSE: false */
 
-var srflaEvalPackage = require('./srflaEval.js');
+var srflaEvalPackage = require('./lib/srflaEval.js');
 
 srflaEval = srflaEvalPackage.srflaEval;
 SRFLATRUE = srflaEvalPackage.SRFLATRUE;
 SRFLAFALSE = srflaEvalPackage.SRFLAFALSE;
 
-var srflaMathParser = require('./srflaMathParser.js');
-var blocksParser = require('./blocksParser.js');
+var srflaMathParser = require('./lib/srflaMathParser.js');
+var blocksParser = require('./lib/blocksParser.js');
 
 
 
@@ -30,12 +30,12 @@ var blocksParser = require('./blocksParser.js');
 
 // dataFromServer is JSON.parse'ed data from the ajax call
 
-exports.processBlocksWorldRequest = function(dataFromServer) {
+exports.check = function(dataFromServer) {
 
     // FIXME: make sure it has the right fields, return with a sensible error if not.
     var world = dataFromServer.world;
     var blockNames = dataFromServer.blockNames;
-    var logic = dataFromServer.logic;
+    var logic = dataFromServer.formula;
 
     var result;		// server return object.
 

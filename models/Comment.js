@@ -8,5 +8,3 @@ var commentSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Comment', commentSchema);
-
-// TODO: uniqueness check
