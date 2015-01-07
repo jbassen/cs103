@@ -81,8 +81,8 @@ app.get('/signup', userCtrl.getSignup);
 app.post('/signup', userCtrl.postSignup);
 app.get('/', passportConf.isAuthed, navigationCtrl.getHome);
 app.get('/assignment/:id', passportConf.isAuthed, navigationCtrl.getAssignment);
-app.get('/exercise/:_id', passportConf.isAuthed, exerciseCtrl.getExercise);
-app.post('/exercise/:_id', passportConf.isAuthed, exerciseCtrl.postExercise);
+app.get('/exercise/:_id', exerciseCtrl.getExercise);
+app.post('/exercise/:_id', exerciseCtrl.postExercise);
 
 
 // ERROR HANDLERS
