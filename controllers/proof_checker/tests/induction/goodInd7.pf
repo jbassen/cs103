@@ -1,0 +1,17 @@
+// Multiple base cases, out of order.
+
+P1: proof
+   base2: P(2) by trustMe
+   base1: P(1) by trustMe
+   base0: P(0) by trustMe
+
+   ind: proof
+        var n \in \integers
+
+	A1: n \ge 2 by assumption
+	A2: P(n) by assumption
+	C1: P(n+1) by trustMe
+   end
+
+  C2:  \forall n \in \integers: (n \ge 0 \implies P(n)) by simpleInduction(base0, base1, base2, ind)
+end

@@ -1,0 +1,6 @@
+// Distribute then undistribute
+P1: proof
+C1: P and (Q or R) or (Q and R)
+    <=> P and Q or P and R or Q and R by distribAndOr
+    <=> P and Q or R and (P or Q) by distribAndOr
+end

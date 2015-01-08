@@ -1,0 +1,12 @@
+P1: proof
+   A1: (P \wedge Q) \vee (P \wedge R) by assumption
+   P2: proof
+       A2: P \wedge Q by assumption
+       C2: P by andElim(A2)
+       end
+   P3: proof
+       A3: P \wedge Q by assumption
+       C3: P by andElim(A3)
+       end
+   C1: P by orElim(A1, P2, P3)
+end

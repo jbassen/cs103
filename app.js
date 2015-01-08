@@ -56,10 +56,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 var passportConf = require('./config/passport');
 
-// // DATA (MONGOOSE)
-// // call to populate database
-// // (comment out after populated)
-// var initData = require('./config/data');
+// DATA (MONGOOSE)
+// call to populate database
+// (comment out after populated)
+var initData = require('./config/data');
 
 
 // CONTROLLERS (EXPRESS)

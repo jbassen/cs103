@@ -1,0 +1,3 @@
+P1: proof
+C1:   P or R or Q or R or  P <=> P or Q or R by orIdempotence
+end

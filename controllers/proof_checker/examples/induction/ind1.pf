@@ -1,0 +1,22 @@
+// This will be a challenge!
+P1: proof // by induction
+    var n \in \naturals
+    def I(n): sum(i \in [1 \ldots n], i) = n*(n+1)/2
+    Base1: sum(i, [1 \ldots 0], i) = 0*(0+1)/2 by obvious
+	 I(0) by definition
+
+    Induction1: proof
+        A1: n >= 0 by assumption
+   	A2: I(n) by assumption  // induction hypothesis
+	C1: sum(i, [1 \ldots n], i) = n*(n+1)/2 by trustMe
+        C2: sum(i, [1 \ldots n+1], i) = sum(i \in [1 \ldots n], i) + (n+1) by trustMe
+	       	      		      = n*(n+1)/2 + (n+1) by substitution(C1)
+				      = (n^2 + n + 2*n + 2)/2 by algebra
+				      = (n^2 + 3*n + 2)/2 by algebra
+				      = (n+1)*(n+2)/2 by algebra
+        C3: I(n+1) by definition
+
+    C3:  \forall n \in \naturals I(n) by simpleInduction(Base1, Induction1)
+
+	 
+   

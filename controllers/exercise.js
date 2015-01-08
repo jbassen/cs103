@@ -1,48 +1,88 @@
 var _ = require('underscore');
-var proofCheckerCtrl = require('./proof_checker/controller');
-var blocksWorldCtrl = require('./blocks_world/controller');
+var proofChecker = require('./proof_checker/nodeversion/gradeproof');
+// var blocksChecker = require();
 var Exercise = require('../models/Exercise');
+var Interaction = require('../models/Interaction');
+var User = require('../models/User');
+
 
 exports.getExercise = function(req, res, next) {
+
+  // TODO: add code to load last saved/submitted exercise
 
   Exercise
   .findOne({ _id: req.params._id })
   .exec(function(err, exercise) {
     if(!exercise) {
-      next();
+      next(err);
       return;
     }
 
-    if (exercise.type === "blocksworld") {
-      blocksWorldCtrl.getBlocksWorld(exercise, req, res, next);
-    } else if (exercise.type === "proofchecker") {
-      proofCheckerCtrl.getProofChecker(exercise, req, res, next);
-    } else{
-      next();
-      retrurn;
-    }
+    res.render(exercise.type, {
+      title: exercise.name,
+      name: exercise.name,
+      problemJSON: exercise.problemJSON,
+      username: req.user.username
+    });
 
   });
 
 };
 
 exports.postExercise = function(req, res, next) {
+  console.log("req:");
+  console.log(req.body);
+
   Exercise
   .findOne({ _id: req.params._id })
   .exec(function(err, exercise) {
     if(!exercise) {
+      next(err);
+      return;
+    }
+
+    //store the interaction
+    var interaction = new Interaction({
+      action: req.body.action,
+      username: req.user.username,
+      time: Date.now(),
+      exercise: exercise._id,
+      answer: JSON.stringify(req.body),
+      gradeGiven: 0,
+      gradePossible: 0
+    });
+    interaction.save();
+
+    var feedbackObject;
+    if(exercise.checker === 'default') {
+      feedbackObject = proofChecker.checkAndGradePropIDProof(
+        req.body,
+        JSON.parse(exercise.problemJSON)
+      );
+    } else if(exercise.checker === 'blocksWorldMatch') {
+      //feedbackObject = ...
+      next();
+      return;
+    } else {
       next();
       return;
     }
 
-    if (exercise.type === "blocksworld") {
-      blocksWorldCtrl.postBlocksWorld(exercise, req, res, next);
-    } else if (exercise.type === "proofchecker") {
-      proofCheckerCtrl.postProofChecker(exercise, req, res, next);
-    } else{
-      next();
-      retrurn;
+    var actionText;
+    if (req.body.action === "submit") {
+      actionText = "SUBMITTED";
+    } else {
+      actionText = "SAVED";
     }
+    feedbackObject.receipt = "<p><b>" + actionText + "</b> on " +
+    new Date(Date.now()).toLocaleString() +"</p>";
+    var feedbackJSON = JSON.stringify(feedbackObject);
+
+    console.log(feedbackJSON);
+
+    // send json response
+    res.contentType('json');
+    res.send(feedbackObject);
 
   });
 

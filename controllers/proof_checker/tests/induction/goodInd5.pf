@@ -1,0 +1,15 @@
+// Simple induction proof with base case of -100
+
+P1: proof
+   base: P(-100) by trustMe
+
+   ind: proof
+        var n \in \integers
+
+	A1: n \ge -100 by assumption
+	A2: P(n) by assumption
+	C1: P(n+1) by trustMe
+   end
+
+  C2:  \forall n \in \integers: (n \ge -100 \implies P(n)) by simpleInduction(base, ind)
+end

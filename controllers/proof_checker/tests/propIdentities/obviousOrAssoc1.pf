@@ -1,0 +1,3 @@
+P1: proof
+C1:  (P \vee Q) \vee R <=> P \vee (Q \vee R) by obvious
+end

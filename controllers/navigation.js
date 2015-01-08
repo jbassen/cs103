@@ -58,6 +58,7 @@ exports.getAssignment = function(req, res, next) {
             exercise: _id
           })
           .exec(function(err, submits) {
+            var submitted;
             if(!submits || submits.length === 0) {
               submitted = '';
             } else {
