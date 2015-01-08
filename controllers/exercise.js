@@ -69,13 +69,16 @@ exports.postExercise = function(req, res, next) {
     }
 
     var actionText;
+    var submitReminder;
     if (req.body.action === "submit") {
       actionText = "SUBMITTED";
+      submitReminder="";
     } else {
       actionText = "SAVED";
+      submitReminder="<p><b>\nMUST SUBMIT YOUR CHANGES FOR GRADING!</b></p>";
     }
     feedbackObject.receipt = "<p><b>" + actionText + "</b> on " +
-    new Date(Date.now()).toLocaleString() +"</p>";
+    new Date(Date.now()).toLocaleString() +"</p>" + submitReminder;
     var feedbackJSON = JSON.stringify(feedbackObject);
 
     console.log(feedbackJSON);
