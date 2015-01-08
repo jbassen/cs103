@@ -112,8 +112,7 @@ $(document).ready(function () {
     var dataToServer = {
       action: $(this).attr('id'),
       answer: {
-        prooftext: $("textarea.proofInputBox").text(),
-        result: "OK"
+        prooftext: $("textarea.proofInputBox").text()
       }
     };
     console.log("sending: " + JSON.stringify(dataToServer));
@@ -342,10 +341,11 @@ textarea.proofInputBox
 <!-- container for input text area -->
 <div class='left-container'>
 <center>
-<button class="sendAJAX" id="save">Save</button>
-<button class="sendAJAX" id="check">Check Proof</button>
-<button class="sendAJAX" id="submit">Submit</button>
-<button class="resetProblem">Reset</button>
+<!-- <button class="sendAJAX" id="save">Save</button>
+<button class="sendAJAX" id="check">Check Proof</button> -->
+<button class="sendAJAX" id="check">Save and Check</button>
+<button class="sendAJAX" id="submit">Submit Proof</button>
+<button class="resetProblem">Reset Problem</button>
 </center>
 <br>
 <!-- the text input area -->
