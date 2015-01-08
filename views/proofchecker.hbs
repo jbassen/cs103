@@ -138,7 +138,7 @@ $(document).ready(function () {
     MathJax.Hub.Queue(["Typeset",MathJax.Hub,"mathdisplay"]);
     console.log("made it through mathjax parsing");
     $("#receiptdisplay").html(JSON.parse(answer).receipt);
-
+    $("#gradedisplay").html("<p>Grade:&nbsp;<b>" + JSON.parse(answer).grade.message + "</b></p>");
 
   });
 
@@ -362,7 +362,8 @@ textarea.proofInputBox
 <div class='right-container'>
 
 <p id="mathdisplay"> </p>
-<p id="receiptdisplay" </p>
+<p id="receiptdisplay"> </p>
+<p id="gradedisplay"> </p>
 </div> <!-- end right-container-->
 
 <div id='proof-footer'>

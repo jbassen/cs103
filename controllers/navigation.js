@@ -39,6 +39,7 @@ exports.getAssignment = function(req, res, next) {
     }
 
     var _ids = JSON.parse(assignment.exercises)._ids;
+    console.log(_ids);
 
     var query_functions = _.map(_ids, function(_id){
       return function(callback){

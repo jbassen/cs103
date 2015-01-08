@@ -12,7 +12,7 @@ var assignment = new Assignment({
   deadline: Date.now(),
   name: 'HW 1',
   description: 'HW 1 Description',
-  exercises: JSON.stringify({"ids": [3]})
+  exercises: JSON.stringify({"_ids": [3]})
 });
 assignment.save();
 
@@ -119,7 +119,7 @@ assignment.save();
 var testFormula = "P and (P or Q) <=> P";
 
 var testProblemObject = {
-  instructions: "Please write a propositional identity proof, as describe <a href=\"\">here</a> " +
+  instructions: "// Please write a propositional identity proof, as describe <a href=\"\">here</a> " +
   "for the following logical equivalence:<br>",
   formula: testFormula
 };
@@ -128,7 +128,7 @@ var exercise3 = new Exercise({
   _id: 3,
   type: 'proofchecker',
   checker: 'default',
-  name: 'AndOrElim',
+  name: 'Dave\'s Exercise',
   problemJSON: JSON.stringify(testProblemObject)
 });
 exercise3.save();
