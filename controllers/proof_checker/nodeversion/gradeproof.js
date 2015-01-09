@@ -40,7 +40,7 @@ function gatherParseErrors(err, hash) {
     // don't throw, so we can find additional errors.
 }
 
-prParse.yy.parseError = gatherParseErrors;
+//prParse.yy.parseError = gatherParseErrors;
 
 var testFormula = "P and (P or Q) <=> P";
 
@@ -53,7 +53,7 @@ var testProblemObject = {
 var testProof =
     "// This is not so easy to see\n" +
     "P1: proof\n" +
-    "C1:    P and (P or Q) <=> (P or \\F) and (P or Q) by orIdentity\n" +
+    "C1:    P and (P or Q) <=> (P or \\F) and and (P or Q) by orIdentity\n" +
     "                      <=>  P or (\\F and Q) by distribOrAnd\n" +
     "		      <=> P or \\F by andDomination\n" +
     "		      <=> P by orIdentity\n" +
@@ -152,7 +152,7 @@ function checkAndGradePropIDProof(answerObject, problemObject)
 	// This displays the error in a typewriter font, which is necessary
 	// to make parser errors readable.
         // DEBUGGING CODE:
-	// return err.message + err.stack;
+	//return err.message + err.stack;
 	// We end up here with parse errors and some other internal errors.
 	// If a parse error, the error will be the whole proof with annotation about the
 	// location of the error.
@@ -165,10 +165,10 @@ function checkAndGradePropIDProof(answerObject, problemObject)
 
 function testGradeProof()
 {
-    var xxx = checkAndGradePropIDProof(testProof, testProblemObject);
+    var xxx = checkAndGradePropIDProof(testAnswerObject, testProblemObject);
     console.log(xxx);
 }
 
-testGradeProof();
+//testGradeProof();
 
 exports.checkAndGradePropIDProof = checkAndGradePropIDProof;

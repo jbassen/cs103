@@ -119,8 +119,8 @@ assignment.save();
 var testFormula = "P and (P or Q) <=> P";
 
 var testProblemObject = {
-  instructions: "// Please write a propositional identity proof, as describe <a href=\"\">here</a> " +
-  "for the following logical equivalence:<br>",
+  instructions: "// Please write a propositional identity proof, as described here\n" +
+  "// for the following logical equivalence:<br>",
   formula: testFormula
 };
 

@@ -72,7 +72,7 @@ exports.postExercise = function(req, res, next) {
     var submitReminder;
     if (req.body.action === "submit") {
       actionText = "SUBMITTED";
-      submitReminder="";
+      submitReminder="<p>\nYou can resubmit if you'd like.</p>";
     } else {
       actionText = "SAVED";
       submitReminder="<p><b>\nMUST SUBMIT YOUR CHANGES FOR GRADING!</b></p>";

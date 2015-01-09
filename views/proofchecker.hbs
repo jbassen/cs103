@@ -75,6 +75,13 @@ function parseEnteredFormula(selector) {
     return results;
 }
 
+function resetProblem() {
+  console.log("setting problem!");
+  $("textarea.proofInputBox")
+  .val(problemObject.instructions + "\n// " + problemObject.formula);
+}
+
+
 // When the document "ready" event occurs, call the anonymouse function that
 // adds a click handler to the dom object with id = "checkProof", which is
 // the "Display Formula" button.
@@ -83,7 +90,7 @@ $(document).ready(function () {
     // We are in  the handler for clicks on the "Display Formula" button.
     // Next clears the mathdisplay, so it doesn't hang around when the user
     // enters a new erroneous input.
-    $("#mathdisplay").html(String(""));
+    //$("#mathdisplay").html(String(""));
     // This try block catches exceptions from the formula processing, like
     // empty formulas and formulas with syntax errors.
     //try {
@@ -115,6 +122,10 @@ $(document).ready(function () {
     };
     console.log("sending: " + JSON.stringify(dataToServer));
 
+    $("#mathdisplay").html(String(""));
+    $("#receiptdisplay").html(String(""));
+    $("#gradedisplay").html(String(""));
+
     var answer = $.ajax({
       type: 'POST',
       url: window.location.pathname,
@@ -125,30 +136,30 @@ $(document).ready(function () {
       async: false,
       success: function(result) {
         console.log("done: " + JSON.stringify(result));
+        console.log("made it to before mathjax");
+        $("#mathdisplay").html(result.message);
+        console.log("made it through displaying HTML");
+        // / JON'S SCRIPTS
+        MathJax.Hub.Queue(["Typeset",MathJax.Hub,"mathdisplay"]);
+        console.log("made it through mathjax parsing");
+        $("#receiptdisplay").html(result.receipt);
+        $("#gradedisplay").html("<p>Grade:&nbsp;<b>" + result.grade.message + "</b></p>");
       },
       error: function(e) {
         console.log("ajax failed: " + JSON.stringify(e));
+        $("#receiptdisplay").html("<p>Server Failure. Check your submission and network connection and try again.</p>");
       }
     }).responseText;
-
-    console.log("made it to before mathjax");
-    $("#mathdisplay").html(JSON.parse(answer).message);
-    console.log("made it through displaying HTML");
-    // / JON'S SCRIPTS
-    MathJax.Hub.Queue(["Typeset",MathJax.Hub,"mathdisplay"]);
-    console.log("made it through mathjax parsing");
-    $("#receiptdisplay").html(JSON.parse(answer).receipt);
-    $("#gradedisplay").html("<p>Grade:&nbsp;<b>" + JSON.parse(answer).grade.message + "</b></p>");
 
   });
 
 
-  // JON'S SCRIPTS
-  $("textarea.proofInputBox")
-  .text(problemObject.instructions)
-  .append("\n")
-  .append("//" + problemObject.formula);
-  // / JON'S SCRIPTS
+
+  $("button.resetProblem").click(function () {
+    resetProblem();
+  });
+
+  resetProblem();
 
 });
 </script>
