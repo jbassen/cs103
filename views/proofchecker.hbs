@@ -81,8 +81,10 @@ function parseEnteredFormula(selector) {
 function resetProblem() {
   console.log("setting problem!");
   $("textarea.proofInputBox")
-  .val(problemObject.instructions + "\n// " + problemObject.formula);
+  .val(problemObject.instructions);
   $("#mathdisplay").html(String(""));
+  $("#receiptdisplay").html(String(""));
+  $("#gradedisplay").html(String(""));
 }
 
 
