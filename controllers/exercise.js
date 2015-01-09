@@ -77,7 +77,7 @@ exports.postExercise = function(req, res, next) {
     if(feedbackObject.grade && feedbackObject.grade.message) {
       checkerGrade = feedbackObject.grade;
     }
-    var grade = JSON.jsonify(checkerGrade);
+    var grade = JSON.stringify(checkerGrade);
 
     //store the interaction
     var interaction = new Interaction({
