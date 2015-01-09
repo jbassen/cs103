@@ -162,11 +162,10 @@ $(document).ready(function () {
   });
 
 
-  if (typeof savedObject === 'undefined') {
+  if (jQuery.isEmptyObject(savedObject)) {
     resetProblem();
   }
   else {
-    console.log("setting answer!");
     $("textarea.proofInputBox").val(savedObject.proof);
     $("#receiptdisplay").html(savedObject.time);
   }
@@ -356,7 +355,7 @@ textarea.proofInputBox
 
 </head>
 <body>
-<h1 style="text-align:center">Propositional Identity Proof Checker</h1>
+<h1 style="text-align:center">Propositional Identity Proof Checker (Alpha Version)</h1>
 <p style="text-align:center"><a href="mailto:cs103bugs@gmail.com">Report Bugs</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/">Quick Start Guide</a></p>
 
 <!-- Maybe I can get them to match up by making a fixed top-margin,
