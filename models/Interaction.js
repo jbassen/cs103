@@ -6,8 +6,7 @@ var interactionSchema = new mongoose.Schema({
   time: { type: Date, required: true },
   exercise: { type: Number, required: true },
   answer: {type: String, required: true},
-  gradeGiven: {type: Number, required: true},
-  gradePossible: {type: Number, required: true}
+  grade: {type: String, required: true}
 });
 
 module.exports = mongoose.model('Interaction', interactionSchema);

@@ -1,6 +1,7 @@
 DEFINITELY:
-- shift Heroku keys once and for all!!!
-- change Heroku timezone
+- print last submit time
+
+
 - enter a couple test problems into the database
 - tell student if their submission is late
 - empty, non-assignment versions of systems

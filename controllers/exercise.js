@@ -62,6 +62,23 @@ exports.postExercise = function(req, res, next) {
       return;
     }
 
+    var feedbackObject;
+    if(exercise.checker === 'default') {
+      feedbackObject = proofChecker.checkAndGradePropIDProof(
+        req.body,
+        JSON.parse(exercise.problemJSON)
+      );
+    } else {
+      next();
+      return;
+    }
+
+    var checkerGrade = '{}';
+    if(feedbackObject.grade && feedbackObject.grade.message) {
+      checkerGrade = feedbackObject.grade;
+    }
+    var grade = JSON.jsonify(checkerGrade);
+
     //store the interaction
     var interaction = new Interaction({
       action: req.body.action,
@@ -69,25 +86,9 @@ exports.postExercise = function(req, res, next) {
       time: Date.now(),
       exercise: exercise._id,
       answer: JSON.stringify(req.body),
-      gradeGiven: 0,
-      gradePossible: 0
+      grade: grade
     });
     interaction.save();
-
-    var feedbackObject;
-    if(exercise.checker === 'default') {
-      feedbackObject = proofChecker.checkAndGradePropIDProof(
-        req.body,
-        JSON.parse(exercise.problemJSON)
-      );
-    } else if(exercise.checker === 'blocksWorldMatch') {
-      //feedbackObject = ...
-      next();
-      return;
-    } else {
-      next();
-      return;
-    }
 
     feedbackObject.receipt = "<p><b>LAST SUBMITTED:</b>" +
     new Date(Date.now()).toLocaleString() +"</p>";
