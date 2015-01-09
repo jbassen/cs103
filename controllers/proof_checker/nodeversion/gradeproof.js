@@ -37,10 +37,15 @@ function gatherParseErrors(err, hash) {
     else {
 	parseErrMap[errLineNo].push(hash);
     }
+    if (!parseErrMap.recoverable) {
+	// I don't know why some errors are unrecoverable, but I think
+	// this produces the best message we can under the circumstances.
+	throw new Error("Unrecoverable parser error");
+    }
     // don't throw, so we can find additional errors.
 }
 
-//prParse.yy.parseError = gatherParseErrors;
+prParse.yy.parseError = gatherParseErrors;
 
 var testFormula = "P and (P or Q) <=> P";
 
@@ -53,11 +58,14 @@ var testProblemObject = {
 var testProof =
     "// This is not so easy to see\n" +
     "P1: proof\n" +
-    "C1:    P and (P or Q) <=> (P or \\F) and and (P or Q) by orIdentity\n" +
+    "C1:    P and (P or Q) <=> (P or \\F) and (P or Q) by orIdentity\n" +
     "                      <=>  P or (\\F and Q) by distribOrAnd\n" +
     "		      <=> P or \\F by andDomination\n" +
     "		      <=> P by orIdentity\n" +
     "end\n";
+
+// var testProof =
+//     "// a comment\n// another comment\n" ;
 
 var testAnswerObject = {
     proof: testProof
@@ -85,6 +93,8 @@ function checkAndGradePropIDProof(answerObject, problemObject)
     var results = [];
     var proofText = answerObject.proof;
 
+    console.log("checkAndGrade...");
+
     var desiredFormulaStr = problemObject.formula;
     try {
 	// check that input is not empty
@@ -99,7 +109,10 @@ function checkAndGradePropIDProof(answerObject, problemObject)
 	    }
 	    // check proofs, defs, etc.
             results = processCommands(parsedCommands);
-	    if (results.length !== 1) {
+	    if (results.length === 0) {
+		throw "Nothing in proof but comments?";
+	    }
+	    if (results.length > 1) {
 		throw "Internal error or weird proof: more than one result from processCommands.";
 	    }
 
@@ -148,15 +161,22 @@ function checkAndGradePropIDProof(answerObject, problemObject)
 	}
     }
     catch (err) {
+
+	console.log("checkAndGrade catch");
 	// Return HTML for the error message
 	// This displays the error in a typewriter font, which is necessary
 	// to make parser errors readable.
         // DEBUGGING CODE:
-	//return err.message + err.stack;
+
+	// return err.message + err.stack;
 	// We end up here with parse errors and some other internal errors.
 	// If a parse error, the error will be the whole proof with annotation about the
 	// location of the error.
 	// reject if it was a submission.
+
+	if (err.message === "Unrecoverable parser error") {
+	    err = codeWithErrorString(proofText, parseErrMap);
+	}
 	return {status: false,	// is that correct?  Reject submission.
 		message: "<b>There were errors processing this proof</b><p><pre>\n" + String(err) + "</pre>\n"};
     }

@@ -1,0 +1,30 @@
+%% basic number proofs
+
+def even(n) \exists m \in integers n = 2 \cdot m
+
+def odd(n) \exists m \in integers n = 2 \cdot m + 1
+
+def EvenOddTheorem \forall n \in integers (even(n) \bicond \neg odd(n))
+
+proof
+  var n \in integers
+  A1: even(n) by assumption
+  C1: \exists k, m \in integers n = k \cdot m by expandDef(A1)
+  S1: subproof
+     var k, m \in integers
+     A2: n = k \cdot m by assumption
+     C2: n + 1 = k \cdot m + 1 by simpleAlgebra(A2)
+     C3 ???
+
+My problem is I don't know how to use the inference rules!
+
+
+if n is even, n + 1 is not even. (iff?)
+
+n = 2m
+so 
+n = 2m + 1 not divisible by 2 ?
+I need to know my axioms!!!
+
+  
+

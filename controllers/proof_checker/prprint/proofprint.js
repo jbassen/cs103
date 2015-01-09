@@ -61,7 +61,6 @@ function latexJustificationString(justification)
 
 // Args: pf is the proof object.
 // level (optional, default 0) is levels of nesting.  0 means top-level.
-// Indent one line at a time with spans?
 function htmlProofString(pf, level)
 {
     var i, vardecllist, vdlArgs;
@@ -69,14 +68,8 @@ function htmlProofString(pf, level)
 
     level = level || 0;
 
-    // display  row with label: "proof" or "subproof"
     result += '<dt>' + pf.label + ': </dt>\n';
-    if (level === 0) {
-	result += '<dd><b>proof</b></dd>\n';
-    }
-    else {
-	result += '<dd><b>subproof</b></dd>\n';
-    }
+    result += '<dd><b>proof</b></dd>\n';
 
     result += '<dt></dt><dd><dl class=\"proof\">';      // description list.
 
@@ -125,8 +118,8 @@ function htmlProofString(pf, level)
     for (i = 0; i < pf.conclusions.length; i++) {
         result += htmlConclusionString(pf.conclusions[i], level+1);
     }
-    result += "<dt></dt><dd><b>end</b><dd>\n";
     result += '</dl></dd>\n';
+    result += "<dt></dt><dd><b>end</b><dd>\n";
     result += '</dl>\n';
 
     return result;

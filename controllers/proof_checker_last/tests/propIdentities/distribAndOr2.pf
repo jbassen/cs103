@@ -1,0 +1,4 @@
+// Test dstribAndOr
+P1: proof
+C1: (P and Q) or (P and R) <=>  P and (Q or R) by distribAndOr
+end

@@ -42,6 +42,30 @@ MathJax.Hub.Config({
 
 <script>
 
+   // set custom parse error handler in Jison parser
+   // this collects all parse errors in parseErrMap,
+   function gatherParseErrors(err, hash) {
+       var errLineNo = hash.loc.first_line;
+       if (!parseErrMap[errLineNo]) {
+	   parseErrMap[errLineNo] = [ hash ];
+       }
+       else {
+	   parseErrMap[errLineNo].push(hash);
+       }
+       if (!parseErrMap.recoverable) {
+	   // I don't know why some errors are unrecoverable, but I think
+	   // this produces the best message we can under the circumstances.
+	   throw new Error("Unrecoverable parser error");
+       }
+       // don't throw, so we can find additional errors.
+   }
+
+  // set error handler
+  prParse.yy.parseError = gatherParseErrors;
+
+
+  var proofText = "";  // GLOBAL (parser error recovery issues)
+
   // This function takes a jquery selector (in this case ".proofInputBox") as
   // and argument, gets the string. 
   // If it is text is non-empty, it parses it.  There is an exception in the 
@@ -52,7 +76,7 @@ MathJax.Hub.Config({
   function parseEnteredFormula(selector) {
      var parsedFormula, compiledProof, i;
      var results = [];
-     var proofText = $(selector).val();
+     proofText = $(selector).val();   // GLOBAL
 
      // this is a closure encapsulating proofText.  I didn't know how to get the hash, otherwise.
 
@@ -60,7 +84,7 @@ MathJax.Hub.Config({
         parseErrMap = {};  // clear errors from previous parses.
         parsedCommands = prParse.parse(proofText);
         if (!jQuery.isEmptyObject(parseErrMap)) {
-           throw codeWithErrorString(proofText);
+           throw codeWithErrorString(proofText, parseErrMap);
         }
         results = processCommands(parsedCommands);
       }
@@ -95,10 +119,9 @@ MathJax.Hub.Config({
         MathJax.Hub.Queue(["Typeset",MathJax.Hub,"mathdisplay"]);
       } 
       catch (err) {
-        // catch errors and inject the error html into the <pre id="error"> dom
-        // object.  This displays the error in a typewriter font, which is necessary
-        // to make parser errors readable.
-        // FIXME:  Use <code> tag or <pre> or typewrite font.
+	if (err.message === "Unrecoverable parser error") {
+	    err = codeWithErrorString(proofText, parseErrMap);
+	}
 	// build new string with appropriately placed error message.
         $("#mathdisplay").html("<b>There were errors processing this proof</b><p><pre>\n" + String(err) + "</pre>\n");
       }
@@ -241,10 +264,11 @@ dl.proof
     border-style: solid;
     border-width: 2px;
     border-color:#AFBCCA;
+    margin-left:2px;
     float:left;
     padding:5px;
 //    width:48%;
-    width:50%;
+    width:49%;
 //    height:696px;
     height:100%;
     overflow-x:scroll;
@@ -260,8 +284,8 @@ textarea.proofInputBox
    bottom:0px;
    width:100%;
    height:93%;
-//   padding:5px;
-   padding:0px;
+   padding-left: 2px;
+   padding-right: 2px;
    display:inline-block;
     -moz-border-radius: 3px 3px 3px 3px;
 //   border: 1px solid #CCCCCC;

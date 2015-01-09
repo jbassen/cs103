@@ -1,0 +1,3 @@
+P1: proof
+C1:  P or (Q and R and S) or T <=> T or (S and R and Q) or P by obvious
+end

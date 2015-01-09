@@ -1,0 +1,3 @@
+P1: proof
+C1:   P and  P <=> P by andIdempotence
+end

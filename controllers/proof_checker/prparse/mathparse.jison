@@ -19,12 +19,14 @@
 "domain" 	      return 'domain'
 "codomain"            return 'codomain'
 \"([^"\\]|(\\(.|\n)))*\" { yytext=yytext.substring(1, yytext.length-1); return 'STRING'; }
+"->"		      return '\\implies'
+"<->"		      return '\\bicond'
 ";"		      return ';';
 "|"		      return '|';
-"\\T"		      return '\\T';
 "T"		      return '\\T';
-"\\F"		      return '\\F';
 "F"		      return '\\F';
+"\\T"		      return '\\T';
+"\\F"		      return '\\F';
 "("		      return '('
 ")"		      return ')'
 "\\{"		      return '\\{'
@@ -69,15 +71,14 @@
 "vv"	              return '\\vee'
 "or"	      	      return '\\vee'
 "\\implies"	      return '\\implies'
-"->"		      return '\\implies'
 "\\bicond"	      return '\\bicond'
-"<->"		      return '\\bicond'
 "\\xor"		      return '\\xor'
 "o+"	              return '\\xor'
 "\\wedge"	      return '\\wedge'
 "^^"                  return '\\wedge'
 "and"                 return '\\wedge'
 "\\neg"		      return '\\neg'
+"not"		      return '\\neg'
 "\\forall"	      return '\\forall'
 "AA"	              return '\\forall'
 "\\exists"	      return '\\exists'
@@ -257,6 +258,7 @@ e
       { $$ = makeExpr('\\lambda', [$2, $4 ]); }
     | 'if' e 'then' e 'else' e 'endif' { $$ = makeExpr('ite', [$2, $4, $6 ]); }
     | 'if' e 'then' e 'endif' { throw new Error("if-then must have else."); }
+    | error
     ;
 
 exprlist

@@ -1,0 +1,15 @@
+// Simple induction proof with changed variable names.
+
+P1: proof
+   base: P(0) by trustMe
+
+   ind: proof
+        var k \in \integers
+
+	A1: k \ge 0 by assumption
+	A2: P(k) by assumption
+	C1: P(k+1) by trustMe
+   end
+
+  C2:  \forall l \in \integers: (l \ge 0 \implies P(l)) by simpleInduction(base, ind)
+end

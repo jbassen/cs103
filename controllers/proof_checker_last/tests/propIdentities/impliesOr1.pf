@@ -1,0 +1,4 @@
+// Test impliesOr
+P1: proof
+C1:   P \implies Q <=> \neg P \vee Q by impliesOr
+end

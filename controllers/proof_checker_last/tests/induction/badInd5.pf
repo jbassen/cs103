@@ -1,0 +1,16 @@
+// Simplest possible induction proof.
+// conclusion of induction conclusion is not of form P(quantified variable)
+
+P1: proof
+   base: P(0) by trustMe
+
+   ind: proof
+        var n \in \integers
+
+	A1: n \ge 0 by assumption
+	A2: P(n) by assumption
+	C1: P(n+1) by trustMe
+   end
+
+  C2:  \forall n \in \integers: (n \ge 0 \implies P(2*n)) by simpleInduction(base, ind)
+end

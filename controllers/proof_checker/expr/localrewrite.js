@@ -184,6 +184,28 @@ function impliesOrRewrite(e, bindings)
     }
 }
 
+function bicondImpliesMatch(e)
+{
+    var bindings = pmatch("leftform \\bicond rightform", e);
+    return bindings;
+}
+
+function bicondImpliesRewrite(e, bindings)
+{
+    var rwEx = bindings['#matchingExpr'];
+    var leftform = bindings.leftform;
+    var rightform = bindings.rightform;
+    var args;
+    if (e === rwEx) {
+	return makeExpr('\\wedge',
+			[makeExpr('\\implies', [leftform, rightform]),
+			 makeExpr('\\implies', [rightform, leftform])]);
+    }
+    else {
+	return e;		// should not happen when called from rewriteRec
+    }
+}
+
 // make a distributive law matcher for op1, op2
 function makeDistribMatchFun(op1, op2)
 {
@@ -218,7 +240,9 @@ function makeDistribRewriteFun(op1, op2, newOp2)
     var distribRewriteFun = function distribRewriteFun(e, bindings) {
 	var rwEx = bindings['#matchingExpr'];
 	if (e === rwEx) {
-	    return e.distribute(op1, op2, newOp2);
+	    var temp =  e.distribute(op1, op2, newOp2);
+	    console.log(latexMathString(temp));
+	    return temp;
 	}
 	return e;
     };
@@ -394,6 +418,8 @@ try {
     global.identityRewrite = identityRewrite;
     global.idempotenceRewrite = idempotenceRewrite;
     global.makeDominationMatchFun = makeDominationMatchFun;
+    global.bicondImpliesMatch = bicondImpliesMatch;
+    global.bicondImpliesRewrite = bicondImpliesRewrite;
 }
 catch (e) {
     // in browser, do nothing

@@ -1,0 +1,249 @@
+Proof checker.
+
+* Bind labels to formulas using objects.
+  - scope using prototypes -- see how srflaEval works.
+
+* Think about rules that use subproofs as arguments.
+
+* Implement propositional proof system, first?
+
+* How will theorems be saved for use?
+
+
+Variables:
+   Don't need to bind them at this point (if no types).
+   Just need to find them when applying forall-intro and exists-elim.
+
+Infrastructure:
+   justifications bound in object (function dispatch).
+   Justification like "transitivity" will look at top-level operators.
+   Premise lists are in order, but, initially, rules will allow arbitrary order.
+
+   Rules need to be able to take whole subproofs.
+   Ah, need to label an entire subproof.
+
+Proof check:
+   * identify conclusions where justification fails (checks/X's in interface).
+
+We're going to need a pretty printer for proofs and expressions.
+
+* Proof macro feature for "similarly" and "w.l.g."?
+
+Next step:  Simple propositional rules.
+
+* simple and-intro and-elim
+* subproofs:  or-elim (case analysis) negation-intro (proof by control)
+  or-elim -- review Fitch.  I think it needs 3 premises, and "or",
+     and two subproofs.  Maybe it takes a bunch of subproofs, and needs
+     a premise that says they're exhaustive.
+  In general, n cases.  Need a disjunction of all of them, and a subproof for each disjunct.
+psuedo code:
+    conclusion: S
+    P1 V P2 V ... V PN.
+
+    | Pi
+    +---
+    | .
+    | S
+
+    For each disjunct, check that there is a proof with that disjunct as a premise.
+       [what if someone wants a "sub-disjunct" as a premise?  Use parenthesized subexpression!]
+
+For each disjunct
+   Find a case with disjunct as premise.
+      S must be conclusion
+      (Later, optionally omit disjunct, then it checks whether disjunct is logically valid)
+      
+Check that every subproof has conclusion S
+
+everyChild(d of S):
+   some:
+      subproof
+      function(d is the only premise, S is a conclusion)
+
+Proof structure: Make a list of premises.
+Since "assumption" is not a keyword in parser, I should do this as a post-pass.
+
+Diagnostics for failed proof rules would be VERY helpful!
+
+------
+
+justification functions
+   Somehow need to check dependnecies on premises.
+   now, premises are just labels.
+     * Do we want to check steps or check transitive dependencies?
+     * How do we check that whole proof is verified?  Should I require that all steps check? Or just the relevant steps?
+
+-----
+Additional considerations:
+
+* Previews of proof technique ("we prove by cases")
+
+* Comments in proofs.
+
+-----
+First verstion working.  More tasks:
+
+* Undeclared variable check.
+* Comments
+  ? How to incorporate into syntax tree?
+    Allow comments in statement positions.
+    Allow comments after justifications, variables?
+* "Preview comments"
+* Variable types
+* Theories: Strings and arithmetic
+* Induction -- weak and strong
+* Definitions
+  Definitions are bascially syntax macros (might check undeclared variables).
+* Theorems
+  Theorems are definitions?  Last conclusion in proof can be theorem (in definition form).
+  Theorem instantiation from database. Allow "by pumping_lemma" in justification?
+* Better editor
+  - Ace, codemirror, ymacs?
+  - Remote file (or proof) saving.
+  - proof language mode
+* File save
+* Rule restrictions/smartness levels
+* Predefined exercise support.
+* More inference rules.
+* "similar" and "w.l.g."
+* Preserve parens
+* Display formulas
+* Printing large formulas (line breaks)
+* User control over math formatting
+* "Equational" proofs
+* IFF proofs.
+
+If we can't capture all information, allow interactive use and submission of completed proof.
+
+Motivation: Very tempting to try incremental approach, for fun.
+
+Highest priority:   
+  Continuing with skeletal architectural exploration approach:
+    Time to work out some example proofs.
+      Numbers
+      Sets, functions, relations
+      Finite automata/regular languages
+      CFGs
+      Turing machines/decidability
+      NP completeness (running time?)
+
+Comments and documentation:
+   Label them.  Require them in premises?
+   D1: We prove by contradiction  
+
+----------------
+How to deal with induction?
+
+Everything is a subproof.
+
+base cases:
+assume
+  n = 0   % or other variable
+  ...
+  P(n)
+
+induction
+  n >= c1
+  P(n)
+  ...
+  P(n+1)
+
+processing:
+  Convert inductions to quantified formula.
+  forall m (m >= something) & P(n) -> P(n+1).
+
+  Redefine variable so that last conclusion is P(n)
+    This requires arithmetic simplification throughout.
+
+Ok... then what?
+For quantified formulas, set n to it's minimum value.
+P(c1) -> P(c1 + 1)
+P(c2) & P(c3) -> P(c2 + 2) or whatever
+
+Compare with base cases?
+   Antecedants should all be defined.
+   At least one consequent should define an additional value.
+
+If there are multiple induction steps, this feels like finite automata!
+
+What about double inductions?
+Strong induction?
+
+1.  If we plug in the smallest possible value of n, it should only depend on
+    base cases.
+2.  What about gaps?
+    forall n \ge 2: P(n-2) -> P(n)
+     P(0)  -> P(2)
+     P(1) -> P(3) -- ah, it is really the same as case 1?
+
+Plugging constants into the induction step is not satisfactory.
+   E.g.  forall x P(n) -> P(1) works the first time!
+forall x P(n) -> P(n-1)  --- need to catch this bogosity.
+
+Reasoning about inequalities:
+  forall x > c  P(x - d) & P(x - e) -> P(x)
+    c < x
+    c - d  must be a base case or must be > c.
+    c - e ""
+
+But, for minimum value of x, antecedants MUST depend on base cases!
+   There can be extra base cases, but antecedants must be a subset of them.
+In general, there could be mutually dependent multiple induction parts.
+
+I guess we could have P(f(n)) where f(n) jumps around a lot
+P(0)
+P(93) -> P(21)
+P(21) -> P(3)
+P(0) -> P(21)
+...
+But the problem should be re-parameterized in that case.
+
+Standard form?
+base P(0)
+ind:  forall n > 0 P(n-1) -> P(n) ?
+* shift base
+* merge larger bases into P?  P(n-1) -> P(n) --- true if P(n) is true!
+* eh...
+
+Don't get hung up on P(n+2), etc.  Can actually handle it ok with P(n-2) & P(n-1) -> P(n)
+[fibonacci proof?]
+
+Ok:  induction must be of the form 
+forall n > n0:  P(n-c1) & P(n-c2) ... & P(n-ck) -> P(n), where ci > 0.
+n0-ci must be a base case for all i.
+
+Need arithmetic simplification.  Time to write a better expression class.
+ 
+Check ind1.
+
+NEXT:
+  * types in variable decls  (partially complete)
+  * propositional simplifications (basic ones for and/or done)
+  * simple algebra
+  * equational proofs
+  * summations
+  * induction
+
+
+Parsing problme
+\forall x \in S (x \in T) -- parses as though S were a call, then gets an error at the end.
+It could be
+\forall x \in f(x) (x < 3) -- parses correctly, I think.
+
+Maybe this could work if the parser could read all the way to the end of the body to see
+   how to parse it (re-arrange grammar?)
+  There's a shift-reduce conflict at end of "S" -- shift the parens, or reduce x \in S?
+Maybe it would be possible to do this, but it's "stand on head"
+     Make vardecllist1 right recursive?
+     Don't think so.  Still have wrong precedence.  If I could avoid specifying
+     relative precedence of '\in' and '(', it might work.
+     But still get a shift reduce conflict on lots of operators: \neg e . on '(',
+       for example.  But when would you want to reduce with \neg e ( ?
+          Never?  This just calls for making '(' high precedence, which is what I did before this.
+     Ok, I think I would need to have \forall x \in S '(' e ')  all shifted before it 
+     has to decide whether to reduce on S.  Which would mean avoiding reductions on vardecl,
+     vardecllist, and, worst, expr after the \in until all has been shifted.
+     Or doing GLR parsing?
+That's enough of that rathole.  Put the ':' after the variables.
+

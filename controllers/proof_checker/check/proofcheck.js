@@ -20,7 +20,7 @@ var proofCheckerMode;
 
 proofCheckerMode = 'propositionalIdentityMode';
 
-// make jshint happy
+// make jshint happy 
 /* global exprProto: false */
 /* global isExpr: false */
 /* global isLeaf: false */
@@ -44,6 +44,8 @@ proofCheckerMode = 'propositionalIdentityMode';
 /* global doRewrites: false */
 /* global impliesOrMatch: false */
 /* global impliesOrRewrite: false */
+/* global bicondImpliesMatch: false */
+/* global bicondImpliesRewrite: false */
 /* global makeDistribMatchFun: false */
 /* global makeDistribRewriteFun: false */
 /* global makePropIdemInvMatchFun: false */
@@ -135,7 +137,7 @@ function makeJustification(name, args)
 
 // process commands.  This handles a complete file of defs, proofs,
 // and whatever else.  argument is command array.  This updates
-// globalProcDecls with definitions, and checks any proofs.
+// globalProcDecls with definitions, and checks any proofs.  
 // NOTE: This is a little different from a top-level proof, because
 // there are no variable decls or single conclusion (yet), and because
 // defs and subproofs can occur in any order.
@@ -279,7 +281,7 @@ function makeIdentityRule(matchFun, rewriteFun, eqOp, normalizeFun)
 	var rewritten = doRewrites(rewriteFun, concFrm, matchAr);
 	var result = normalizeFun(rewritten);
 	if (result !== exprProto.trueVal) {
-	    conclusion.ok = "Unable to prove equivalence: " + latexMathString(result);
+	    conclusion.ok = "Unable to prove equivalence: \\(" + latexMathString(result) + "\\).";
 	}
 	else {
 	    conclusion.ok = "checks";
@@ -325,7 +327,7 @@ function andElim(conclusion, premiseLabels, proofDecls)
 // Helper function to check that every subproof has exactly one premise
 // Every array element after first must be a subproof.
 // FIXME: Should go through subproofAr and ignore all non-subproofs.
-function allSubproofsHaveExactlyOnePremise(subproofAr)
+function allSubproofsHaveExactlyOnePremise(subproofAr) 
 {
     // starts at 1 because first entry is disjunction
     return subproofAr.everyStart(function(subproof) { return subproof.premises.length === 1; },
@@ -333,7 +335,7 @@ function allSubproofsHaveExactlyOnePremise(subproofAr)
                                  1);
 }
 
-// Helper function to search for a conclusion in an array.
+// Helper function to search for a conclusion in an array. 
 // Args: conclusion is a conclusion, conclusionAr is an array of conclusions.
 // Returns index of matching conclusion or -1 if there is no such index.
 // FIXME: Eventually, use approximate logical equivalence instead of
@@ -513,7 +515,7 @@ function generalConditionalProof1(conclusion, premiseLabels, proofDecls)
     var premises = proofDecls.lookupLabels(premiseLabels);
     // conclusion should be of the form \forall vars premises -> conclusions.
     // Last conclusion is the only one we use.
-    var concForm = conclusion.formula;
+    var concForm = conclusion.formula;    
     if (premises.length !== 1) {
 	// FIXME: I misinterpreted this error message to mean subproof had to have exactly one premise,
 	// not the justification!
@@ -608,7 +610,7 @@ function orElim(conclusion, premiseLabels, proofDecls)
 	conclusion.ok = "Not all subproofs have the correct conclusion: " + wrongMsg;
 	return;
     }
-
+        
     // Check whether there is a subproof for each disjunct
     // Loop over disjuncts
 
@@ -685,13 +687,13 @@ function substitutionRule(conclusion, premiseLabels, proofDecls)
     var pr2 = premises[1];
     if (typeof(pr1) === 'string') {
 	conclusion.ok = pr1;
-	return;
+	return;	
     }
     if (typeof(pr2) === 'string') {
 	conclusion.ok = pr1;
-	return;
+	return;	
     }
-
+    
     // second premise must be equality.
     var pr1Frm = pr1.formula;
     var pr2Frm = pr2.formula;
@@ -917,7 +919,7 @@ function checkBaseCases(concAr)
 // checks the induction step and the conclusion
 // FIXME: Need to deal with redundant lower bounds, e.g. from \\naturals decl.
 // indFrm is logical formula for induction step or induction conclusion.
-// the induction step is checked if "checkAssumption" is true, otherwise the
+// the induction step is checked if "checkAssumption" is true, otherwise the 
 // conclusion is checked.
 // induction step is similar to:
 //  \forall n : n \in \integers \wedge c \le n \wedge P(n) \implies P(n+1)
@@ -962,7 +964,7 @@ function checkInductionFormula(indFrm, indPred, baseConst, checkAssumption)
     var freeVarOb = freeVariables(indFrm);
     var freeVarAr =  Object.keys(freeVarOb);
     if (freeVarAr.length > 0) {
-	return "Induction formula has free variables: " + freeVarAr.join(", ");
+	return "Induction formula has free variables: " + freeVarAr.join(", "); 
     }
 
     // "\forall n: (P(n) \wedge n \in \integers \wedge 1 \le n \implies P(1 + n))"
@@ -993,7 +995,7 @@ function checkInductionFormula(indFrm, indPred, baseConst, checkAssumption)
 	    return "Conclusion of induction " + errorPlace + " is not of the form P(quantified variable).";
 	}
     }
-
+    
     if (indPred !== pred) {
 	return "Inconsistent induction predicates: " +
 	    indPred.getArg(0) +
@@ -1057,7 +1059,7 @@ function checkInductionFormula(indFrm, indPred, baseConst, checkAssumption)
 	varMap[qvar.getArg(0)] = indBound;
 
 	caseBound = substitute(expr, varMap).normalize();
-
+	
 	// check that conclusion is assumption + 1.
 	var exprPlusOne = makeExpr('+', [expr, exprProto.oneVal]);
 	var exprPlusOneEqExpr1 = makeExpr('=', [expr1, exprPlusOne]);
@@ -1095,7 +1097,7 @@ function checkInductionFormula(indFrm, indPred, baseConst, checkAssumption)
 	    whichBase +
 	    " base case: " +
 	    indBound.getArg(0) +
-	    " != " +
+	    " != " + 
 	    baseConst.getArg(0) +
 	    ".";
     }
@@ -1212,6 +1214,10 @@ var allJustifiers = {
 				     impliesOrRewrite,
 				     '\\logeq',
 				     normalize),
+    bicondImplies:  makeIdentityRule(bicondImpliesMatch,
+				     bicondImpliesRewrite,
+				     '\\logeq',
+				     normalize),
     distribAndOr:   makeIdentityRule(makeDistribMatchFun('\\wedge', '\\vee'),
 				     makeDistribRewriteFun('\\wedge', '\\vee'),
 				     '\\logeq',
@@ -1240,8 +1246,14 @@ var propositionalIdentityJustifiers = {
 // FIXME: add a catch -- justifiers throw for diagnostics?
     // rules for propositional identities
     obvious:      propObvious,
+    associativity:      propObvious,
+    commutativity:      propObvious,
     // propositional identity rules
     impliesOr:      makeIdentityRule(impliesOrMatch, impliesOrRewrite, '\\logeq', propObviousNormalize),
+    bicondImplies:  makeIdentityRule(bicondImpliesMatch,
+				     bicondImpliesRewrite,
+				     '\\logeq',
+				     propObviousNormalize),
     distribAndOr:   makeIdentityRule(makeDistribMatchFun('\\wedge', '\\vee'),
 				     makeDistribRewriteFun('\\wedge', '\\vee'),
 				     '\\logeq',
@@ -1328,7 +1340,7 @@ var globalProofDecls = {
             this.labelDecls[label] = conc;
 	}
     },
-
+    
     // bind and check conclusion or subproof
     // conc may be a conclusion, proof object, or def
     procConclusion: function procConclusion(conc) {
@@ -1400,7 +1412,7 @@ var globalProofDecls = {
 	if (conc.ok !== "") {
 	    throw new Error("ok field of checkJustification is already set?!");
 	}
-
+        
         if (!justFun) {
 	    // FIXME: return value or exception?
             conc.ok = "Undefined justification: " + justName;
@@ -1473,7 +1485,7 @@ var transPredTable = {
 // This checks whether
 // the sequence of top-level predicates in the formulas should be compatible.
 // same irection.  E.g.  a = b < c = d <= e is ok. a < b > c is not,
-// It modifies conclusions.  Fills in missing LHS of each conc with RHS from
+// It modifies conclusions.  Fills in missing LHS of each conc with RHS from 
 // previous line.
 // It checks each justification in the chain.
 // This replaces the transitive chain of conclusions with one conclusion that
@@ -1495,7 +1507,7 @@ function checkTransitiveChain(transAr, newConcAr, proofDecls)
     var firstLHS = concFrm.getArg(0);
     var prevRHS = concFrm.getArg(1); // gets copied to LHS of next in chain
     var chainIsOk = true;  // FIXME: This depends on states of transAr[0]
-    // don't call procConclusion on first conclusion in chain because it
+    // don't call procConclusion on first conclusion in chain because it 
     // was already checked in checkConcArray
     for (i = 1; i < transAr.length; i++) {
 	conc = transAr[i];
@@ -1520,7 +1532,7 @@ function checkTransitiveChain(transAr, newConcAr, proofDecls)
 	    chainIsOk = false;
 	}
 	else {
-	    proofDecls.procConclusion(conc); //
+	    proofDecls.procConclusion(conc); // 
 	    if (conc.ok !== "checks") {
 		chainIsOk = false;
 	    }
@@ -1611,7 +1623,6 @@ function checkConcArray(concAr, proofDecls)
 
 function checkProof(prf, outerPfDecls)
 {
-    console.log("prf: " + JSON.stringify(prf));
     var proofName = prf.label;
     var proofDecls = makeProofDecls(outerPfDecls); // create new scopes.
     var results, i;
@@ -1626,10 +1637,10 @@ function checkProof(prf, outerPfDecls)
     for (i = 0; i < prf.defs.length; i++) {
 	proofDecls.defineConst(prf.defs[i]);
     }
-
+    
     // bind premise labels
     prf.premises.forEach(proofDecls.bindConclusionLabel, proofDecls);
-
+    
     // process conclusions and subproofs
     prf.conclusions = checkConcArray(prf.conclusions, proofDecls);
 }
