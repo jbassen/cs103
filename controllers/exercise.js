@@ -26,7 +26,7 @@ exports.getExercise = function(req, res, next) {
       console.log(submission);
       var savedObject;
       if(!submission || submission.length === 0) {
-        savedObject = {};
+        savedObject = "{}";
       } else {
         savedObject = submission[0].answer;
         savedObject = JSON.parse(savedObject);
