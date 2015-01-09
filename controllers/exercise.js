@@ -74,7 +74,7 @@ exports.postExercise = function(req, res, next) {
     }
 
     var checkerGrade = '{}';
-    if(feedbackObject.grade && feedbackObject.grade.message) {
+    if(feedbackObject.grade) {
       checkerGrade = feedbackObject.grade;
     }
     var grade = JSON.stringify(checkerGrade);
