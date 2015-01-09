@@ -1,7 +1,7 @@
 DEFINITELY:
+- shift Heroku keys once and for all!!!
+- enter a couple test problems into the database
 - tell student if their submission is late
-- store external files locally on server (mathjax, jquery)
-
 - empty, non-assignment versions of systems
 
 
