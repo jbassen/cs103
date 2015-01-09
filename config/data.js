@@ -6,6 +6,24 @@ var Interaction = require('../models/Interaction');
 var User = require('../models/User');
 
 
+var testFormula = "P and (P or Q) <=> P";
+
+var testProblemObject = {
+  instructions: "// Please write a propositional identity proof, as described here\n" +
+  "// for the following logical equivalence:",
+  formula: testFormula
+};
+
+var exercise1 = new Exercise({
+  _id: 1,
+  type: 'proofchecker',
+  checker: 'default',
+  name: 'Dave\'s Exercise',
+  problemJSON: JSON.stringify(testProblemObject)
+});
+exercise1.save();
+
+
 var assignment = new Assignment({
   _id: 1,
   release: Date.now(),
@@ -114,25 +132,6 @@ assignment.save();
 //   problemJSON: JSON.stringify(andOrElim)
 // });
 // exercise2.save();
-
-
-var testFormula = "P and (P or Q) <=> P";
-
-var testProblemObject = {
-  instructions: "// Please write a propositional identity proof, as described here\n" +
-  "// for the following logical equivalence:",
-  formula: testFormula
-};
-
-var exercise1 = new Exercise({
-  _id: 1,
-  type: 'proofchecker',
-  checker: 'default',
-  name: 'Dave\'s Exercise',
-  problemJSON: JSON.stringify(testProblemObject)
-});
-exercise1.save();
-
 
 // var comment = new Comment({
 //   id: 0,
