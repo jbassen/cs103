@@ -1,10 +1,7 @@
 DEFINITELY:
-- Home Page
-- Assignments Page
-- AJAX for Proof Checker
-- AJAX for Blocks World
-- Blocks World JSON
+- tell student if their submission is late
 - retrieve saved versions
+
 - empty, non-assignment versions of systems
 
 

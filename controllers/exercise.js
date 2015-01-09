@@ -18,11 +18,32 @@ exports.getExercise = function(req, res, next) {
       return;
     }
 
-    res.render(exercise.type, {
-      title: exercise.name,
-      name: exercise.name,
-      problemJSON: exercise.problemJSON,
-      username: req.user.username
+    Interaction
+    .find({username: req.user.username, exercise: req.params._id})
+    .sort({ 'time': -1 })
+    .limit(1)
+    .exec(function(err, submission) {
+      console.log(submission);
+      var savedObject;
+      if(!submission || submission.length === 0) {
+        savedObject = {};
+      } else {
+        savedObject = submission[0].answer;
+        savedObject = JSON.parse(savedObject);
+        savedObject.time = "<p><b>LAST SUBMITTED:</b>" +
+        new Date(submission[0].time).toLocaleString() +"</p>";
+        savedObject = JSON.stringify(savedObject);
+      }
+      console.log(savedObject);
+
+      res.render(exercise.type, {
+        title: exercise.name,
+        name: exercise.name,
+        problemJSON: exercise.problemJSON,
+        username: req.user.username,
+        savedJSON: savedObject
+      });
+
     });
 
   });
@@ -68,17 +89,8 @@ exports.postExercise = function(req, res, next) {
       return;
     }
 
-    var actionText;
-    var submitReminder;
-    if (req.body.action === "submit") {
-      actionText = "SUBMITTED";
-      submitReminder="<p>\nYou can resubmit if you'd like.</p>";
-    } else {
-      actionText = "SAVED";
-      submitReminder="<p><b>\nMUST SUBMIT YOUR CHANGES FOR GRADING!</b></p>";
-    }
-    feedbackObject.receipt = "<p><b>" + actionText + "</b> on " +
-    new Date(Date.now()).toLocaleString() +"</p>" + submitReminder;
+    feedbackObject.receipt = "<p><b>LAST SUBMITTED:</b>" +
+    new Date(Date.now()).toLocaleString() +"</p>";
     var feedbackJSON = JSON.stringify(feedbackObject);
 
     console.log(feedbackJSON);
