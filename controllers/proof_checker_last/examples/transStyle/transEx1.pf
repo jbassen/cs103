@@ -1,5 +1,0 @@
-P1: proof
-   var n
-C1: (a + b) * (c + d) = a * (c + d) + b * (c + d) by algebra
-C2:      = a*c + a*d + b*c + b*d by algebra
-end

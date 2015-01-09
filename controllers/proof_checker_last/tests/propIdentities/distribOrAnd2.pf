@@ -1,4 +1,0 @@
-// Test dstribAndOr
-P1: proof
-C1:  (P or Q) and (P or R) <=> P or (Q and R) by distribOrAnd
-end

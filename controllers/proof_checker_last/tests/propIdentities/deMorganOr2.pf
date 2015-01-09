@@ -1,4 +1,0 @@
-// Test deMorganAnd
-P1: proof
-C1: \neg P and \neg Q <=> \neg (P or Q) by deMorganOr
-end

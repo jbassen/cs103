@@ -1,9 +1,0 @@
-P1: proof
-  A1: P \wedge Q by assumption
-  P2: proof
-    var x
-    A2: Q by assumption
-    C1: P by andElim(A1)
-  end
-  C2: \forall x P by conditionalGeneralProof(P2)
-end

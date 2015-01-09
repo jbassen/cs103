@@ -1,3 +1,0 @@
-P1: proof
-C1: \neg (P or Q or R or S) <=>  \neg P and \neg R and \neg Q and \neg S by deMorganOr
-end

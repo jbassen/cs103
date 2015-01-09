@@ -1,7 +1,0 @@
-P1: proof
-C1: P \implies (Q \implies R) <=> \neg P or (Q \implies R) by impliesOr
-    <=> \neg P or (\neg Q or R) by impliesOr
-    <=> (\neg P or \neg Q) or R by obvious
-    <=> \neg (P and Q) or R by deMorganAnd
-    <=> (P and Q) \implies R by impliesOr
-end

@@ -1,6 +1,0 @@
-// Form of counterexample to implies
-
-P1: proof
-C1: \neg (P \implies Q) <=> \neg (\neg P or Q)  by impliesOr
-    <=> \neg \neg P and \neg Q by deMorganOr
-end

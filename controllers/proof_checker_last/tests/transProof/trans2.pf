@@ -1,6 +1,0 @@
-P1: proof
-C1: x \le x + 1 by addIneqs
-       \ge x by addIneqs
-end
-
-%% Predicate directions in transitive chain are incompatible

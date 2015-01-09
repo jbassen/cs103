@@ -1,3 +1,0 @@
-P1: proof
-C1:  P and Q and R and S and T <=> R and (T and (Q and P) and S) by obvious
-end

@@ -1,4 +1,0 @@
-// Test impliesOr
-P1: proof
-C1:  (\neg (P and Q) \vee Q) and R  <=>  R and ((P and Q) \implies Q) by impliesOr
-end

@@ -1,8 +1,0 @@
-// This is not so easy to see
-P1: proof
-C1:    P or (P and Q) <=> (P and \T) or (P and Q) by andIdentity
-                      <=>  P and (\T or Q) by distribAndOr
-		      <=> P and \T by orDomination
-		      <=> P by andIdentity
-
-end

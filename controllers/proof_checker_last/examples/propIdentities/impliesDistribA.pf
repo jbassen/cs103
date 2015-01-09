@@ -1,8 +1,0 @@
-// implies distributes antecedant
-
-P1: proof
-C1: (P1 \vee P2) \implies P3 <=> \neg (P1 \vee P2) \vee P3 by impliesOr
-      <=> (\neg P1 and \neg P2) \vee P3 by deMorganOr
-      <=> (\neg P1 or P3) and (\neg P2 \vee P3) by distribOrAnd
-      <=> (P1 \implies P3) and (P2 \implies P3) by impliesOr
-end
