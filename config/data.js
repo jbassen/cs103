@@ -113,11 +113,8 @@ object1a = {
   + "// P -> (Q -> R) <=> (P and Q) -> R\n"
   + "\n"
   + "P1: proof\n"
-  + "C1: P -> (Q -> R) <=> not P or (Q -> R) by impliesOr\n"
-  + "<=> not P or (not Q or R) by impliesOr\n"
-  + "<=> (not P or not Q) or R by obvious\n"
-  + "<=> not (P and Q) or R by deMorganAnd\n"
-  + "<=> (P and Q) -> R by impliesOr\n",
+  + "C1:  // fill in your answer here\n"
+  + "end\n",
   formula: "P -> (Q -> R) <=> (P and Q) -> R"
 }
 var exercise1a = new Exercise({
