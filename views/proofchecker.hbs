@@ -82,6 +82,7 @@ function resetProblem() {
   console.log("setting problem!");
   $("textarea.proofInputBox")
   .val(problemObject.instructions + "\n// " + problemObject.formula);
+  $("#mathdisplay").html(String(""));
 }
 
 
@@ -281,7 +282,7 @@ dl.proof
 {
     width:100%;
 //    height:700px;
-    height:85%;
+    height:80%;
 //    padding:10px;
     padding:0px;
     align-content:space-between;
@@ -356,6 +357,7 @@ textarea.proofInputBox
 </head>
 <body>
 <h1 style="text-align:center">Propositional Identity Proof Checker</h1>
+<p style="text-align:center"><a href="mailto:cs103bugs@gmail.com">Report Bugs</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/">Quick Start Guide</a></p>
 
 <!-- Maybe I can get them to match up by making a fixed top-margin,
      then making bottom window absolute -->

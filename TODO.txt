@@ -1,6 +1,6 @@
 DEFINITELY:
 - tell student if their submission is late
-- retrieve saved versions
+- store external files locally on server (mathjax, jquery)
 
 - empty, non-assignment versions of systems
 
