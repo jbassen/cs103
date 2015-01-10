@@ -1304,6 +1304,7 @@ try {
     global.negate = negate;
     global.propDual = propDual;
     global.applyLambda = applyLambda;
+    global.sortArgs = sortArgs;
 }
 catch (e) {
     // in browser, do nothing

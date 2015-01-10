@@ -1,0 +1,3 @@
+P1: proof
+C1:   P and \F <=> \F by andDomination
+end

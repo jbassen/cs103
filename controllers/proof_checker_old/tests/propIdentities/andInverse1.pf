@@ -1,0 +1,4 @@
+// Test dstribAndOr
+P1: proof
+C1:   P and \neg P <=> \F by andInverse
+end

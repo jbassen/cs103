@@ -1,0 +1,7 @@
+// This is not so easy to see
+proof
+   P or (P and Q) <=> (P and \T) or (P and Q) by andIdentity .
+       <=>  P and (\T or Q) by distribAndOr .
+       <=> P and \T by orDomination .
+       <=> P by andIdentity .
+end

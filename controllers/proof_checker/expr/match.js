@@ -7,6 +7,8 @@
 
 'use strict';
 
+var mathparse = require('../prParse/mathparse.js');
+
 /* global mathparse: false */
 /* global algebraicNormalize: false */
 /* global console: false */
@@ -226,4 +228,13 @@ function permuteArray(ar, callback, end)
     }
 }
 
-
+try {
+    exports.foo = 'foo';
+    // we're running in node.
+    global.match = match;
+    global.pmatch = pmatch;
+    global.matchAr = matchAr;
+}
+catch (e) {
+    // in browser, do nothing
+}

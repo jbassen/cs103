@@ -1,0 +1,20 @@
+P1: proof
+def P(n) : n < 2^n end
+
+C1:   1 < 2^1 by obvious
+base:   P(1) by definition(P, C1)
+
+// induction step
+ind1: proof
+var n \in \integers
+A2:   n >=  1 by assumption
+A3:   P(n) by assumption
+C4:   n < 2^n by definition(P,A3)
+C5:   n+1 < 2^n+1 by addIneqs(C4)
+          < 2^n + 2^n by trustMe
+          = 2^(n+1) by trustMe
+C6:   P(n+1) by definition(P, C5)
+end
+
+C7: \forall n \in \integers: (n \ge 1 \implies P(n)) by simpleInduction(base, ind1)
+end

@@ -1,0 +1,3 @@
+P1: proof
+C1:   P and R and Q and R and  P <=> P and Q and R by andIdempotence
+end

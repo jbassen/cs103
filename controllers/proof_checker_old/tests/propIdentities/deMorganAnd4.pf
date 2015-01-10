@@ -1,0 +1,4 @@
+// Actually had a bug in this but not deMorganAnd1 at one point.
+P1: proof
+C1: \neg (\neg P and Q) <=>  P or \neg Q by deMorganAnd
+end

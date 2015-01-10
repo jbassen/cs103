@@ -24,63 +24,62 @@ var User = require('../models/User');
 // exercise1.save();
 
 
-// objectExampleEveryRule = {
-//   instructions:
-//   "// This exercises every rule\n"
-//   + "// For compactness, this puts several unrelated identity proofs inside\n"
-//   + "one proof.\n"
-//   + "// You should NOT do this on the homework.\n"
-//   + "P1: proof\n"
-//   + "\n"
-//   + "// associativity and commutativity with and/or are \"obvious\"\n"
-//   + "C1:  (P and Q) and R <=> P and (Q and R) by obvious\n"
-//   + "C2:  P or Q <=> Q or P by obvious\n"
-//   + "C3:  P and Q and R and S and T <=> R and (T and (Q and P) and S) by\n"
-//   + "obvious\n"
-//   + "C4:  P and Q <=> Q and P by obvious\n"
-//   + "\n"
-//   + "// The checker will attempt to apply the same rule twice in some cases.\n"
-//   + "// If this doesn't work, try breaking it down into smaller steps.\n"
-//   + "C5: (P -> Q) and (R -> S) <=> (not P or Q) and (not R or S) by impliesOr\n"
-//   + "\n"
-//   + "// When applying distributive law, it matters which operator is on\n"
-//   + "// top.  distribAndOr != distribOrAnd.\n"
-//   + "C6:  P and (Q or R) <=> (P and Q) or (P and R) by distribAndOr\n"
-//   + "C7:   P or (Q and R) <=> (P or Q) and (P or R) by distribOrAnd\n"
-//   + "// Notice that "or" is on top when distribAnd or is applied\n"
-//   + "// "backwards".\n"
-//   + "C8:  (P and Q) or (P and R) <=>  P and (Q or R) by distribAndOr\n"
-//   + "\n"
-//   + "C9: not (P and Q) <=>  not P or not Q by deMorganAnd\n"
-//   + "C10: not (P or Q) <=>  not P and not Q by deMorganOr\n"
-//   + "\n"
-//   + "// various rules from lecture\n"
-//   + "C11: P and T <=> P by andIdentity\n"
-//   + "C12: P or  F <=> P by orIdentity\n"
-//   + "\n"
-//   + "C13:   P and  P <=> P by andIdempotence\n"
-//   + "C14:   P or  P <=> P by orIdempotence\n"
-//   + "\n"
-//   + "C15:   P and not P <=> F by andInverse\n"
-//   + "C16:   P or not P <=> T by orInverse\n"
-//   + "\n"
-//   + "C17:   P and F <=> F by andDomination\n"
-//   + "C18:   P or T <=> T by orDomination\n"
-//   + "\n"
-//   + "C19:  P -> Q <=> not P or Q by impliesOr\n"
-//   + "C20:  P <-> Q <=> (P -> Q) and (Q -> P) by bicondImplies\n"
-//   + "\n"
-//   + "end\n",
-//   formula: "!!!UNKNOWN!!!"
-// }
-// var exerciseExampleEveryRule = new Exercise({
-//   _id: 1,
-//   type: 'proofchecker',
-//   checker: 'default',
-//   name: 'Example: Every Rule',
-//   problemJSON: JSON.stringify(objectExampleEveryRule)
-// });
-// exerciseExampleEveryRule.save();
+objectExampleEveryRule = {
+  instructions:
+  "// This exercises every rule\n"
+  + "// For compactness, this puts several unrelated identity proofs inside one proof.\n"
+  + "// You should NOT do this on the homework.\n"
+  + "P1: proof\n"
+  + "\n"
+  + "// associativity and commutativity with and/or are \"obvious\"\n"
+  + "C1:  (P and Q) and R <=> P and (Q and R) by obvious\n"
+  + "C2:  P or Q <=> Q or P by obvious\n"
+  + "C3:  P and Q and R and S and T <=> R and (T and (Q and P) and S) by\n"
+  + "obvious\n"
+  + "C4:  P and Q <=> Q and P by obvious\n"
+  + "\n"
+  + "// The checker will attempt to apply the same rule twice in some cases.\n"
+  + "// If this doesn't work, try breaking it down into smaller steps.\n"
+  + "C5: (P -> Q) and (R -> S) <=> (not P or Q) and (not R or S) by impliesOr\n"
+  + "\n"
+  + "// When applying distributive law, it matters which operator is on\n"
+  + "// top.  distribAndOr != distribOrAnd.\n"
+  + "C6:  P and (Q or R) <=> (P and Q) or (P and R) by distribAndOr\n"
+  + "C7:   P or (Q and R) <=> (P or Q) and (P or R) by distribOrAnd\n"
+  + "// Notice that \"or\" is on top when distribAnd or is applied\n"
+  + "// \"backwards\".\n"
+  + "C8:  (P and Q) or (P and R) <=>  P and (Q or R) by distribAndOr\n"
+  + "\n"
+  + "C9: not (P and Q) <=>  not P or not Q by deMorganAnd\n"
+  + "C10: not (P or Q) <=>  not P and not Q by deMorganOr\n"
+  + "\n"
+  + "// various rules from lecture\n"
+  + "C11: P and T <=> P by andIdentity\n"
+  + "C12: P or  F <=> P by orIdentity\n"
+  + "\n"
+  + "C13:   P and  P <=> P by andIdempotence\n"
+  + "C14:   P or  P <=> P by orIdempotence\n"
+  + "\n"
+  + "C15:   P and not P <=> F by andInverse\n"
+  + "C16:   P or not P <=> T by orInverse\n"
+  + "\n"
+  + "C17:   P and F <=> F by andDomination\n"
+  + "C18:   P or T <=> T by orDomination\n"
+  + "\n"
+  + "C19:  P -> Q <=> not P or Q by impliesOr\n"
+  + "C20:  P <-> Q <=> (P -> Q) and (Q -> P) by bicondImplies\n"
+  + "\n"
+  + "end\n",
+  formula: ""
+}
+var exerciseExampleEveryRule = new Exercise({
+  _id: 1,
+  type: 'proofchecker',
+  checker: 'default',
+  name: 'Example: Every Rule',
+  problemJSON: JSON.stringify(objectExampleEveryRule)
+});
+exerciseExampleEveryRule.save();
 
 
 var objectExampleContrapositive = {
@@ -132,12 +131,12 @@ object1b = {
   "// Please do an equational proof of the following identity.\n"
   + "// This is a way to convert the biconditional to AND/OR/NOT.\n"
   + "// Think about why it intuitively makes sense.\n"
-  + "// P <-> Q <=> (not P or Q) and  (not P or Q)\n"
+  + "// P <-> Q <=> (not P or Q) and (not Q or P)\n"
   + "\n"
   + "P1: proof\n"
   + "C1:  // fill in your answer here\n"
   + "end\n",
-  formula: "P <-> Q <=> (not P or Q) and  (not P or Q)"
+  formula: "P <-> Q <=> (not P or Q) and (not Q or P)"
 }
 var exercise1b = new Exercise({
   _id: 4,
@@ -222,7 +221,7 @@ var assignment = new Assignment({
   deadline: Date.now(),
   name: 'HW 1',
   description: 'HW 1 Description',
-  exercises: JSON.stringify({"_ids": [2,3,4,5,6]})
+  exercises: JSON.stringify({"_ids": [1,2,3,4,5,6]})
 });
 assignment.save();
 

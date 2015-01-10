@@ -47,7 +47,7 @@ function gatherParseErrors(err, hash) {
 
 prParse.yy.parseError = gatherParseErrors;
 
-var testFormula = "P and (P or Q) <=> P";
+var testFormula = "P <-> Q <=> (P and Q) or (not P and not Q)";
 
 var testProblemObject = {
     instructions: "Please write a propositional identity proof, as describe <a href=\"\">here</a> " +
@@ -56,13 +56,16 @@ var testProblemObject = {
 };
 
 var testProof =
-    "// This is not so easy to see\n" +
-    "P1: proof\n" +
-    "C1:    P and (P or Q) <=> (P or \\F) and (P or Q) by orIdentity\n" +
-    "                      <=>  P or (\\F and Q) by distribOrAnd\n" +
-    "		      <=> P or \\F by andDomination\n" +
-    "		      <=> P by orIdentity\n" +
-    "end\n";
+"P1: proof\n"
++ "C1:   P <-> Q <=> (P -> Q) and (Q -> P) by bicondImplies\n"
++ "<=> (not P or Q) and (not Q or P) by impliesOr\n"
++ "<=> ((not P or Q) and not Q) or ((not P or Q) and P) by \n"
++ "distribOrAnd\n"
++ "<=> ((not P and not Q) or (Q and not Q)) or ((not P and P) or \n"
++ "(Q and P)) by distribAndOr\n"
++ "<=> ((not P and not Q) or F) or (F or (Q and P)) by andInverse\n"
++ "<=> (not P and not Q) or (Q and P) by orIdentity\n"
++ "end\n";
 
 // var testProof =
 //     "// a comment\n// another comment\n" ;
@@ -109,6 +112,7 @@ function checkAndGradePropIDProof(answerObject, problemObject)
 	    }
 	    // check proofs, defs, etc.
             results = processCommands(parsedCommands);
+            //console.log(JSON.stringify(results));
 	    if (results.length === 0) {
 		throw "Nothing in proof but comments?";
 	    }
@@ -168,7 +172,7 @@ function checkAndGradePropIDProof(answerObject, problemObject)
 	// to make parser errors readable.
         // DEBUGGING CODE:
 
-	// return err.message + err.stack;
+	console.log(err.message + err.stack);
 	// We end up here with parse errors and some other internal errors.
 	// If a parse error, the error will be the whole proof with annotation about the
 	// location of the error.
