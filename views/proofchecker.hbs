@@ -170,6 +170,12 @@ $(document).ready(function () {
   else {
     $("textarea.proofInputBox").val(savedObject.proof);
     $("#receiptdisplay").html(savedObject.time);
+    if (!jQuery.isEmptyObject(savedObject.grade) && savedObject.grade.message) {
+      $("#gradedisplay").html("<p>Grade:&nbsp;<b>" + savedObject.grade.message + "</b></p>");
+    } else {
+      $("#gradedisplay").html("<p>Grade:&nbsp;<b>" + "Looks like you're not done yet?" + "</b></p>");
+
+    }
   }
 
 });

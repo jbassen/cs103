@@ -32,7 +32,7 @@ exports.getExercise = function(req, res, next) {
         savedObject = JSON.parse(savedObject);
         savedObject.time = "<p><b>LAST SUBMITTED:</b>" +
         new Date(submission[0].time).toLocaleString() +"</p>";
-        savedObject.grade = submission[0].grade;
+        savedObject.grade = JSON.parse(submission[0].grade);
         savedObject = JSON.stringify(savedObject);
       }
       console.log(savedObject);
