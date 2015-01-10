@@ -7,7 +7,7 @@
 
 'use strict';
 
-var mathparse = require('../prParse/mathparse.js');
+var mathparse = require('../prparse/mathparse.js');
 
 /* global mathparse: false */
 /* global algebraicNormalize: false */
@@ -167,7 +167,7 @@ function printBindings(b)
     for (i = 0; i < symNames.length; i++) {
 	symName = symNames[i];
 	symBinding = b[symName];
-	console.log(symName + ": " + latexMathString(symBinding)); 
+	console.log(symName + ": " + latexMathString(symBinding));
     }
 }
 
@@ -228,13 +228,13 @@ function permuteArray(ar, callback, end)
     }
 }
 
+
+// Fake exports to make everything run in node.
 try {
-    exports.foo = 'foo';
-    // we're running in node.
-    global.match = match;
-    global.pmatch = pmatch;
-    global.matchAr = matchAr;
+  exports.foo = 'foo';
+  // we're running in node.
+  global.pmatch = pmatch;
 }
 catch (e) {
-    // in browser, do nothing
-}
+  // in browser, do nothing
+};
