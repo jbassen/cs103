@@ -60,7 +60,7 @@ function normalizedEq(e1, e2, normalizeFun) {
 // applying at most one rewrite to each node of eLeft.
 
 // I got this wrong several times until I wrote out a careful
-// recursive definition and sketched a proof.  
+// recursive definition and sketched a proof.
 // PROBLEM: We don't know wher the user applied the rewrite.  They are
 // allowed to apply it at different places "in parallel".  I.e.,
 // rewrites can be applied to subtrees along a frontier of the tree.
@@ -88,9 +88,9 @@ function rwStepOkFwd(xFormFun, eLeft, eRight, normalizeFun)
     }
     for (i = 0; i < eLeftRwAr.length; i++) {
 	eLeftRw = eLeftRwAr[i];
-	// JON -- DEBUGGING CODE
-	console.log("eLeftRw:\n" + latexMathString(eLeftRw));
-	console.log("eRight:\n" + latexMathString(eRight));
+	// // JON -- DEBUGGING CODE
+	// console.log("eLeftRw:\n" + latexMathString(eLeftRw));
+	// console.log("eRight:\n" + latexMathString(eRight));
 	if (normalizedEq(eLeftRw, eRight, normalizeFun)) {
 	    return true;
 	}
@@ -125,7 +125,7 @@ function rwStepOkFwd(xFormFun, eLeft, eRight, normalizeFun)
 	}
     }
 
-    // nothing worked. 
+    // nothing worked.
     return false;
 }
 
@@ -146,15 +146,15 @@ function makeSubexprTable(e, tab)
     var args = e.getArgs();
     var num = e.getNum();
     var i;
-    
+
     tab[num] = e;
-    
+
     if (!isLeaf(e)) {
 	for (i = 0; i < args.length; i++) {
 	    makeSubexprTable(args[i], tab);
 	}
     }
-	
+
     return tab;
 }
 
@@ -303,7 +303,7 @@ function bicondImpliesRewrite(e, bindings)
     }
 }
 
-// This builds a distributivity transform that distributes op1 over op2 and 
+// This builds a distributivity transform that distributes op1 over op2 and
 // either returns an expr (if there is a single result) or an array of result if
 // there is more than one.
 // With AC operators, distributivity can be applied in multiple conflicting ways
@@ -421,10 +421,10 @@ function makeDistribRewriteFun(op1, op2)
 	    gChild = cArgs[i];	// running example: b, then c
 	    nArgs = args.slice(0); // copy args. r.e. [a, (+ b c), d]
 	    // replace child (+ b c) with gChild [a, (+ b c), d] => [a, b, d]
-	    nArgs.splice(leftmost, 1, gChild); 
+	    nArgs.splice(leftmost, 1, gChild);
 	    // FIXME:
 	    // next R.e.: (* a (* b d)) -->  (* a b d)  [REALLY?}
-	    // nTerm = makeExpr(op1, makeExpr(op1, nArgs).flatten());  
+	    // nTerm = makeExpr(op1, makeExpr(op1, nArgs).flatten());
 	    nTerm = makeExpr(op1, nArgs);
 	    dArgs.push(nTerm);   // r.e. [(* a b d), (* a c d)]
 	}
@@ -576,7 +576,7 @@ function makeDominationMatchFun(andOrOp)
 }
 
 
-// builds a complete rewrite rule, which either transforms the expression 
+// builds a complete rewrite rule, which either transforms the expression
 // or returns the original (e.g., due to pattern matching failure).
 function makeRewriteXform(matchFun, rewFun)
 {
