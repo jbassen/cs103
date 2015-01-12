@@ -1,0 +1,8 @@
+// Please do an equational proof of the following identity.
+// This is a way to convert the biconditional to AND/OR/NOT.
+// Think about why it intuitively makes sense.
+// P <-> Q <=> (not P or Q) and  (not P or Q)
+
+P1: proof
+C1:  // fill in your answer here
+end

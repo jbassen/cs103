@@ -1,0 +1,8 @@
+// This example is a proof of the contrapositive law using more
+// basic properties
+// P -> Q <=> not Q -> not P
+P1: proof
+C1:  P -> Q <=> not P or Q by impliesOr
+         <=> not not Q or not P by obvious
+         <=> not Q -> not P by impliesOr
+end

@@ -7,12 +7,15 @@
 
 'use strict';
 
+// find a node/browser solution to this.
 var mathparse = require('../prparse/mathparse.js');
 
 /* global mathparse: false */
 /* global algebraicNormalize: false */
 /* global console: false */
 /* global latexMathString: false */
+/* global exports */
+/* global global */
 
 // Matching thoughts (research issues).
 // x + constant doesn't match y * z, but it maybe it could do a coercion
@@ -25,6 +28,7 @@ var mathparse = require('../prparse/mathparse.js');
 // Checks whether non-leaf operators are equal, or, if they are complex,
 // whether they match.
 // returns bindings if they're equal or match, null otherwise.
+// FIXME: Should this rewrite the operator?  Probably.
 function opMatch(pOp, eOp, bindings)
 {
     if (typeof(pOp) !== 'string') {
@@ -57,6 +61,8 @@ function opMatch(pOp, eOp, bindings)
 // If pattern matches, adds name of bound variable to matching expr to bindings.
 // that binds variables from pattern to subexpressions of expr.
 // If no match, bindings may have some new entries, anyway.
+//  If we encounter a subexpr that is also in that
+// table, it appears on both sides of the equation.
 // Returns bindings if match is successful, null otherwise.
 // When the matching is successful, the matching subexpression is returned
 // via binding a fake symbol '#matchingExpr', in the returned bindings object.
@@ -149,6 +155,7 @@ function matchAr(p, eAr, bindings)
 // BEST SOLUTION SO FAR: Write the pattern in exactly the right form, even if it's awkward.
 // FIXME: Parser still may do unexpected things.  Tree input in the future?
 // FIXME: Parsing the pattern each time is inefficient.  Cache or preprocess?
+// FIXME: consider passing in parser as an argument?  Or setting in a config?
 function pmatch(pStr, e)
 {
     var p = mathparse.parse(pStr);
@@ -167,7 +174,7 @@ function printBindings(b)
     for (i = 0; i < symNames.length; i++) {
 	symName = symNames[i];
 	symBinding = b[symName];
-	console.log(symName + ": " + latexMathString(symBinding));
+	console.log(symName + ": " + latexMathString(symBinding)); 
     }
 }
 
@@ -228,13 +235,13 @@ function permuteArray(ar, callback, end)
     }
 }
 
-
-// Fake exports to make everything run in node.
 try {
-  exports.foo = 'foo';
-  // we're running in node.
-  global.pmatch = pmatch;
+    exports.foo = 'foo';
+    // we're running in node.
+    global.match = match;
+    global.pmatch = pmatch;
+    global.matchAr = matchAr;
 }
 catch (e) {
-  // in browser, do nothing
-};
+    // in browser, do nothing
+}

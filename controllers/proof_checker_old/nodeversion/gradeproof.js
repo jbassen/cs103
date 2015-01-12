@@ -112,6 +112,7 @@ function checkAndGradePropIDProof(answerObject, problemObject)
 	    }
 	    // check proofs, defs, etc.
             results = processCommands(parsedCommands);
+            //console.log(JSON.stringify(results));
 	    if (results.length === 0) {
 		throw "Nothing in proof but comments?";
 	    }
@@ -192,6 +193,6 @@ function testGradeProof()
     console.log(xxx);
 }
 
-testGradeProof();
+//testGradeProof();
 
 exports.checkAndGradePropIDProof = checkAndGradePropIDProof;

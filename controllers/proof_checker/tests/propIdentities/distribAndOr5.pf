@@ -1,0 +1,5 @@
+// Had bugs with variations on this.
+// This keeps the right term together and breaks up the left term
+P1: proof
+C1:  (P or Q) and (R or S) <=> P and (R or S) or Q and (R or S) by distribAndOr
+end

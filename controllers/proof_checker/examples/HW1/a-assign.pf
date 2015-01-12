@@ -1,0 +1,7 @@
+// Do an equational proof of the following identity.
+// This is an important property of "implies".
+// Think about whether it makes intuitive sense.
+// P -> (Q -> R) <=> (P and Q) -> R
+P1: proof
+C1:  // fill in your answer here
+end

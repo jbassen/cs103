@@ -1,0 +1,17 @@
+// Please do an equational proof of the following identity.
+// This is a different way to convert the biconditional to 
+// AND/OR/NOT.  Surprisingly, the result is completely different
+// (e.g., "and" and "or" are swapped), but about the same size
+// as the solution to the previous problem.
+// Think about why it intuitively makes sense.
+// P <-> Q <=> (P and Q) or (not P and not Q)
+
+// NOTE: There was a problem with the distributive rule that
+// it couldn't check this.  You can work on this an check (and save)
+// it, but we have to fix the distributive rule before it will fully
+// check.  We'll make an announcement and remove this message when
+// the problem is resolved.
+
+P1: proof
+C1:  // fill in your answer here
+end

@@ -1,0 +1,4 @@
+P1: proof
+C1:   P <-> Q <=> (P -> Q) and (Q -> P) by bicondImplies
+       <=> (not P or Q) and (not Q or P) by impliesOr
+end

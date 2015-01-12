@@ -1,4 +1,4 @@
-// Fails: not clear which way to apply transformation
+// Should fail: not clear which way to apply transformation
 P1: proof
 C1: P and (Q or R) or (Q and R)
     <=> P and Q or  Q and (P or R) by distribAndOr

@@ -1,0 +1,71 @@
+<html>
+<head>
+<meta http-equiv="Content-Language" content="en-us"> 
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"> 
+<meta http-equiv="Keywords" content="Class Page, CS103, Mathematical Foundations of Computing,
+Course, Computer Science, Theory, Stanford, Winter, 2014-2015, David L. Dill" />
+  <meta http-equiv="Description" content=" cs103 course page" />
+
+<title>CS103: Mathematical Foundations of Computing</title>
+
+<style>
+.page_container
+{
+    width:7in;
+}
+
+</style>
+</head>
+
+
+<body>
+<div class='page_container'>
+
+<pre>
+// This exercises every rule
+// For compactness, this puts several unrelated identity proofs inside one proof.
+// You should NOT do this on the homework.
+P1: proof
+
+// associativity and commutativity with and/or are "obvious
+C1:  (P and Q) and R <=> P and (Q and R) by obvious
+C2:  P or Q <=> Q or P by obvious   
+C3:  P and Q and R and S and T <=> R and (T and (Q and P) and S) by obvious
+C4:  P and Q <=> Q and P by obvious 
+
+// The checker will attempt to apply the same rule twice in some cases.
+// If this doesn't work, try breaking it down into smaller steps.
+C5: (P -> Q) and (R -> S) <=> (not P or Q) and (not R or S) by impliesOr
+
+// When applying distributive law, it matters which operator is on
+// top.  distribAndOr != distribOrAnd.
+C6:  P and (Q or R) <=> (P and Q) or (P and R) by distribAndOr
+C7:   P or (Q and R) <=> (P or Q) and (P or R) by distribOrAnd
+// Notice that "or" is on top when distribAnd or is applied
+// "backwards".
+C8:  (P and Q) or (P and R) <=>  P and (Q or R) by distribAndOr
+
+C9: not (P and Q) <=>  not P or not Q by deMorganAnd
+C10: not (P or Q) <=>  not P and not Q by deMorganOr
+
+// various rules from lecture
+C11: P and T <=> P by andIdentity
+C12: P or  F <=> P by orIdentity
+
+C13:   P and  P <=> P by andIdempotence
+C14:   P or  P <=> P by orIdempotence
+
+C15:   P and not P <=> F by andInverse
+C16:   P or not P <=> T by orInverse
+
+C17:   P and F <=> F by andDomination
+C18:   P or T <=> T by orDomination
+
+C19:  P -> Q <=> not P or Q by impliesOr
+C20:  P <-> Q <=> (P -> Q) and (Q -> P) by bicondImplies
+
+end
+</pre>
+
+</body>
+</html>

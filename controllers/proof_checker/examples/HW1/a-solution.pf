@@ -1,0 +1,13 @@
+// Do an equational proof of the following identity.
+// This is an important property of "implies".
+// Think about whether it makes intuitive sense.
+// P -> (Q -> R) <=> (P and Q) -> R
+
+P1: proof
+C1: P -> (Q -> R) <=> not P or (Q -> R) by impliesOr
+  <=> not P or (not Q or R) by impliesOr
+  <=> (not P or not Q) or R by obvious
+  <=> not (P and Q) or R by deMorganAnd
+  <=> (P and Q) -> R by impliesOr
+end
+

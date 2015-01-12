@@ -34,13 +34,16 @@ proofCheckerMode = 'propositionalIdentityMode';
 /* global applyLambda: false */
 /* global latexMathString: false */
 /* global pmatch: false */
+/* global rwStepOk: false */
 /* global mathparse: false */
 /* global matchAr: false */
+/* global makeRewriteXform: false */
+/* global makeDistribXform: false */
 /* global latexMathPrint: false */
 /* global freeVariables: false */
 /* global standardizeQuantifier: false */
 /* global substitute: false */
-/* global findTopmostMatchingExprs: false */
+/* global findLocalMatches: false */
 /* global doRewrites: false */
 /* global impliesOrMatch: false */
 /* global impliesOrRewrite: false */
@@ -244,12 +247,17 @@ function propObvious(conclusion, premiseLabels, proofDecls)
 
 
 // Create a rule for checking an identity
-// matchFun is a pattern matching function, as in localrewrites.js
-// rewriteFun is a rewriting function, as in localrewrites.js
+// xForm is match + rewrite, may return array of results if there are several
+// possibilities (as with distrib).
 // eqOp is '\\logeq' or '='
 // normalizeFun is a function to normalize expressions.  Sometimes
 // we want a normalizer that is not too powerful (e.g. propObviousNormalize)
-function makeIdentityRule(matchFun, rewriteFun, eqOp, normalizeFun)
+function makeIdentityRule(matchFun, rewFun, eqOp, normalizeFun) {
+    var xForm = makeRewriteXform(matchFun, rewFun);
+    return makeIdentityRuleXform(xForm, eqOp, normalizeFun);
+}
+
+function makeIdentityRuleXform(xForm, eqOp, normalizeFun)
 {
     if (eqOp === undefined) {
 	throw Error("System error in makeIdentityRule: eqOp is not defined.");
@@ -260,7 +268,8 @@ function makeIdentityRule(matchFun, rewriteFun, eqOp, normalizeFun)
 	// identities, but may mess up matching of some other
 	// patterns, especially if normalization does more than
 	// flattening and sorting.
-	concFrm = normalizeFun(concFrm);
+	// Normalizing at this stage can actually mess things up.
+	// concFrm = normalizeFun(concFrm); 
 	var op = concFrm.getOp();
 	if (op !== eqOp) {
 	    conclusion.ok = "Conclusion is not \\((\\logeq\\).";
@@ -273,18 +282,11 @@ function makeIdentityRule(matchFun, rewriteFun, eqOp, normalizeFun)
 	var args = concFrm.getArgs();
 	var left = args[0];
 	var right = args[1];
-	var matchAr = findTopmostMatchingExprs(matchFun, left, right);
-	if (typeof(matchAr) === 'string') {
-	    conclusion.ok = matchAr;
-	    return;
-	}
-	var rewritten = doRewrites(rewriteFun, concFrm, matchAr);
-	var result = normalizeFun(rewritten);
-	if (result !== exprProto.trueVal) {
-	    conclusion.ok = "Unable to prove equivalence: \\(" + latexMathString(result) + "\\).";
+	if (rwStepOk(xForm, left, right, normalizeFun)) {
+	    conclusion.ok = "checks";
 	}
 	else {
-	    conclusion.ok = "checks";
+	    conclusion.ok = "Unable to prove equivalence.\n";
 	}
     };
     return identityRule;
@@ -1253,12 +1255,10 @@ var propositionalIdentityJustifiers = {
 				     bicondImpliesRewrite,
 				     '\\logeq',
 				     propObviousNormalize),
-    distribAndOr:   makeIdentityRule(makeDistribMatchFun('\\wedge', '\\vee'),
-				     makeDistribRewriteFun('\\wedge', '\\vee'),
+    distribAndOr:   makeIdentityRuleXform(makeDistribXform('\\wedge', '\\vee'),
 				     '\\logeq',
 				     propObviousNormalize),
-    distribOrAnd:   makeIdentityRule(makeDistribMatchFun('\\vee', '\\wedge'),
-				     makeDistribRewriteFun('\\vee', '\\wedge'),
+    distribOrAnd:   makeIdentityRuleXform(makeDistribXform('\\vee', '\\wedge'),
 				     '\\logeq',
 				     propObviousNormalize),
     deMorganAnd:    makeIdentityRule(makeDistribMatchFun('\\neg', '\\wedge'),

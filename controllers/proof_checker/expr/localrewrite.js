@@ -3,12 +3,18 @@
 // Copyright (c) 2014 by the Board of Trustees of Leland Stanford Junior University and David L. Dill
 // All Rights Reserved.
 
-// NEXT:  Build some example symbolic pattern match/rewriters and test this.
-// Then hand-code distributive law or whatever.
+// FIXME: Refactoring opportunity: This is exporting a bunch of functions so that
+//   proofcheck can build justifiers with them.  If this file exported the justifier tables,
+//   it would significantly reduce the size of the interface.
+
+// FIXME: There are quite a few obsolete functions because of my struggles to get
+// this to actually work.
+
 
 'use strict';
 
 /* global isLeaf:false */
+/* global isExpr:false */
 /* global makeExpr:false */
 /* global pmatch:false */
 /* global exprProto:false */
@@ -20,6 +26,16 @@
 /* global unitTab:false */
 /* global propDual:false */
 /* global negate:false */
+/* global global */
+/* global exports */
+
+
+function normalizedEq(e1, e2, normalizeFun) {
+    if (normalizeFun === undefined) {
+	throw new Error("normalizedEq: normalizeFun is not defined.");
+    }
+    return normalizeFun(e1) === normalizeFun(e2);
+}
 
 // Local rewriting is for small proof steps.  The idea is to identify
 // particular subexpressions that can be rewritten to make two
@@ -38,6 +54,87 @@
 // term is computed.  Then the pattern matching is applied
 // recursively, top-down, until a sub-expression that does not occur
 // in the other expression matches the pattern.
+
+
+// rwStep says whether eLeft can be transformed to eRight by
+// applying at most one rewrite to each node of eLeft.
+
+// I got this wrong several times until I wrote out a careful
+// recursive definition and sketched a proof.  
+// PROBLEM: We don't know wher the user applied the rewrite.  They are
+// allowed to apply it at different places "in parallel".  I.e.,
+// rewrites can be applied to subtrees along a frontier of the tree.
+// The problem is that we don't know that the user may have several
+// choices about where to apply combinations of rewrites, and we have
+// to consider all of them.
+
+// FIXME: need consistent terminology about rewrites, xforms.
+//  which ones have separate match?
+
+function rwStepOkFwd(xFormFun, eLeft, eRight, normalizeFun)
+{
+    var i, eLeftRw, cRight, cLeft, argsLeft, argsRight;
+    // base case 1: trees are equal already.
+    if (normalizedEq(eLeft, eRight, normalizeFun)) {
+	return true;
+    }
+
+    // base case 2: top-level rewrite makes them equal.  If there is
+    // no pattern match, xFormFun just returns its argument.  Some
+    // xForms (e.g. distrib) return several alternate possibilities.
+    var eLeftRwAr = xFormFun(eLeft);
+    if (isExpr(eLeftRwAr)) {
+	eLeftRwAr = [eLeftRwAr];
+    }
+    for (i = 0; i < eLeftRwAr.length; i++) {
+	eLeftRw = eLeftRwAr[i];
+	// JON -- DEBUGGING CODE
+	console.log("eLeftRw:\n" + latexMathString(eLeftRw));
+	console.log("eRight:\n" + latexMathString(eRight));
+	if (normalizedEq(eLeftRw, eRight, normalizeFun)) {
+	    return true;
+	}
+    }
+
+    // base case 3: One is a leaf, so we can't look at subtrees.
+    if (isLeaf(eLeft) || isLeaf(eRight)) {
+	return false;
+    }
+
+    // We continue instead or returning if rewriting doesn't
+    // get a match in base case 2 to consider the possibility
+    // the the rewrite was applied in subtrees.
+
+    // induction: rewrites of descendents make them equal
+    var opLeft = eLeft.getOp();
+    var opRight = eRight.getOp();
+
+    // FIXME: Rewrites in complex operators are not considered.
+    if (opLeft === opRight) {
+	argsLeft = eLeft.getArgs();
+	argsRight = eRight.getArgs();
+	if (argsLeft.length === argsRight.length) {
+	    for (i = 0; i < argsLeft.length; i++) {
+		cLeft = argsLeft[i];
+		cRight = argsRight[i];
+		if (!rwStepOkFwd(xFormFun, cLeft, cRight, normalizeFun)) {
+		    return false;
+		}
+	    }
+	    return true;	// loop found no inequivalent children.
+	}
+    }
+
+    // nothing worked. 
+    return false;
+}
+
+// Try forwards and backwards.
+function rwStepOk(xFormFun, eLeft, eRight, normalizeFun)
+{
+    return rwStepOkFwd(xFormFun, eLeft, eRight, normalizeFun) ||
+	rwStepOkFwd(xFormFun, eRight, eLeft, normalizeFun);
+}
 
 // makeSubexprTable takes an expression as an argument and makes a
 // table for fast lookup of each expression.  The table is a
@@ -62,61 +159,69 @@ function makeSubexprTable(e, tab)
 }
 
 
-// findTopmostMatchingExprs does a top-down recursive match on of
-// patFun on expressions e1 and e2 to find subexpressions that match
-// the pattern and do not occur in the other expression (using tables t1 and t2).
-// It returns an array of match results.
-// Each match result is an object with matching subexpression and bindings,
-// for rewriting.
-// Return value: an array of matchResults, or a string with a failure message
-// (for conclusion.ok) of there are matches in both expressions.
-function findTopmostMatchingExprs(patFun, e1, e2, t1, t2)
+// THIS IS SUBTLE.
+// Worry about rewriting wrong number of times.
+// everything gets rewritten 0 or 1 times.
+// then rwEqTab used to map e2 nodes.  It's important that they were never
+// rewritten. All entries in rwEqTab come from rewriting e1.
+function findRewriteEquivalences(matchFun, rewFun, e, otherExprTab, rwEqTab, noRewrite)
 {
-    t1 = t1 || makeSubexprTable(e1);
-    t2 = t2 || makeSubexprTable(e2);
-
-    var topMatches1 = findTopmostMatchingSubexprs(patFun, e1, t2);
-    var topMatches2 = findTopmostMatchingSubexprs(patFun, e2, t1);
-
-    if (topMatches1.length === 0) {
-	return topMatches2;
+    var bindings = {};
+    if (isLeaf(e)) {
+	return e;
     }
-    // else if (topMatches2.length === 0) {
-    else if (topMatches2.length === 0) {
-	return topMatches1;
+    var eNum = e.getNum();
+    var rwEx = rwEqTab[eNum];
+    if (rwEx) {
+	return rwEx;		// cache hit
     }
-    else {
-	return "Not clear whether to apply transformation forwards or backwards.";
-    }
-}
+    var op = e.getOp();
+    var args = e.getArgs();
 
-// patFun is a pattern matching function
-// e1 is an expression.
-// t2 is an object mapping expression numbers to expressions.
-// resultsAr is an array of accumulated matching results (optional)
-// Find all topmost subexpressions matching patFun in e1 that
-// are not in table t2.
-// FIXME: needs to be tested with multiple matches.
-function findTopmostMatchingSubexprs(patFun, e1, t2, resultsAr)
-{
-    resultsAr = resultsAr || [];
-    var patResults;		// pattern match results
-    var args, i;
-
-    if (!t2[e1.getNum()]) {
-	patResults = patFun(e1); // don't give it any bindings
-	if (patResults) {
-	    resultsAr.push(patResults);
-	}
-	else if (!isLeaf(e1)) {
-	    args = e1.getArgs();
-	    for (i = 0; i < args.length; i++) {
-		findTopmostMatchingSubexprs(patFun, args[i], t2, resultsAr);
-	    }
+    // rewrite children, first
+    var rwKids = args.map(function (c) { return findRewriteEquivalences(matchFun, rewFun, c, otherExprTab, rwEqTab); });
+    // Rebuild expr with rewritten children
+    rwEx = makeExpr(op, rwKids);
+    // rewrite the the current node (with rewritten kids)
+    if (!noRewrite) {			  // don't rewrite when doing "other" side. Just substitute known equivalences.
+	// BUG: Using rewritten children might cause rewrite in original expression to be overlooked!
+	bindings = matchFun(rwEx, bindings); // returns new bindings or null
+	if (bindings) {			  // match successful
+	    rwEx = rewFun(rwEx, bindings);
+	    // FIXME: consider otherTab optimization  -- only rewrite when rewritten
+	    // expr appears somewhere in other side (don't clobber rwEx in previous line)
 	}
     }
-    return resultsAr;
+    // rewritten child changed the expression, so rebuild, store store that as equivalent to e,
+    // and return the rewritten expr.
+    rwEqTab[e] = rwEx;
+    return rwEx;
 }
+
+// check for equivalence up to at most one application of a rewrite at each node.
+// If the rewrite described by matchFun and newFun, when applied at most once to each
+// node in "left", makes the two equivalent, it returns true.
+function leftRewritesToRight(matchFun, rewFun, left, right)
+{
+    var rwEqTab = {};		// maps exprNums to rewritten expr.
+    // apply rewrites at bottom-most opportunities in the tree.
+    // substitute rewritten exprs for original in containing expressions
+    // to get rewritten equivalent for the whole expression.
+    // FIXME: use other expr tab?
+    var rwLeft = findRewriteEquivalences(matchFun, rewFun, left, {}, rwEqTab, false);
+    // Do the same to right expression, but ONLY apply rewrites to
+    // specific expressions that applied on the left tree (stored in rwEqTab).
+    var rwRight = findRewriteEquivalences(matchFun, rewFun, right, {}, rwEqTab, true);
+    return rwLeft === rwRight;
+}
+
+// Checks equivalence by trying to rewrite in both forwards and backwards direction
+function rewriteEq(matchFun, rewFun, left, right)
+{
+    return leftRewritesToRight(matchFun, rewFun, left, right) ||
+	leftRewritesToRight(matchFun, rewFun, right, left);
+}
+
 
 // Do rewrites for all matches in array
 // rewFun is a rewrite function (taking args: expr, bindings)
@@ -154,15 +259,6 @@ function rewriteRec(rewFun, e, bindings)
     }
 }
 
-
-
-// ****************************************************************
-// Some test code
-// ****************************************************************
-
-// impliesOr
-// pattern:  p \implies q
-// rewrite  \neg p \vee q
 
 function impliesOrMatch(e)
 {
@@ -207,13 +303,65 @@ function bicondImpliesRewrite(e, bindings)
     }
 }
 
+// This builds a distributivity transform that distributes op1 over op2 and 
+// either returns an expr (if there is a single result) or an array of result if
+// there is more than one.
+// With AC operators, distributivity can be applied in multiple conflicting ways
+// (it's nondeterministic).  So this returns an ARRAY of rewritten expressions.
+// The match function gets multiple matches, each of which results in a different
+// rewrite, so matching and rewriting are combined in one function.
+function makeDistribXform(op1, op2)
+{
+    var distribXform = function distribXform(e, bindings) {
+	var op, args, i, c, cArgs, j, nArgs, gChild, nTerm, rwEx, dArgs;
+	var results = [];
+	if (!isLeaf(e)) {
+	    op = e.getOp();
+	    if (op === op1) {
+		args = e.getArgs();
+		// this loops finds all of the children that can be distributed.
+		for (i = 0; i < args.length; i++) {
+		    dArgs = [];
+		    // Running example: (* a (+ b c) d)
+		    c = args[i];
+		    if (c.getOp() === op2) {
+			// c is the child whose args will be distributed among other children.
+			//  e.g. (+ b c)
+			cArgs = c.getArgs();
+			// this loop collects all the copies of with different grandchildren
+			for (j = 0; j < cArgs.length; j++) {
+			    gChild = cArgs[j];
+			    nArgs = args.slice(); // copy args.
+			    nArgs.splice(i, 1, gChild);  // replace (+ b c) with b, c
+			    nTerm = makeExpr(op1, nArgs);
+			    dArgs.push(nTerm);   // accumulate [(* a b d), (* a c d)]
+			}
+			// build the rewritten expression
+			// ??? why do we need the "flatten"?
+			rwEx = makeExpr(op2, makeExpr(op2, dArgs).flatten());
+			results.push(rwEx);
+		    }
+		}
+	    }
+	}
+	if (results.length === 0) {
+	    return e;
+	}
+	else if (results.length === 1) {
+	    return results[0];
+	}
+	else if (results.length > 1) {
+	    return results;
+	}
+    };
+    return distribXform;
+}
+
 // make a distributive law matcher for op1, op2
 function makeDistribMatchFun(op1, op2)
 {
-    // this is a little funky -- bindings are useless except matching expr.
-    var distribMatchFun = function distribMatchFun(e) {
+    var distribMatchFun = function distribMatchFun(e, bindings) {
 	var op, args, i, c;
-	var bindings = {};
 	if (!isLeaf(e)) {
 	    op = e.getOp();
 	    if (op === op1) {
@@ -222,6 +370,8 @@ function makeDistribMatchFun(op1, op2)
 		    c = args[i];
 		    if (c.getOp() === op2) {
 			bindings['#matchingExpr'] = e;
+			// FIXME: generate diagnostic msg if there is more than one child that is different?
+			bindings['#targetChild'] = c;
 			return bindings;
 		    }
 		}
@@ -234,18 +384,53 @@ function makeDistribMatchFun(op1, op2)
     return distribMatchFun;
 }
 
+
+
+
 // return a distributive law rewriter for op1, op2.
 // REMOVE NEWOP2
-function makeDistribRewriteFun(op1, op2, newOp2)
+function makeDistribRewriteFun(op1, op2)
 {
-    var distribRewriteFun = function distribRewriteFun(e, bindings) {
-	var rwEx = bindings['#matchingExpr'];
-	if (e === rwEx) {
-	    var temp =  e.distribute(op1, op2, newOp2);
-	    return temp;
+    // var distribRewriteFun = function distribRewriteFun(e, bindings) {
+    // 	var rwEx = bindings['#matchingExpr'];
+    // 	if (e === rwEx) {
+    // 	    var temp =  e.distribute(op1, op2);
+    // 	    return temp;
+    // 	}
+    // 	return e;
+    // };
+
+    function distribRewriteFun(e, bindings)
+    {
+	var i, cOp, cArgs, gChild, nTerm, nArgs;
+	// Running example: (* a (+ b c) d)
+	// op1 = *, op2 = +
+	// find leftmost occurrence of op2 in children of op1, distribute.
+	var op = e.getOp();
+	var args = e.getArgs();
+	// find a term with op2, set leftmost to the index of the term.
+	// running example: child = (+ b c).
+	var child = bindings['#targetChild'];
+	// get index of child
+	var leftmost = args.findIndex(function (c) { return c === child; });
+	// running example: leftmost = 1 now
+	var dArgs = []; 		// args for result
+	cArgs = child.getArgs(); // r.e.: cArgs = [b,c] (there could be more than 2)
+	// running example: loop over b, c
+	for (i = 0; i < cArgs.length; i++) {
+	    gChild = cArgs[i];	// running example: b, then c
+	    nArgs = args.slice(0); // copy args. r.e. [a, (+ b c), d]
+	    // replace child (+ b c) with gChild [a, (+ b c), d] => [a, b, d]
+	    nArgs.splice(leftmost, 1, gChild); 
+	    // FIXME:
+	    // next R.e.: (* a (* b d)) -->  (* a b d)  [REALLY?}
+	    // nTerm = makeExpr(op1, makeExpr(op1, nArgs).flatten());  
+	    nTerm = makeExpr(op1, nArgs);
+	    dArgs.push(nTerm);   // r.e. [(* a b d), (* a c d)]
 	}
-	return e;
-    };
+	// return (+ (* a b d) (* a c d))
+	return makeExpr(op2, makeExpr(op2, dArgs).flatten());
+    }
     return distribRewriteFun;
 }
 
@@ -280,11 +465,10 @@ function deMorganRewrite(e, bindings)
 // FIXME: what about XOR?
 function makePropIdemInvMatchFun(andOrOp, whichLaw)
 {
-    var propIdemInvMatch = function propIdemInvMatch(e)
+    var propIdemInvMatch = function propIdemInvMatch(e, bindings)
     {
 	var op = e.getOp();
 	var args = e.getArgs();
-	var bindings = {};
 	// return value for inverse
 	var i, cur, next;
 	if (op === andOrOp) {
@@ -373,11 +557,10 @@ function makeAsToldRewriteFun()
 
 function makeDominationMatchFun(andOrOp)
 {
-    var dominationMatch = function dominationMatch(e)
+    var dominationMatch = function dominationMatch(e, bindings)
     {
 	var op = e.getOp();
 	var args, nullity;
-	var bindings = {};
 	if (op === andOrOp) {
 	    args = e.getArgs();
 	    nullity = nullityTab[andOrOp];
@@ -392,21 +575,39 @@ function makeDominationMatchFun(andOrOp)
     return dominationMatch;
 }
 
-function mstTest(str, matchFun, rewFun)
+
+// builds a complete rewrite rule, which either transforms the expression 
+// or returns the original (e.g., due to pattern matching failure).
+function makeRewriteXform(matchFun, rewFun)
 {
-    var tab = {};
-    var e = mathparse.parse(str);
-    var matchAr = findTopmostMatchingSubexprs(matchFun, e, tab);
-    var result = doRewrites(rewFun, e, matchAr);
-    return latexMathString(result);
+    return function rewrite(e) {
+	var bindings = {};
+	bindings = matchFun(e, bindings); // returns new bindings or null
+	if (bindings) {			  // match successful
+	    return rewFun(e, bindings);
+	}
+	return e;
+    };
+}
+
+function reqtest(leftStr, rightStr)
+{
+    var distribXform = makeDistribXform('\\wedge', '\\vee');
+    var impliesRewrite = makeRewriteXform(impliesOrMatch, impliesOrRewrite);
+    var left = mathparse.parse(leftStr);
+    var right = mathparse.parse(rightStr);
+    console.log("impliesOr result: " , rwStepOk(impliesRewrite, left, right, propObviousNormalize));
+    console.log("distrib result: " , rwStepOk(distribXform, left, right, propObviousNormalize));
 }
 
 try {
     exports.foo = 'foo';
     // we're running in node.
+    global.rwStepOk = rwStepOk;
+    global.makeDistribXform = makeDistribXform;
+    global.makeRewriteXform = makeRewriteXform;
     global.impliesOrMatch = impliesOrMatch;
     global.impliesOrRewrite = impliesOrRewrite;
-    global.findTopmostMatchingExprs = findTopmostMatchingExprs;
     global.doRewrites = doRewrites;
     global.impliesOrMatch = impliesOrMatch;
     global.impliesOrRewrite = impliesOrRewrite;

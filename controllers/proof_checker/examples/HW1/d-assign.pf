@@ -1,0 +1,7 @@
+// Please prove the following identity about biconditionals.
+// There is no rule for contrapositive, so you will need to
+// use other rules (but see the contrapositive example).
+//  P <-> Q <=>  not P <-> not Q
+P1: proof
+C1: // fill in your answer here.
+end

@@ -1,0 +1,6 @@
+// Buggy line from proof 1.c  There is a genuine error here.
+P1: proof
+C1: (not P or Q) and (not Q or P) <=> ((not P or Q) and not Q) or ((not P or Q) and P) by distribOrAnd
+end
+
+
