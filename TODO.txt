@@ -1,5 +1,7 @@
 DEFINITELY:
-- print last submit time
+- display saved blocks world
+- check blocks world
+- grade blocks world
 
 
 - enter a couple test problems into the database

@@ -1,4 +1,0 @@
-P1: proof
-C1:   P and (Q or R) and S
-     <=> (P and S and R) or (S and Q and P) by distribAndOr
-end

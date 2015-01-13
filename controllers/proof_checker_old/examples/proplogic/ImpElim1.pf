@@ -1,7 +1,0 @@
-P1: proof
-   P2: proof
-       A2: P \wedge Q by assumption
-       C2: P by andElim(A2)
-       end
-   C1: P \wedge Q \implies P by impliesIntro(P2)
-end

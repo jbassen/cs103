@@ -1,7 +1,0 @@
-// implies distributes consequent
-
-proof
-    P1 \implies (P2 and P3) <=> \neg P1 \vee (P2 and P3) by impliesOr.
-      <=> (\neg P1 \vee P2) \wedge (\neg P1 \vee P3) by distribOrAnd.
-      <=> (P1 \implies P2) and (P1 \implies P3) by impliesOr.
-end

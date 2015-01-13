@@ -2,7 +2,11 @@
 <html>
 <head>
 	<!-- JON'S SCRIPTS -->
-	<script type="text/javascript">var problemObject = {{{problemJSON}}};</script>
+	<script type="text/javascript">
+	var problemObject = {{{problemJSON}}};
+	var savedObject;
+	savedObject = {{{savedJSON}}};
+	</script>
 	<!-- / JON'S SCRIPTS -->
 
 	<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
@@ -111,8 +115,10 @@
 	<button onclick = "getHelp()">Need help?</button></p>-->
 
 	<!-- took out "; saveCheckedFormulas()"" -->
-	<p><button id ="check" onclick="submitAndVerify(this.id) ">Check World</button></p>
-
+	<p>
+	<button id ="check" onclick="submitAndVerify(this.id) ">Check And Submit World</button>
+	<button id = "resetProblem" class = "problemtype" onclick = "resetProblem()">Reset Problem</button>
+	</p>
 
 	<!-- BLOCKSWORLD GRID -->
   <table border = "0"><tr><td>
@@ -252,11 +258,12 @@
   </td></tr>
  </table>
 
-	<button id ="submit" onclick="submitAndVerify(this.id) ">Submit</button>
-	<button id ="save" onclick="submitAndVerify(this.id) ">Save</button>
-	<button id = "resetProblem" class = "problemtype" onclick = "resetProblem()">Reset</button>
+	<!-- <button id ="submit" onclick="submitAndVerify(this.id) ">Submit</button> -->
+	<!-- <button id ="save" onclick="submitAndVerify(this.id) ">Save</button> -->
+	<!-- <button id = "resetProblem" class = "problemtype" onclick = "resetProblem()">Reset</button> -->
 
-	<pre id="grade"><p></p></pre>
+	<p id="receiptdisplay"> </p>
+	<p id="gradedisplay"> </p>
 	<!-- &#x2713; &#x2717; -->
 	<!-- <button id ="check" onclick="submitAndVerify() ">Check</button> -->
 

@@ -1,4 +1,0 @@
-P1: proof
-    def P(x) : x > 0 and x > 1
-    C1:   x > 2 and P(x) <=> x > 0  and x > 2 and x > 1 by definition(P)
-end

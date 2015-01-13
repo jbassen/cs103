@@ -1,8 +1,0 @@
-P1: proof
-  P2: proof
-    var x
-    A1: P(x) \wedge Q(x) by assumption
-    C1: P(x) by andElim(A1)
-  end
-  C2: \forall x (P(x) \wedge Q(x) \implies P(x)) by conditionalGeneralProof(P2)
-end

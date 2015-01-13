@@ -16,6 +16,11 @@ function submitAndVerify(action)
 		return;
 	}
 
+	if (formula === "") {
+		$("#checkresult").html("Formula box cannot be empty.");
+		return;
+	}
+
 	//don't allow the empty world
 	if (world === "var world =};") {
 		$("#checkresult").html("&nbsp;");
@@ -27,12 +32,10 @@ function submitAndVerify(action)
 	var c = blockNames.c;
 
 	var dataToServer = {
-		action: action,
-		answer: {
-			world: world,
-			formula: formula,
-			blockNames: blockNames
-		}
+		action: "submit",
+		world: world,
+		formula: formula,
+		blockNames: blockNames
 	};
   console.log("sending: " + JSON.stringify(dataToServer));
 
@@ -60,10 +63,15 @@ function submitAndVerify(action)
   if (result.status !== 'error') {
       $("#checkresult").html("Result: " + result.msg);
  	    MathJax.Hub.Queue(["Typeset",MathJax.Hub,"checkresult"]);
+			$("#receiptdisplay").html(result.receipt);
+			if(result.grade && result.grade.message) {
+				$("#gradedisplay").html("Grade:&nbsp;<b>" + result.grade.message + "</b>");
+			}
 	}
   else {
 	    $('#checkresult').html('&nbsp;');
 	    $("#error").html($('#inputFormula1').val() + '<br>' + result.msg);
+			$("#receiptdisplay").html("Server Failure. Check your submission and network connection and try again.");
 	}
 
 	var checkHeightAfter = $('#check').offset().top;

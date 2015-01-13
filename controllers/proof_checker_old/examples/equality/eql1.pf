@@ -1,6 +1,0 @@
-P1: proof
-   var x, y
-   A1: x = y  by assumption
-   A2: P(x) by assumption
-   C1: P(y) by substitution
-end

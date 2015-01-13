@@ -1,14 +1,12 @@
 var _ = require('underscore');
 var proofChecker = require('./proof_checker/nodeversion/gradeproof');
-// var blocksChecker = require();
+var blocksChecker = require('./blocks_world/blocksChecker');
 var Exercise = require('../models/Exercise');
 var Interaction = require('../models/Interaction');
 var User = require('../models/User');
 
 
 exports.getExercise = function(req, res, next) {
-
-  // TODO: add code to load last saved/submitted exercise
 
   Exercise
   .findOne({ _id: req.params._id })
@@ -53,7 +51,7 @@ exports.getExercise = function(req, res, next) {
 
 exports.postExercise = function(req, res, next) {
   console.log("req:");
-  console.log(req.body);
+  console.log(JSON.stringify(req.body));
 
   Exercise
   .findOne({ _id: req.params._id })
@@ -64,8 +62,13 @@ exports.postExercise = function(req, res, next) {
     }
 
     var feedbackObject;
-    if(exercise.checker === 'default') {
+    if(exercise.type == "proofchecker") {
       feedbackObject = proofChecker.checkAndGradePropIDProof(
+        req.body,
+        JSON.parse(exercise.problemJSON)
+      );
+    } else if (exercise.type == "blocksworld") {
+      feedbackObject = blocksChecker.checkAndGradeBlocksWorld(
         req.body,
         JSON.parse(exercise.problemJSON)
       );

@@ -70,11 +70,21 @@ $(document).ready(function(){
 	// $('#b').offset(getUnusedNameOffset('b'));
 	// $('#c').offset(getUnusedNameOffset('c'));
 
+
 	// JON'S CODE
 	$('#instructions').text(problemObject.instructions);
-	$('#inputFormula1').val(problemObject.formula);
-	SRFLAtoWorld(problemObject.world);
-	// / JON'S CODE
+
+	if (jQuery.isEmptyObject(savedObject)) {
+		$('#inputFormula1').val(problemObject.formula);
+		SRFLAtoWorld(problemObject.world);
+	} else {
+		$('#inputFormula1').val(savedObject.formula);
+		SRFLAtoWorld(savedObject.world);
+		$("#receiptdisplay").html(savedObject.time);
+		if (!jQuery.isEmptyObject(savedObject.grade) && savedObject.grade.message) {
+			$("#gradedisplay").html("Grade:&nbsp;<b>" + savedObject.grade.message + "</b>");
+		}
+	}
 
 });
 
@@ -82,8 +92,10 @@ $(document).ready(function(){
 function resetProblem() {
 	$('#inputFormula1').val('');
 	resetWorld();
-	$('#instructions').text(problemObject.instructions);
+	$('#instructions').val(problemObject.instructions);
 	$('#inputFormula1').val(problemObject.formula);
+	$("#receiptdisplay").html(String(""));
+	$("#gradedisplay").html(String(""));
 	SRFLAtoWorld(problemObject.world);
 }
 // / JON'S CODE
@@ -406,9 +418,12 @@ function worldToSRFLA() {
  * Given a SRFLA set of Records, updates the blocks world to display the SRFLA world
  */
 function SRFLAtoWorld(set) {
-  console.log(set);
-	// resetWorld();  //commented out by JON
-	set.shift("Set"); //account for the unshift by "Set" in worldToSRFLA
+  // console.log(set);
+	// // resetWorld();  //commented out by JON
+	// set.shift("Set"); //account for the unshift by "Set" in worldToSRFLA
+	//
+	set = set.slice(1);
+
 	for (var i = 0; i < set.length; i++) {
 		var rec = set[i][1];
 		var row = rec.y[1];
@@ -419,9 +434,11 @@ function SRFLAtoWorld(set) {
 		var id = '#' + idnum;
 		var img = '/images/' + color + shape + '.gif';
 		//note that the acceptsSelf is not in the standard JQuery library
-		$(id).attr('src', img).droppable({tolerance:'pointer', drop: handleDrop, acceptsSelf: true}).draggable({cursor: 'move', helper: 'clone', opacity: constants.DRAG_OPACITY, start: handleMoveStart, stop: handleMoveStop}).css('cursor', 'move').addClass('COLOR_'+color).addClass('SHAPE_'+shape);
+		$(id).attr('src', img).droppable({tolerance:'pointer', drop: handleDrop, acceptsSelf: true}).draggable({cursor: 'move', helper: 'clone', opacity: constants.DRAG_OPACITY, start: handleMoveStart, stop: handleMoveStop}).css('cursor', 'move').addClass('COLOR_'+
+		color).addClass('SHAPE_'+shape).addClass('dragMe');
+		//$('.block').addClass('dragMe').addClass('block');
 	}
-	set.unshift("Set"); // if you don't put this back, bad things happen!!! JON
+	// set.unshift("Set"); // if you don't put this back, bad things happen!!! JON
 }
 
 

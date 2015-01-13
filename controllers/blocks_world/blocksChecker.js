@@ -1,0 +1,155 @@
+// -*- javascript -*-
+
+// 'use strict';
+
+/* global srflaMathParser: false */
+/* global blocksParser: false */
+/* global srflaEval: false */
+/* global SRFLATRUE: false */
+/* global SRFLAFALSE: false */
+
+var srflaEvalPackage = require('./srflaEval.js');
+
+srflaEval = srflaEvalPackage.srflaEval;
+SRFLATRUE = srflaEvalPackage.SRFLATRUE;
+SRFLAFALSE = srflaEvalPackage.SRFLAFALSE;
+
+var srflaMathParser = require('./srflaMathParser.js');
+var blocksParser = require('./blocksParser.js');
+
+
+
+// ****************************************************************
+// DD: fake server code starts here.  A lot of parsers, srfla stuff has to be
+// loaded into node, somehow (require?)
+// AJAX to the server should be JSON.stringify(newInterp)
+// server should return an object
+// { status:  one of 'normal', 'badname', 'error'
+//   message:  html to display
+// }
+
+// answerObject is JSON.parse'ed data from the ajax call
+
+exports.checkAndGradeBlocksWorld = function(answerObject, problemObject) {
+
+    // FIXME: make sure it has the right fields, return with a sensible error if not.
+    var world = answerObject.world;
+    var blockNames = answerObject.blockNames;
+    var logic = answerObject.formula;
+
+    console.log(answerObject);
+
+    var result;		// server return object.
+
+    // This will be the object that SRFLA uses to bind global
+    // variables (the "interpretation").
+    var srflaInterp = {};
+
+    // SRFLA code to define predicates used in evaluating a formula.
+    // This is string input for the SRFLA programming language.  It defines
+    // predicates (e.g., LeftOf is really a property of the x coordinates
+    // of blocks b1 and b2, where b1 and b2.
+    var blocksDefsInput =
+	"function LeftOf(b1, b2) b1.x < b2.x;\n" +
+	"function RightOf(b1, b2) b1.x > b2.x;\n" +
+	"function Below(b1, b2) b1.y > b2.y;\n" +
+	"function Above(b1, b2) b1.y < b2.y;\n" +
+	"function SameRow(b1, b2) b1.y = b2.y;\n" +
+	"function SameColumn(b1, b2) b1.x = b2.x;\n" +
+	"function Red(b1) b1.color = \"red\";\n"+
+	"function Yellow(b1) b1.color = \"yellow\";\n" +
+	"function Blue(b1) b1.color = \"blue\";\n" +
+	"function Square(b1) b1.shape = \"square\";\n" +
+	"function Circle(b1) b1.shape = \"circle\";\n" +
+	"function Triangle(b1) b1.shape = \"triangle\";\n";
+
+    // Parse the predicates defined in previous 'line';
+    var blocksDefsAST = srflaMathParser.parse(blocksDefsInput);
+
+    // srflaEval is the SRFLA intepreter, which is called here to
+    // process the defined predicates (blocksDefInput).  They get
+    // stored in globalInterp (e.g., srflaInterp.Circle gets the AST
+    // for the Circle predicate).
+    for (var i = 0; i < blocksDefsAST.length; i++) {
+	srflaEval(blocksDefsAST[i], srflaInterp);
+    }
+
+    console.log("0: " + JSON.stringify(srflaInterp));
+
+    // get the string for the world and parse it.
+    // This takes the AST for the world (answerObject.world] and embeds it in the
+    // AST for a declaration of the variable 'world' with that AST as the value.
+  //BROKEN?  srflaEval(['var', 'world', world], srflaInterp);
+    srflaInterp.world = world;
+
+    console.log("1: " + JSON.stringify(srflaInterp));
+
+    // define the block names in the srflaInterp
+    // names that do not correspond to blocks throw an error
+    var blockAssign, bnKeys, bnk, bn;
+    try {
+	bnKeys = Object.keys(blockNames);
+	for (i = 0; i < bnKeys.length; i++) {
+	    bnk = bnKeys[i];
+   	    bn = blockNames[bnk];
+	    if (bn) {
+		blockAssign = srflaMathParser.parse(bn)[0];
+		srflaEval(blockAssign, srflaInterp);
+	    }
+	}
+
+	console.log("logic:  " + logic);
+	// parse the logic formula string into an AST.
+	var logicAST = blocksParser.parse(logic);
+
+  console.log("2: " + JSON.stringify(srflaInterp));
+
+
+	// evaluate the logic formula against srflaInterp, which has the definitions for
+	// the blocks world, the predefined predicates ("Red", etc.), and the blocks.
+	var srflaResult = srflaEval(logicAST, srflaInterp);
+	// SRFLA returns ['\\T'] or ['\\F'].  I'm not sure why it gets turned into T or F,
+	// and especially unclear about the linefeed at the end.  I left it like this for
+	// consistency with old code.  See "JSON.parse" below.
+
+	if (srflaResult === SRFLATRUE) {
+	    result = {status : 'normal', msg: "<b>True</b>", grade: {message: "formula MATCHES world"}};
+	}
+	else {
+	    result = {status : 'normal', msg: "<b>False</b>", grade: {message: "formula DOES NOT MATCH world"}};
+	}
+    }
+    catch (err) {
+	// parse the error message.
+	// FIXME: This is inelegant.
+	var errorParse = err.message.match(/Undefined variable: (.*)$/);
+	if (errorParse) {
+	    result = { status: 'badname', msg: "Block name <i>'" + errorParse[1] + "'</i> is undefined.\n", grade: {message: "Parse Error"} };
+	}
+	else {
+	    result = {status: 'error', msg: err.message, grade: {message: "Error"} };
+	}
+    }
+
+    // AJAX: this should be JSON.stringified and returned to the client via AJAX
+    return result;
+}
+
+
+function testServer()
+{
+    /// JSON.stringify cut and pasted from browser debugger This
+    // doesn't work because of some problem with my cut-and-pasting
+    // JSON from the browser. I'm hoping it won't be a problem with
+    // real AJAX code.
+    var testJSONString = '{"world":["Set",["Record",{"color":["String","red"],"shape":["String","square"],"x":["Number",2],"y":["Number",1]}],["Record",{"color":["String","yellow"],"shape":["String","square"],"x":["Number",4],"y":["Number",2]}]],"logic":" \\\\exists  x  Red(x) ","blockNames":{}}';
+
+    console.log(testJSONString);
+
+    var testData = JSON.parse(testJSONString);
+    var result = processBlocksWorldRequest(testData);
+    console.log(result);
+    return result;
+}
+
+// testServer();

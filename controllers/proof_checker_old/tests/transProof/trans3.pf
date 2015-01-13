@@ -1,5 +1,0 @@
-P1: proof
-C1: P -> Q and R <=> \neg P or Q and R by impliesOr
-                 <=> (\neg P or Q) and (\neg P or R) by distribAndOr
-                 <=> (P -> Q) and (P -> R) by impliesOr
-end
