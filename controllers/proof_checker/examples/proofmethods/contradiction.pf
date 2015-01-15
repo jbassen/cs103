@@ -1,0 +1,8 @@
+P1: proof
+P2:   proof
+A1:     P by assumption
+C1:     F by trustMe
+      end
+C2:   not P by contradiction(P2)  
+
+end

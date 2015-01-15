@@ -12,6 +12,8 @@
 /* global compareExprsForSimp: false */
 /* global exp: false */
 /* global abs: false */
+/* global global: false */
+/* global exports: false */
 
 'use strict';
 
@@ -26,6 +28,11 @@ var unitTab = {'\\wedge' :  exprProto.trueVal,
 		  '\\bicond' : exprProto.trueVal,
 		  '\\oplus' : exprProto.falseVal};
 
+// dual operators
+var dualTab = {'\\wedge': '\\vee',
+	       '\\vee':   '\\wedge',
+	       '\\forall': '\\exists',
+	       '\\exists': '\\forall'};
 
 // LOOSE ENDS:
 // Same general problem in both cases: Not using distributive laws.
@@ -160,11 +167,9 @@ function negate(e)
 // Return dual of and/or.
 function propDual(op)
 {
-    if (op === '\\wedge') {
-	return '\\vee';
-    }
-    else if (op === '\\vee') {
-	return '\\wedge';
+    var dual = dualTab[op];
+    if (dual) {
+	return dual;
     }
     else {
 	return op;
@@ -881,6 +886,21 @@ function makeFreshVar(prefix)
     return makeExpr('Symbol', ['#' + prefix + "_" + String(freshVarCount++)]);
 }
 
+// rename variables systematically for equality upto renaming of quantifiers,
+// lambdas.
+// This is a quick hack that abuses alphaRenaming
+// CAUTION: Don't return or throw out of the middle of this!  It needs to restore
+// freshVarCount!
+// arg: expr to be renamed.
+// returns: renmaed expr.
+function standardizeRenaming(e)
+{
+    var fvcSave = freshVarCount;
+    var renamed = alphaRename(e, {});
+    freshVarCount = fvcSave;
+    return renamed;
+}
+
 // nameMap maps old var names (strings) to fresh vars (symbols).
 // It is scoped by binding contexts.
 // FIXME: Soundness: Need to be sure that new un-renamed bound variables are not
@@ -904,7 +924,8 @@ function alphaRename(e, varMap)
 	    // the current one.  This needs to be done before modifying varMap.
 	    nType = alphaRename(vdArgs[1], varMap);
 	    oldName = vdArgs[0].getArg(0); // string name of symbol
-	    fresh = makeFreshVar(oldName);
+	    // fresh = makeFreshVar(oldName);
+	    fresh = makeFreshVar("var");
 	    varMap[oldName] = fresh;
 	    renVd = makeExpr('vardecl', [fresh, nType]);
 	    nVDLArgs.push(renVd);
@@ -1114,42 +1135,84 @@ function preNormalizeRec(e)
     }
 }
 
-// return an array of the free variables in a formula.
 // e is a formula
-// free is an object with free variables as keys and the symbols as values.
-// bound is an object with bound variables as keys.  This is scoped, using prototype chain.
-function freeVariables(e, free, bound)
+// This works bottom up, removing free variables that come
+// from recursive calls if we're in a construct that binds them.
+function freeVariables(e)
 {
-    free = free || {};
-    bound = bound || {};
+    // check if already computed.
+    if (e._freeVars !== undefined) {
+	return e._freeVars;
+    }
     var op = e.getOp();
+    if (op === 'vardecllist') {
+	// no free vars in vardecls.  Probably don't get this case.
+	return {};
+    }
+    
     var args = e.getArgs();
-    var i, sym, vdlArgs, vardecl, body, symName;
+    var i, j, fv, keys, sym, vdlArgs, vardecl, symName;
+    var free = {};		// new object for free vars for this expr.
     if (op === 'Symbol') {
 	symName = args[0];
-	if (bound[symName] === undefined) {
-	    free[symName] = e;
-	}
+	free[symName] = true;
     }
     else if (op === '\\forall' || op === '\\exists' || op === '\\lambda') {
-	bound = Object.create(bound); // push a new scope for bound var names.
+	fv = freeVariables(args[1]); // free vars from body.
+	// shallow copy
+	Object.keys(fv).forEach(function (key) { free[key] = true; } );	
 	vdlArgs = args[0].getArgs();
-	body = args[1];
+	// remove vars of binding construct from free.
 	for (i = 0; i < vdlArgs.length; i++) {
 	    vardecl = vdlArgs[i];
 	    sym = vardecl.getArg(0);
 	    symName = sym.getArg(0);
-	    bound[symName] = true;
+	    delete free[symName];
 	}
-	freeVariables(body, free, bound);
     }
-    else if (isLeaf(e)) {
-	return e;
+    else if (!isLeaf(e)) {
+	for (i = 0; i < args.length; i++) {
+	    fv = freeVariables(args[i]);
+	    // merge all free vars into free.
+	    keys = Object.keys(fv);
+	    for (j = 0; j < keys.length; j++) {
+		free[keys[j]] = true;
+	    }
+	}
+    }
+    // memoize
+    e._freeVars = free;
+    return free;
+}
+
+// delete useless quantifiers (\forall x : P where no free x in P).
+// Assumes quantifiers have only one var in vardecllist
+function eliminateUselessQuantifiers(e)
+{
+    var op = e.getOp();
+    var args = e.getArgs();
+    var body, fv, vdlArgs, varName;
+    if (op === '\\forall' || op === '\\exists' || op === '\\lambda') {
+	body = eliminateUselessQuantifiers(args[1]);
+	fv = freeVariables(args[1]); // free vars from body.
+	// shallow copy
+	vdlArgs = args[0].getArgs();
+	varName = vdlArgs[0].getArg(0).getArg(0);
+	if (!fv[varName]) {
+	    // return body without the useless quantifier, 
+	    return body;
+	}
+	else {
+	    return makeExpr(op, [args[0], body]);
+	}
+    }
+    else if (!isLeaf(e)) {
+	args = args.map(eliminateUselessQuantifiers);
+	return makeExpr(op, args);
     }
     else {
-	args.forEach(function (e1) { freeVariables(e1, free, bound); });
+	return e;
     }
-    return free;
 }
 
 // Extract quantifier restrictions into antecedants.
@@ -1305,9 +1368,10 @@ try {
     global.propDual = propDual;
     global.applyLambda = applyLambda;
     global.sortArgs = sortArgs;
+    global.standardizeRenaming = standardizeRenaming;
 }
 catch (e) {
     // in browser, do nothing
-};
+}
 
 

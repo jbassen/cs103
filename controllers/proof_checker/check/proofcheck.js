@@ -15,11 +15,6 @@
 // These parameters are "modes" that change the behavior of the proof checker.
 // FIXME: consider limiting the grammar, too.
 
-// propositional identity mode.  This is for proofs using propositional identities.
-var proofCheckerMode;
-
-proofCheckerMode = 'propositionalIdentityMode';
-
 // make jshint happy 
 /* global exprProto: false */
 /* global isExpr: false */
@@ -42,6 +37,7 @@ proofCheckerMode = 'propositionalIdentityMode';
 /* global latexMathPrint: false */
 /* global freeVariables: false */
 /* global standardizeQuantifier: false */
+/* global standardizeRenaming: false */
 /* global substitute: false */
 /* global findLocalMatches: false */
 /* global doRewrites: false */
@@ -59,6 +55,8 @@ proofCheckerMode = 'propositionalIdentityMode';
 /* global makeDominationMatchFun: false */
 /* global global: true */
 /* global exports: true */
+
+/* global proofCheckerMode:false */  // defined in html file, to control available justifiers
 
 // Datatypes
 // Mutually recursive "proof" type and  "conclusion" type.
@@ -308,11 +306,12 @@ function lastConclusion(subproof)
 function andElim(conclusion, premiseLabels, proofDecls)
 {
     var premises = proofDecls.lookupLabels(premiseLabels);
-    if (typeof(premises[0] ) === 'string') {
-	conclusion.valid = false;
-	conclusion.ok = premises[0];
-	return;
-    }
+    // DON'T KNOW WHY THIS CODE IS HERE
+    // if (typeof(premises[0] ) === 'string') {
+    // 	conclusion.valid = false;
+    // 	conclusion.ok = premises[0];
+    // 	return;
+    // }
     // premise is a conclusion, "AND" formula is second element.
     if (conclusion.formula.isChildOf(premises[0].formula)) {
 	conclusion.valid = premises[0].valid;
@@ -349,9 +348,9 @@ function findMatchingConclusionIndex(conclusion, conclusionAr)
 				  0);
 }
 
-// For orElim rule, every subproof (case) must have a conclusion matching the
-// desired conclusion of the orElim rule.
-// Args: conclusion is the desired conclusion of the orElim,
+// For 'cases' rule, every subproof (case) must have a conclusion matching the
+// desired conclusion of the 'cases' rule.
+// Args: conclusion is the desired conclusion of the 'cases',
 // subproofAr is an array of subproofs.  failingCases is an array of
 // labels of failing subproofs.  Used as by-reference return value so
 // we can return "valid" as Boolean return valie.
@@ -523,10 +522,11 @@ function generalConditionalProof1(conclusion, premiseLabels, proofDecls)
 	conclusion.ok = "Justification does not have exactly one premise.";
 	return;
     }
-    if (typeof(premises[0]) === 'string') {
-	conclusion.ok = premises[0];
-	return;
-    }
+    // DON'T KNOW WHY THIS CODE IS HERE
+    // if (typeof(premises[0]) === 'string') {
+    // 	conclusion.ok = premises[0];
+    // 	return;
+    // }
     if (!isProof(premises[0])) {
 	conclusion.ok = "Premise to justification is not a subproof.";
 	return;
@@ -580,7 +580,7 @@ function caseCovered(disjunctFrm, subproofAr)
 // disjunction.
 // Args: conclusion is a conclusion, premises is an array of
 // conclusions.
-function orElim(conclusion, premiseLabels, proofDecls)
+function proofByCases(conclusion, premiseLabels, proofDecls)
 {
     var premises = proofDecls.lookupLabels(premiseLabels);
     var disjunctionFrm = premises[0].formula;
@@ -638,16 +638,11 @@ function orElim(conclusion, premiseLabels, proofDecls)
 }
 
 // proof by contradiction
-// NOT TESTED.
-function notIntro(conclusion, premiseLabels, proofDecls)
+function contradiction(conclusion, premiseLabels, proofDecls)
 {
     var premises = proofDecls.lookupLabels(premiseLabels);
     if (premises.length !== 1) {
 	conclusion.ok = "Justification does not have exactly one premise.";
-	return;
-    }
-    if (typeof(premises[0]) === 'string') {
-	conclusion.ok = premises[0];
 	return;
     }
     var subProof = premises[0];
@@ -656,14 +651,20 @@ function notIntro(conclusion, premiseLabels, proofDecls)
 	return;
     }
     var lastConc = lastConclusion(subProof);
-    if (lastConc.formula !== makeExpr('\\F', [])) {
-	conclusion.ok = "Proof is not a contradition.";
+    if (lastConc.formula !== exprProto.falseVal) {
+	conclusion.ok = "Proof is not a contradiction.";
 	return;
     }
     var negatedFormula = conjoinPremises(subProof.premises);
     var concFormula = conclusion.formula;
     // FIXME: approxEquiv needs to simplify double negations.
-    conclusion.ok = approxEquivalentFormulas(negatedFormula, concFormula);
+    var eqResult = makeExprNorm('\\logeq', [negate(negatedFormula), concFormula]);
+    if (eqResult === exprProto.trueVal) {
+	conclusion.ok = "checks";
+    }
+    else {
+	conclusion.ok = "Negation of premises doesn't correspond to desired conclusion.";
+    }
     conclusion.valid = (conclusion.ok === "checks") && lastConc.valid;
 }
 
@@ -1175,6 +1176,9 @@ function simpleInduction(conclusion, premiseLabels, proofDecls)
     conclusion.ok = "checks";
 }
 
+
+
+
 // Rule that automatically makes things check, like 1 = 2.
 function trustMe(conclusion, premiseLabels, proofDecls)
 {
@@ -1201,11 +1205,11 @@ var allJustifiers = {
 // FIXME: add a catch -- justifiers throw for diagnostics?
     // Is the conclusion one of the children of the premise?
     andElim:    andElim,
-    orElim:     orElim,
+    cases:     proofByCases,
     generalConditionalProof:	generalConditionalProof,
     forallIntro:	generalConditionalProof,
     impliesIntro:	impliesIntro,
-    notIntro:		notIntro,
+    contradiction:		contradiction,
     substitution:	substitutionRule,
     algebra:	algebraRule,
     // rules for propositional identities
@@ -1241,6 +1245,9 @@ var allJustifiers = {
     addIneqs: addIneqs,
     trustMe: trustMe,
 };
+
+
+
 
 
 var propositionalIdentityJustifiers = {
@@ -1304,6 +1311,36 @@ var propositionalIdentityJustifiers = {
 				       propObviousNormalize),
 
 };
+
+// For first-order identity justifiers, us prototype to inherit propositional
+// identity justifiers.
+var folIdentityJustifiers = Object.create(propositionalIdentityJustifiers);
+
+// folIdentityJustifiers.forallDeMorgan = 
+
+// the xformFun does nothing here.  The results come from using standardizeRenaming
+// as the normalizer.
+folIdentityJustifiers.renaming =
+    makeIdentityRuleXform(function(e) { return e; }, '\\logeq', standardizeRenaming);
+
+folIdentityJustifiers.distribForallAnd = makeIdentityRuleXform(makeDistribXform('\\forall', '\\wedge'),
+							       '\\logeq',
+							       propObviousNormalize);
+
+folIdentityJustifiers.distribExistsOr = makeIdentityRuleXform(makeDistribXform('\\exists', '\\vee'),
+							       '\\logeq',
+							       propObviousNormalize);
+
+folIdentityJustifiers.deMorganForall = makeIdentityRule(makeDistribMatchFun('\\neg', '\\forall'),
+						     deMorganRewrite,
+						     '\\logeq',
+						     propObviousNormalize);
+
+folIdentityJustifiers.deMorganExists = makeIdentityRule(makeDistribMatchFun('\\neg', '\\exists'),
+						     deMorganRewrite,
+						     '\\logeq',
+						    propObviousNormalize);
+
 
 // proofDecls is a class-like datastructure that maintains proper scope
 // as proofs and subproofs are processed.
@@ -1593,7 +1630,9 @@ function checkConcArray(concAr, proofDecls)
 	    }
 	}
 	else {
-	    // FIXME: it's a proof.  Check it here???
+	    // Check pending transitive chain, if necessary
+	    checkTransitiveChain(transChain, newConcAr, proofDecls);
+	    transChain = [];
 	    proofDecls.procConclusion(conc);
 	    newConcAr.push(conc);
 	}
@@ -1688,6 +1727,10 @@ function proofCheckerInit()
     switch (proofCheckerMode) {
     case 'propositionalIdentityMode': {
 	justifiers = propositionalIdentityJustifiers;
+	break;
+    }
+    case 'folIdentityMode': {
+	justifiers = folIdentityJustifiers;
 	break;
     }
     case 'maximalMode': {

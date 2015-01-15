@@ -1,0 +1,17 @@
+P1: proof
+
+C1: P or Q by trustMe
+
+C2: proof
+A1:  P by assumption
+C3:  R by trustMe
+     end
+
+C3: proof
+A2:  Q by assumption
+C4:  R by trustMe
+     end
+
+C5: R by orElim(C1, C2, C3)
+
+end
