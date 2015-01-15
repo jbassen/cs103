@@ -1341,6 +1341,14 @@ folIdentityJustifiers.deMorganExists = makeIdentityRule(makeDistribMatchFun('\\n
 						     '\\logeq',
 						    propObviousNormalize);
 
+folIdentityJustifiers.quantElim = makeIdentityRuleXform(eliminateUselessQuantifiers,
+						     '\\logeq',
+						    propObviousNormalize);
+
+folIdentityJustifiers.quantReorder = makeIdentityRuleXform(reorderQuantifiers,
+						     '\\logeq',
+						    propObviousNormalize);
+
 
 // proofDecls is a class-like datastructure that maintains proper scope
 // as proofs and subproofs are processed.

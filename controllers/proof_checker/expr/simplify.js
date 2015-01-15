@@ -1215,6 +1215,46 @@ function eliminateUselessQuantifiers(e)
     }
 }
 
+
+// helper for making foralls / exists given just the variable name. Maybe exists elsewhere?
+function makeVarDeclList(name) {
+    var sym = makeExpr('Symbol', [name]);
+    return makeExpr('vardecllist', [makeExpr('vardecl', [sym, exprProto.anyMarker])]);
+}
+
+// Standardize order of quantifiers
+// Does not handle lambdas, and assumes one variable per quantifier
+function reorderQuantifiers(e)
+{
+    var op = e.getOp();
+    var args = e.getArgs();
+    var body, quantifier, vdlArgs, varNames, i;
+    if (op === '\\forall' || op === '\\exists') {
+        varNames = [];
+        quantifier = op;
+        // currently uses a loop, but could be made recursive if necessary
+        while(op === quantifier) {
+            vdlArgs = args[0].getArgs();
+            varNames.push(vdlArgs[0].getArg(0).getArg(0));
+            body = args[1];
+            op = body.getOp();
+            args = body.getArgs();
+        }
+        varNames.sort();
+        for(i = 0; i < varNames.length; i++) {
+            body = makeExpr(quantifier, [makeVarDeclList(varNames[i]), body]);
+        }
+        return body;    
+    }
+    else if (!isLeaf(e)) {
+	args = args.map(reorderQuantifiers);
+	return makeExpr(op, args);
+    }
+    else {
+	return e;
+    }
+} 
+
 // Extract quantifier restrictions into antecedants.
 // e.g.  \\forall x \in S : P(x) ==> \\forall x \in #ANY : x \in S \implies P(x).
 // FIXME: Should this be performed in normalization?
