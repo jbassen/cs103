@@ -75,6 +75,7 @@ $(window).load(function(){
 	if (jQuery.isEmptyObject(savedObject)) {
 		$('#inputFormula1').val(problemObject.formula);
 		SRFLAtoWorld(problemObject.world);
+		namesToWorld(problemObject.blockNames);
 	} else {
 		$('#inputFormula1').val(savedObject.formula);
 		SRFLAtoWorld(savedObject.world);
@@ -82,6 +83,7 @@ $(window).load(function(){
 		if (!jQuery.isEmptyObject(savedObject.grade) && savedObject.grade.message) {
 			$("#gradedisplay").html("Grade:&nbsp;<b>" + savedObject.grade.message + "</b>");
 		}
+		namesToWorld(savedObject.blockNames);
 	}
 
 	console.log("offset: " + JSON.stringify($('#unusedNamesLabel').offset()));
@@ -97,6 +99,7 @@ function resetProblem() {
 	$("#receiptdisplay").html(String(""));
 	$("#gradedisplay").html(String(""));
 	SRFLAtoWorld(problemObject.world);
+	namesToWorld(problemObject.blockNames);
 }
 // / JON'S CODE
 
@@ -149,7 +152,8 @@ function handleDrop(event,ui) {
 		var nameShape = getType(this, 'shape');
 		var newName = $(ui.draggable).attr('id');
 		// var decl =  "var " + newName + " = [x \\mapsto " + nameX + ", y \\mapsto " + nameY + ", color \\mapsto \"" + nameColor + "\", shape \\mapsto \"" + nameShape + "\"];";
-		var decl = { x: nameX, y: nameY, color: nameColor, shape: nameShape };
+		var decl = { x: ["Number", nameX], y: ["Number", nameY], color: ["String",
+		nameColor], shape: ["String", nameShape] };
 		blockNames[newName] = decl;
 		console.log("block names: " + JSON.stringify(blockNames));
 		nameClass = 'NAME_' + newName;
@@ -164,7 +168,8 @@ function handleDrop(event,ui) {
 		nameColor = getType($(ui.helper), 'color');
 		nameShape = getType($(ui.helper), 'shape');
 		// var newDecl = "var " + oldName + " = [x \\mapsto " + nameX + ", y \\mapsto " + nameY + ", color \\mapsto \"" + nameColor + "\", shape \\mapsto \"" + nameShape + "\"];";
-		var newDecl = { x: nameX, y: nameY, color: nameColor, shape: nameShape };
+		var newDecl = { x: ["Number", nameX], y: ["Number", nameY], color: ["String",
+		nameColor], shape: ["String", nameShape] };
 		blockNames[oldName] = newDecl;
 	}
 
@@ -441,6 +446,21 @@ function SRFLAtoWorld(set) {
 		//$('.block').addClass('dragMe').addClass('block');
 	}
 	// set.unshift("Set"); // if you don't put this back, bad things happen!!! JON
+}
+
+function namesToWorld(names) {
+	$.each(names, function(key, value) {
+		nameClass = 'NAME_' + key;
+		var xStr = "";
+		if (value.x[1] !== 0) {
+			xStr += value.x[1];
+		}
+		var blockID = xStr + value.y[1];
+		//blockNames[key] = value;
+		blockNames[key] = value;
+		$('#' + blockID).addClass(nameClass);
+		alignName(key, $('#' + blockID));
+	});
 }
 
 

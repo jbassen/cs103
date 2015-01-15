@@ -55,7 +55,7 @@ function submitExercise(action)
 
   if (result.status !== 'error') {
 			$("#receiptdisplay").html(result.status);
-			$("#gradedisplay").html(result.message);
+			$("#gradedisplay").html(result.msg);
 	}
   else {
 	    $('#checkresult').html('&nbsp;');

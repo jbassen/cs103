@@ -113,10 +113,10 @@ exports.checkAndGradeBlocksWorld = function(answerObject, problemObject) {
 	// consistency with old code.  See "JSON.parse" below.
 
 	if (srflaResult === SRFLATRUE) {
-	    result = {status : 'normal', msg: "<b>True</b>", grade: {message: "formula MATCHES world"}};
+	    result = {status : 'normal', msg: "<b>True</b>", grade: {message: "Success! Formula matches world."}};
 	}
 	else {
-	    result = {status : 'normal', msg: "<b>False</b>", grade: {message: "formula DOES NOT MATCH world"}};
+	    result = {status : 'normal', msg: "<b>False</b>", grade: {message: "Try again. Formula doesn't match world."}};
 	}
     }
     catch (err) {
