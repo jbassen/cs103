@@ -1,13 +1,34 @@
 DEFINITELY:
-- display saved blocks world
-- check blocks world
-- grade blocks world
+- What, if anything do you like about this system?
+- What, if anything, would you change about this system?
+- Would you like to continue using this system to work on propositional
+logic exercises for this class? (What are your arguments for and against?)
+- Do you think this tool helped you learn propositional logic better or faster
+than you would have with a delayed feedback system
+(i.e., scorist or pen and paper)?
+
+- On a scale from 1-7, where 1 is terrible and 7 is amazing, how would you
+rate your experience with this system?
 
 
-- enter a couple test problems into the database
-- tell student if their submission is late
-- empty, non-assignment versions of systems
+- Which features of this system did you find easy to use?
+- Which features of this system did you find difficult to use?
 
+X- come up with questions about the system
+-- keep it short so that we have a high response rate
+- change status to Success/Fail
+
+X- route for submitting exercises
+
+X- page for submitting exercises
+X-- name
+X-- instructions
+X-- formula
+X-- blocks world
+X-- submit button
+X-- place for reporting results
+
+- add names to srfla
 
 
 POSSIBLY: (need to investigate further)
@@ -18,3 +39,8 @@ POSSIBLY: (need to investigate further)
 - move error handlers out of app.js
 -- consider using errorhandler package
 -- consider adding more error handlers?
+
+
+
+what did you think of the experience?
+do you think it helps you learn better?

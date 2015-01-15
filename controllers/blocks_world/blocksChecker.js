@@ -93,8 +93,8 @@ exports.checkAndGradeBlocksWorld = function(answerObject, problemObject) {
 	    bnk = bnKeys[i];
    	    bn = blockNames[bnk];
 	    if (bn) {
-		blockAssign = srflaMathParser.parse(bn)[0];
-		srflaEval(blockAssign, srflaInterp);
+        srflaInterp[bnk] = ["Record", bn];
+        // srflaEval(blockAssign, srflaInterp);
 	    }
 	}
 

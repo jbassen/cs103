@@ -67,6 +67,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 var userCtrl = require('./controllers/user');
 var navigationCtrl = require('./controllers/navigation');
 var exerciseCtrl = require('./controllers/exercise');
+var buildCtrl = require('./controllers/build');
 
 
 // ROUTES (EXPRESS)
@@ -83,6 +84,8 @@ app.get('/', passportConf.isAuthed, navigationCtrl.getHome);
 app.get('/assignment/:id', passportConf.isAuthed, navigationCtrl.getAssignment);
 app.get('/exercise/:_id', passportConf.isAuthed, exerciseCtrl.getExercise);
 app.post('/exercise/:_id', passportConf.isAuthed, exerciseCtrl.postExercise);
+app.get('/build/:type', passportConf.isAuthed, buildCtrl.getBuild);
+app.post('/build', passportConf.isAuthed, buildCtrl.postBuild);
 
 
 // ERROR HANDLERS
