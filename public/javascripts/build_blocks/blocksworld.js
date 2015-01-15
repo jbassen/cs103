@@ -132,8 +132,8 @@ function handleDrop(event,ui) {
 		var nameShape = getType(this, 'shape');
 		var newName = $(ui.draggable).attr('id');
 		// var decl =  "var " + newName + " = [x \\mapsto " + nameX + ", y \\mapsto " + nameY + ", color \\mapsto \"" + nameColor + "\", shape \\mapsto \"" + nameShape + "\"];";
-		var decl = { x: nameX, y: nameY, color: nameColor, shape: nameShape };
-
+		var decl = { x: ["Number", nameX], y: ["Number", nameY], color: ["String",
+		nameColor], shape: ["String", nameShape] };
 		blockNames[newName] = decl;
 		console.log("block names: " + JSON.stringify(blockNames));
 		nameClass = 'NAME_' + newName;
@@ -148,7 +148,8 @@ function handleDrop(event,ui) {
 		nameColor = getType($(ui.helper), 'color');
 		nameShape = getType($(ui.helper), 'shape');
 		// var newDecl = "var " + oldName + " = [x \\mapsto " + nameX + ", y \\mapsto " + nameY + ", color \\mapsto \"" + nameColor + "\", shape \\mapsto \"" + nameShape + "\"];";
-		var newDecl = { x: nameX, y: nameY, color: nameColor, shape: nameShape };		blockNames[oldName] = newDecl;
+		var newDecl = { x: ["Number", nameX], y: ["Number", nameY], color: ["String",
+		nameColor], shape: ["String", nameShape] };
 	}
 
 	//if a named block has just been replaced or moved, update the name record
