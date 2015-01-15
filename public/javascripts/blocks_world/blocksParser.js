@@ -615,61 +615,63 @@ case 5:return 17
 break;
 case 6:return 19
 break;
-case 7:return 8
+case 7:return 13
 break;
-case 8:return 8
+case 8:return 9
 break;
-case 9:return 8
+case 9:return 10
 break;
-case 10:return 9
+case 10:return 8
 break;
-case 11:return 9
+case 11:return 8
 break;
-case 12:return 10
+case 12:return 8
 break;
-case 13:return 10
+case 13:return 9
 break;
-case 14:return 11
+case 14:return 10
 break;
 case 15:return 11
 break;
-case 16:return 12
+case 16:return 11
 break;
 case 17:return 12
 break;
 case 18:return 12
 break;
-case 19:return 13
+case 19:return 12
 break;
-case 20:return 14
+case 20:return 13
 break;
 case 21:return 14
 break;
-case 22:return 16
+case 22:return 14
 break;
 case 23:return 16
 break;
-case 24:return 20
+case 24:return 16
 break;
-case 25:return 21
+case 25:return 20
 break;
-case 26:return 22
+case 26:return 21
 break;
-case 27:return 'NUMBER'
+case 27:return 22
 break;
-case 28:return 23
+case 28:return 'NUMBER'
 break;
-case 29:return 5
+case 29:return 23
 break;
-case 30:
+case 30:return 5
+break;
+case 31:
 		      // print("illegal char");  return 'INVALID_CHAR';
 		      return "INVALID_CHAR";
 		      
 break;
 }
 },
-rules: [/^(?:\s+)/,/^(?:,)/,/^(?:"([^"\\]|(\\(.|\n)))*")/,/^(?:\\T\b)/,/^(?:\\F\b)/,/^(?:\()/,/^(?:\))/,/^(?:\\vee\b)/,/^(?:vv\b)/,/^(?:or\b)/,/^(?:\\implies\b)/,/^(?:->)/,/^(?:\\bicond\b)/,/^(?:<->)/,/^(?:\\xor\b)/,/^(?:o\+)/,/^(?:\\wedge\b)/,/^(?:\^\^)/,/^(?:and\b)/,/^(?:\\neg\b)/,/^(?:\\forall\b)/,/^(?:AA\b)/,/^(?:\\exists\b)/,/^(?:EE\b)/,/^(?:=)/,/^(?:\\not\b)/,/^(?:\\ne\b)/,/^(?:[0-9]+(\.[0-9]+)?\b)/,/^(?:[a-zA-Z]([a-zA-Z0-9])*)/,/^(?:$)/,/^(?:.)/],
-conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],"inclusive":true}}
+rules: [/^(?:\s+)/,/^(?:,)/,/^(?:"([^"\\]|(\\(.|\n)))*")/,/^(?:\\T\b)/,/^(?:\\F\b)/,/^(?:\()/,/^(?:\))/,/^(?:not\b)/,/^(?:->)/,/^(?:<->)/,/^(?:\\vee\b)/,/^(?:vv\b)/,/^(?:or\b)/,/^(?:\\implies\b)/,/^(?:\\bicond\b)/,/^(?:\\xor\b)/,/^(?:o\+)/,/^(?:\\wedge\b)/,/^(?:\^\^)/,/^(?:and\b)/,/^(?:\\neg\b)/,/^(?:\\forall\b)/,/^(?:AA\b)/,/^(?:\\exists\b)/,/^(?:EE\b)/,/^(?:=)/,/^(?:\\not\b)/,/^(?:\\ne\b)/,/^(?:[0-9]+(\.[0-9]+)?\b)/,/^(?:[a-zA-Z]([a-zA-Z0-9])*)/,/^(?:$)/,/^(?:.)/],
+conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31],"inclusive":true}}
 };
 return lexer;
 })();
