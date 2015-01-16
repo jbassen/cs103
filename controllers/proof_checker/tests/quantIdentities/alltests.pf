@@ -2,6 +2,10 @@ P1: proof
 C1: \forall x : P(x) <=> \forall y : P(y) by renaming
 C2: \forall x : (P(x) and Q(x)) <=> (\forall x : P(x)) and (\forall x : Q(x)) by distribForallAnd
 C3: \exists x : (P(x) or Q(x)) <=> (\exists x : P(x)) or (\exists x : Q(x)) by distribExistsOr
-C4: not \forall x : P(x) <=> \exists x : \neg P(x) by deMorganForall
-C5: not \exists x : P(x) <=> \forall x : \neg P(x) by deMorganExists
+C4: \forall x : (P(x) or Q) <=> \forall x : P(x) or \forall x : Q by distribForallOr
+C5: \exists x : (P(x) and Q) <=> \exists x : P(x) and \forall x : Q by distribExistsAnd
+C6: not \forall x : P(x) <=> \exists x : \neg P(x) by deMorganForall
+C7: not \exists x : P(x) <=> \forall x : \neg P(x) by deMorganExists
+C8: \exists x : P <=> P by quantElim
+C9: \forall x : \forall y : P(x,y) <=> \forall y : \forall x : P(x,y) by quantReorder
 end
