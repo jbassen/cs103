@@ -307,7 +307,12 @@ function bicondImpliesRewrite(e, bindings)
 // (it's nondeterministic).  So this returns an ARRAY of rewritten expressions.
 // The match function gets multiple matches, each of which results in a different
 // rewrite, so matching and rewriting are combined in one function.
-function makeDistribXform(op1, op2)
+// childConditionFun is an option argument to determine whether the expression
+// meets some condition (this is for distribAllOverOr:
+// \forall x : (P(x) or Q) <=> (\forall x : P(x)) or (\forall x : Q)
+// ), in which there must be exactly two subexpressions and one must not involve 
+// the variable bound by the qualifier.
+function makeDistribXform(op1, op2, childConditionFun)
 {
     var distribXform = function distribXform(e, bindings) {
 	var op, args, i, c, cArgs, j, nArgs, gChild, nTerm, rwEx, dArgs;
@@ -321,7 +326,7 @@ function makeDistribXform(op1, op2)
 		    dArgs = [];
 		    // Running example: (* a (+ b c) d)
 		    c = args[i];
-		    if (c.getOp() === op2) {
+		    if (c.getOp() === op2 && (typeof childConditionFun != 'function' || childConditionFun(e))) {
 			// c is the child whose args will be distributed among other children.
 			//  e.g. (+ b c)
 			cArgs = c.getArgs();

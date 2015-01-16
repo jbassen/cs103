@@ -1,4 +1,9 @@
 DEFINITELY:
+- Fix jumping names
+- Fix checker storage
+- Use checker name to decide which parts need to match
+
+
 - What, if anything do you like about this system?
 - What, if anything, would you change about this system?
 - Would you like to continue using this system to work on propositional
@@ -44,3 +49,6 @@ POSSIBLY: (need to investigate further)
 
 what did you think of the experience?
 do you think it helps you learn better?
+
+
+DILL LIST:

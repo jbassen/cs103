@@ -15,9 +15,6 @@
 	<script src = "/javascripts/blocks_world/jquery.ui.droppable.patched.js"></script>
 	<script src = "/javascripts/blocks_world/jquery.caret.1.02.js"></script>
 
-	<!-- FROM OLD VERSION The next script tag loads mathjax.  This has to follow the macros, etc.-->
-	<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
 	<script src = "/javascripts/blocks_world/blocksworld.js"></script>
 	<script src = "/javascripts/blocks_world/nodesubmit.js"></script>
 	<script src= "/javascripts/blocks_world/srflaEval.js"></script>
@@ -29,6 +26,7 @@
 	<!-- The next script tag defines CS103-specific macros (like \implies) for MathJax.  -->
 	<script type="text/x-mathjax-config">
 		MathJax.Hub.Config({
+				"HTML-CSS": { linebreaks: { automatic: true } },
   			TeX: {
     				Macros: {
       					T: "\\mathbf{T}",
@@ -37,9 +35,12 @@
     					bicond: "\\leftrightarrow",
       					xor: "\\oplus"
     				}
-  			}
+  			},
 		});
 	</script>
+
+	<!-- FROM OLD VERSION The next script tag loads mathjax.  This has to follow the macros, etc.-->
+	<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 	<link rel="stylesheet" type="text/css" href="/stylesheets/blocksworld.css">
 	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/smoothness/jquery-ui.css" />
@@ -49,7 +50,7 @@
 
 	<h3>CS 103 Blocks World</h3>
 	&nbsp;&nbsp;&nbsp;
-	<p id = "instructions">Drag and drop the blocks to create a world. Enter a corresponding first order logic formula:</p>
+	<p id = "instructions" style="width:600px;">Drag and drop the blocks to create a world. Enter a corresponding first order logic formula:</p>
 
 	<!-- MATH ENTRY HELP KEYBOARD -->
 	<table border = "0" cellspacing = "0" cellpadding = "0" height = "60"><tr>

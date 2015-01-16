@@ -13,6 +13,8 @@ function submitExercise(action)
 
 	var exerciseName = $('#exerciseName').val();
 
+	var checker = $('#checker').val;
+
 	var instructions = $('#instructions').val();
 
 	var a = blockNames.a;
@@ -22,8 +24,8 @@ function submitExercise(action)
 	var dataToServer = {
 		name: exerciseName,
 		type: 'blocksworld',
-		checker: 'default',
-		problemJSON: {
+		checker: checker,
+		problemObject: {
 			instructions: instructions,
 			world: world,
 			formula: formula,
@@ -34,7 +36,7 @@ function submitExercise(action)
 
 	var answer = $.ajax({
 		type: 'POST',
-		url: '/build',
+		url: window.location.pathname,
 		contentType: 'application/json',
 		crossDomain: false,
 		data: JSON.stringify(dataToServer),

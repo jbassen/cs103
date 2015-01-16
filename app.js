@@ -84,8 +84,8 @@ app.get('/', passportConf.isAuthed, navigationCtrl.getHome);
 app.get('/assignment/:id', passportConf.isAuthed, navigationCtrl.getAssignment);
 app.get('/exercise/:_id', passportConf.isAuthed, exerciseCtrl.getExercise);
 app.post('/exercise/:_id', passportConf.isAuthed, exerciseCtrl.postExercise);
-app.get('/build/:type', passportConf.isAuthed, buildCtrl.getBuild);
-app.post('/build', passportConf.isAuthed, buildCtrl.postBuild);
+app.get('/build/:type/:_id?', passportConf.isAuthed, buildCtrl.getBuild);
+app.post('/build/:type/:_id', passportConf.isAuthed, buildCtrl.postBuild);
 
 
 // ERROR HANDLERS
