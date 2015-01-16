@@ -5,6 +5,10 @@ var Exercise = require('../models/Exercise');
 var Interaction = require('../models/Interaction');
 var User = require('../models/User');
 
+exports.getBlocksExplained = function(req, res, next) {
+  console.log("asdf!!!");
+  res.render("blocksexplained");
+};
 
 exports.getExercise = function(req, res, next) {
 
@@ -31,6 +35,9 @@ exports.getExercise = function(req, res, next) {
         savedObject.time = "<p><b>LAST SUBMITTED:</b>" +
         new Date(submission[0].time).toLocaleString() +"</p>";
         savedObject.grade = JSON.parse(submission[0].grade);
+        if (submission[0].explanation) {
+          savedObject.explanation = submission[0].explanation;
+        }
         savedObject = JSON.stringify(savedObject);
       }
       console.log(savedObject);

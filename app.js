@@ -86,6 +86,7 @@ app.get('/exercise/:_id', passportConf.isAuthed, exerciseCtrl.getExercise);
 app.post('/exercise/:_id', passportConf.isAuthed, exerciseCtrl.postExercise);
 app.get('/build/:type/:_id?', passportConf.isAuthed, buildCtrl.getBuild);
 app.post('/build/:type/:_id', passportConf.isAuthed, buildCtrl.postBuild);
+app.get('/blocksexplained', passportConf.isAuthed, exerciseCtrl.getBlocksExplained);
 
 
 // ERROR HANDLERS

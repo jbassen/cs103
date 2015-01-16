@@ -83,16 +83,20 @@ $(window).load(function(){
 		if (!jQuery.isEmptyObject(savedObject.grade) && savedObject.grade.message) {
 			$("#gradedisplay").html("Grade:&nbsp;<b>" + savedObject.grade.message + "</b>");
 		}
+		if(savedObject.explanation) {
+			$('#explanation').val(savedObject.explanation);
+		}
 		namesToWorld(savedObject.blockNames);
 	}
 
 	console.log("offset: " + JSON.stringify($('#unusedNamesLabel').offset()));
-
+	displayMath($('#inputFormula1').val());
 });
 
 // JON'S CODE
 function resetProblem() {
 	$('#inputFormula1').val('');
+	$('#explanation').val('Enter an explanation...');
 	resetWorld();
 	$('#instructions').val(problemObject.instructions);
 	$('#inputFormula1').val(problemObject.formula);
@@ -100,6 +104,7 @@ function resetProblem() {
 	$("#gradedisplay").html(String(""));
 	SRFLAtoWorld(problemObject.world);
 	namesToWorld(problemObject.blockNames);
+	displayMath($('#inputFormula1').val());
 }
 // / JON'S CODE
 

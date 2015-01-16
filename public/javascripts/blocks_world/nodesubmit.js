@@ -11,6 +11,8 @@ function submitAndVerify(action)
 
 	var world = worldToSRFLA();
 
+	var explanation = $('#explanation').val();
+
 	if (world.length <= 1) {
 		$("#checkresult").html("The grid must have at least one shape on it.");
 		return;
@@ -35,7 +37,8 @@ function submitAndVerify(action)
 		action: "submit",
 		world: world,
 		formula: formula,
-		blockNames: blockNames
+		blockNames: blockNames,
+		explanation: explanation
 	};
   console.log("sending: " + JSON.stringify(dataToServer));
 

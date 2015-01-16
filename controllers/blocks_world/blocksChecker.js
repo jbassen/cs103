@@ -74,15 +74,11 @@ exports.checkAndGradeBlocksWorld = function(answerObject, problemObject) {
 	srflaEval(blocksDefsAST[i], srflaInterp);
     }
 
-    console.log("0: " + JSON.stringify(srflaInterp));
-
     // get the string for the world and parse it.
     // This takes the AST for the world (answerObject.world] and embeds it in the
     // AST for a declaration of the variable 'world' with that AST as the value.
   //BROKEN?  srflaEval(['var', 'world', world], srflaInterp);
     srflaInterp.world = world;
-
-    console.log("1: " + JSON.stringify(srflaInterp));
 
     // define the block names in the srflaInterp
     // names that do not correspond to blocks throw an error
@@ -98,11 +94,8 @@ exports.checkAndGradeBlocksWorld = function(answerObject, problemObject) {
 	    }
 	}
 
-	console.log("logic:  " + logic);
 	// parse the logic formula string into an AST.
 	var logicAST = blocksParser.parse(logic);
-
-  console.log("2: " + JSON.stringify(srflaInterp));
 
 
 	// evaluate the logic formula against srflaInterp, which has the definitions for

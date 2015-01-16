@@ -1,39 +1,21 @@
-DEFINITELY:
-- Fix jumping names
+TODO:
+X- Fix jumping names (blocksworldstandalone was actually broken)
+X- Write questionnaire questions
+X- Build routes for editable problems
+X- Fix MathJax line breaks
+
+X- Add explanation box
+X- Add documentation cs103.herokuapp.com/blocksexplained
+X- Display math on first load
+- Create assignment 2
+- Get proof checker to accept flag
+
 - Fix checker storage
-- Use checker name to decide which parts need to match
+- Use checker name to decide which parts of problem need to match
 
-
-- What, if anything do you like about this system?
-- What, if anything, would you change about this system?
-- Would you like to continue using this system to work on propositional
-logic exercises for this class? (What are your arguments for and against?)
-- Do you think this tool helped you learn propositional logic better or faster
-than you would have with a delayed feedback system
-(i.e., scorist or pen and paper)?
-
-- On a scale from 1-7, where 1 is terrible and 7 is amazing, how would you
-rate your experience with this system?
-
-
-- Which features of this system did you find easy to use?
-- Which features of this system did you find difficult to use?
-
-X- come up with questions about the system
--- keep it short so that we have a high response rate
-- change status to Success/Fail
-
-X- route for submitting exercises
-
-X- page for submitting exercises
-X-- name
-X-- instructions
-X-- formula
-X-- blocks world
-X-- submit button
-X-- place for reporting results
-
-- add names to srfla
+- Button to store new version of question
+- Blocks world grading interface
+- Merge duplicate files on the server
 
 
 POSSIBLY: (need to investigate further)
@@ -44,11 +26,3 @@ POSSIBLY: (need to investigate further)
 - move error handlers out of app.js
 -- consider using errorhandler package
 -- consider adding more error handlers?
-
-
-
-what did you think of the experience?
-do you think it helps you learn better?
-
-
-DILL LIST:
