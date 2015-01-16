@@ -18,7 +18,6 @@ function displayMath(mathStr)
         // FIXME: Eventually, should prettyprint from the tree (JSON) representation.
         mathStr = mathStr.replace(/\bvv\b/g, " \\vee ");
         mathStr = mathStr.replace(/\bor\b/g, " \\vee ");
-        mathStr = mathStr.replace(/\bnot\b/g, " \\neg ");
         mathStr = mathStr.replace(/<->/g, " \\bicond ");
         mathStr = mathStr.replace(/->/g, " \\implies ");
         mathStr = mathStr.replace(/\bo\+/g, " \\xor ");

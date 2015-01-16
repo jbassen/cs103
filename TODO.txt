@@ -1,4 +1,9 @@
 DEFINITELY:
+- Fix instructions layout
+- Fix jumping names
+- Fix 
+
+
 - What, if anything do you like about this system?
 - What, if anything, would you change about this system?
 - Would you like to continue using this system to work on propositional
