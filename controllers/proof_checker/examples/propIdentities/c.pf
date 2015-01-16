@@ -1,0 +1,22 @@
+This fails on one or two of the distributivity steps.
+   Too ambiguous where to apply the rule.
+
+
+P1: proof
+C1:   P <-> Q <=> (P -> Q) and (Q -> P) by bicondImplies
+       <=> (not P or Q) and (not Q or P) by impliesOr
+       <=> ((not P or Q) and not Q) or ((not P or Q) and P) by distribOrAnd
+       <=> ((not P and not Q) or (Q and not Q)) or ((not P and P) or (Q and P))) by distribAndOr
+       <=> ((not P and not Q) or F) or (F or (Q and P))) by inverseAnd
+       <=> (not P and not Q) or (Q and P) by identityOr
+end
+
+
+P1: proof
+C1:   P <-> Q <=> (P -> Q) and (Q -> P) by bicondImplies
+       <=> (not P or Q) and (not Q or P) by impliesOr
+       <=> ((not P or Q) and not Q) or ((not P or Q) and P) by distribAndOr
+       <=> ((not P and not Q) or (Q and not Q)) or ((not P and P) or (Q and P)) by distribAndOr
+       <=> ((not P and not Q) or F) or (F or (Q and P)) by inverseAnd
+       <=> (not P and not Q) or (Q and P) by identityOr
+end

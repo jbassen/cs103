@@ -1,0 +1,1 @@
+P and not Q or not P and Q <=> (P or Q) and (not P or not Q)
