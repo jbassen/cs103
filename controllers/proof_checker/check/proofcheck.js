@@ -1177,6 +1177,26 @@ function simpleInduction(conclusion, premiseLabels, proofDecls)
 }
 
 
+// Helper to check if distribForallOr or distribExistsAnd can be applied.
+// You can distribute 'forall' over 'or' under precisely one condition:
+// the 'or' has exactly two children, and at least one does not contain the variable
+// bound by the 'forall'. The callee ensures that we are in the forall->or case.
+// Similarly for the dual.
+function quantifierDistribCondition(quantifierExp) {
+    var varName = getBoundVarName(quantifierExp);
+    var opExp = quantifierExp.getArg(1);
+    var left, right;
+    if(opExp.args.length != 2) {
+        return false;
+    }
+    else {
+        left = opExp.getArg(0);
+        right = opExp.getArg(1);
+        return !freeVariables(left)[varName] || !freeVariables(right)[varName];
+    }
+}
+
+
 
 
 // Rule that automatically makes things check, like 1 = 2.
@@ -1331,6 +1351,15 @@ folIdentityJustifiers.distribExistsOr = makeIdentityRuleXform(makeDistribXform('
 							       '\\logeq',
 							       propObviousNormalize);
 
+folIdentityJustifiers.distribForallOr = makeIdentityRuleXform(makeDistribXform('\\forall', '\\vee', quantifierDistribCondition),
+							       '\\logeq',
+							       propObviousNormalize);
+
+folIdentityJustifiers.distribExistsAnd = makeIdentityRuleXform(makeDistribXform('\\exists', '\\wedge', quantifierDistribCondition),
+							       '\\logeq',
+							       propObviousNormalize);
+
+
 folIdentityJustifiers.deMorganForall = makeIdentityRule(makeDistribMatchFun('\\neg', '\\forall'),
 						     deMorganRewrite,
 						     '\\logeq',
@@ -1345,9 +1374,19 @@ folIdentityJustifiers.quantElim = makeIdentityRuleXform(eliminateUselessQuantifi
 						     '\\logeq',
 						    propObviousNormalize);
 
-folIdentityJustifiers.quantReorder = makeIdentityRuleXform(reorderQuantifiers,
+// as in 'renaming', the transformation is irrelevant;
+// the action is in using reorderQuantifiers as the normalizer 
+folIdentityJustifiers.quantReorder = makeIdentityRuleXform(function(e) { return e; },
 						     '\\logeq',
-						    propObviousNormalize);
+						    function(e) {
+						        return reorderQuantifiers(propObviousNormalize(e));
+						    });
+
+
+
+
+
+
 
 
 // proofDecls is a class-like datastructure that maintains proper scope

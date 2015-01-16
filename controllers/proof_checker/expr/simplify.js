@@ -1216,7 +1216,14 @@ function eliminateUselessQuantifiers(e)
 }
 
 
-// helper for making foralls / exists given just the variable name. Maybe exists elsewhere?
+// Extract the name of the first variable bound by a quantifier
+// do not call on things which are not quantifiers:
+// ie should satisfy e.op == '\\forall' || e.op == '\\exists'
+function getBoundVarName(e) {
+    return e.getArg(0).getArg(0).getArg(0).getArg(0);
+}
+
+// Makes a forall / exists given just the variable name. Maybe exists elsewhere?
 function makeVarDeclList(name) {
     var sym = makeExpr('Symbol', [name]);
     return makeExpr('vardecllist', [makeExpr('vardecl', [sym, exprProto.anyMarker])]);
@@ -1228,18 +1235,18 @@ function reorderQuantifiers(e)
 {
     var op = e.getOp();
     var args = e.getArgs();
-    var body, quantifier, vdlArgs, varNames, i;
+    var body, quantifier, varNames, i;
     if (op === '\\forall' || op === '\\exists') {
         varNames = [];
         quantifier = op;
         // currently uses a loop, but could be made recursive if necessary
+        body = e;
         while(op === quantifier) {
-            vdlArgs = args[0].getArgs();
-            varNames.push(vdlArgs[0].getArg(0).getArg(0));
-            body = args[1];
+            varNames.push(getBoundVarName(body));
+            body = body.getArg(1);
             op = body.getOp();
-            args = body.getArgs();
         }
+        body = reorderQuantifiers(body);
         varNames.sort();
         for(i = 0; i < varNames.length; i++) {
             body = makeExpr(quantifier, [makeVarDeclList(varNames[i]), body]);
@@ -1409,6 +1416,10 @@ try {
     global.applyLambda = applyLambda;
     global.sortArgs = sortArgs;
     global.standardizeRenaming = standardizeRenaming;
+    global.eliminateUselessQuantifiers = eliminateUselessQuantifiers;
+    global.reorderQuantifiers = reorderQuantifiers;
+    global.getBoundVarName = getBoundVarName;
+    global.freeVariables = freeVariables;
 }
 catch (e) {
     // in browser, do nothing
