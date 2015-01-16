@@ -1,0 +1,53 @@
+// Useless quantifiers 
+
+P1: proof
+C1: \exists x: P
+<=> P by quantElim
+<=> \forall x: P by quantElim
+end
+
+
+// "distributing" exists over implies
+
+P2: proof
+C1: \exists x: (P(x) -> Q(x))
+<=> \exists x: (not P(x) or Q(x)) by impliesOr
+<=> \exists x: not P(x) or \exists x: Q(x) by distribExistsOr
+<=> not \forall x: P(x) or \exists x: Q(x) by deMorganForall
+<=> (\forall x: P(x)) -> (\exists x: Q(x)) by impliesOr
+end
+
+// moving quantifiers to the front (ie prenex normal form, though they don't need to know that)
+
+P3: proof
+C1: \forall x: ((not \forall y: P(y)) or Q(x)) and \forall x: R(x)
+<=> \forall x: ((\exists y: not P(y)) or Q(x)) and \forall x: R(x) by deMorganForall
+<=> \forall x: (((\exists y: not P(y)) or Q(x)) and R(x)) by distribForallAnd
+<=> \forall x: ((\exists y: not P(y) or (\exists y: Q(x))) and R(x)) by quantElim
+<=> \forall x: ((\exists y: (not P(y) or Q(x))) and R(x)) by distribExistsOr
+<=> \forall x: ((\exists y: (not P(y) or Q(x))) and \exists y: R(x)) by quantElim
+<=> \forall x: \exists y: ((not P(y) or Q(x)) and R(x)) by distribExistsAnd
+end
+
+// a non-obvious tautology
+
+P4: proof
+C1: \exists x: (P(x) -> (\forall y: P(y)))
+<=> \exists x: (not P(x) or (\forall y: P(y))) by impliesOr
+<=> \exists x: (not P(x)) or \exists x: (\forall y: P(y)) by distribExistsOr
+<=> \exists x: (not P(x)) or \forall y: P(y) by quantElim
+<=> \exists x: (not P(x)) or \forall x: P(x) by renaming
+<=> not \forall x : P(x) or \forall x: P(x) by deMorganForall
+<=> T by orInverse
+end
+
+// combining implications
+
+P5: proof
+C1: \forall x : (P(x) -> Q(x)) and \forall y: (P(y) \implies R(y)) 
+<=> \forall x: (P(x) -> Q(x)) and \forall x : (P(x) \implies R(x)) by renaming
+<=> \forall x: ((P(x) -> Q(x)) and (P(x) -> R(x))) by distribForallAnd
+<=> \forall x: ((not P(x) or Q(x)) and (not P(x) or R(x))) by impliesOr
+<=> \forall x: (not P(x) or (Q(x) and R(x))) by distribOrAnd
+<=> \forall x: (P(x) -> Q(x) and R(x)) by impliesOr
+end

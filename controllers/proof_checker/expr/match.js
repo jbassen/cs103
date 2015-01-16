@@ -9,7 +9,7 @@
 
 // find a node/browser solution to this.
 // KEVIN: comment out next line
-var mathparse = require('../prparse/mathparse.js');
+//var mathparse = require('../prparse/mathparse.js');
 
 /* global mathparse: false */
 /* global algebraicNormalize: false */
