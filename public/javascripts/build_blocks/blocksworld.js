@@ -69,6 +69,15 @@ $(window).load(function(){
 	$('#b').offset(getUnusedNameOffset('b'));
 	$('#c').offset(getUnusedNameOffset('c'));
 
+	if (!jQuery.isEmptyObject(problemObject)) {
+		$('#exerciseName').val(exerciseName);
+		$('#checker').val(checker);
+		$('#instructions').val(problemObject.instructions);
+		$('#inputFormula1').val(problemObject.formula);
+		SRFLAtoWorld(problemObject.world);
+		namesToWorld(problemObject.blockNames);
+	}
+
 });
 
 // JON'S CODE
@@ -425,6 +434,21 @@ function SRFLAtoWorld(set) {
 		//$('.block').addClass('dragMe').addClass('block');
 	}
 	// set.unshift("Set"); // if you don't put this back, bad things happen!!! JON
+}
+
+function namesToWorld(names) {
+	$.each(names, function(key, value) {
+		nameClass = 'NAME_' + key;
+		var xStr = "";
+		if (value.x[1] !== 0) {
+			xStr += value.x[1];
+		}
+		var blockID = xStr + value.y[1];
+		//blockNames[key] = value;
+		blockNames[key] = value;
+		$('#' + blockID).addClass(nameClass);
+		alignName(key, $('#' + blockID));
+	});
 }
 
 
