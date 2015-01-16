@@ -1,5 +1,5 @@
 var _ = require('underscore');
-//var proofChecker = require('./proof_checker/nodeversion/gradeproof');
+var proofChecker = require('./proof_checker/nodeversion/gradeproof');
 var blocksChecker = require('./blocks_world/blocksChecker');
 var Exercise = require('../models/Exercise');
 var Interaction = require('../models/Interaction');

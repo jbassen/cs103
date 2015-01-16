@@ -49,7 +49,7 @@ var dualTab = {'\\wedge': '\\vee',
 // Bottom-up simplifications with low risk of explosion.
 
 // Goals: make configurable to provide differing levels of simplification,
-// depending on what 
+// depending on what
 
 // Flatten  (op (op x y) z) when op is associative
 // Assume children have all been normalized, so they're flattened already.
@@ -79,7 +79,7 @@ exprProto.flatten = function flatten()
 
 // args is an array of exprs
 // sort arguments by expr number when op is commutative.
-// return normalized expr. 
+// return normalized expr.
 // This could use different orders for different operators
 // (e.g., prop logic vs. arith)
 // *** Specialize for propositional logic
@@ -95,7 +95,7 @@ function sortArgs(args)
 // This is not recursive.  It applies locally when op1 is on top of op2.
 // E.g., \\wedge over \\vee or * over +.
 // op3 is an optional argument to be used to replace op2.  This allows the
-// function to implement deMorgan's law (if op2 is \\wedge, newOp2 should be \\vee, 
+// function to implement deMorgan's law (if op2 is \\wedge, newOp2 should be \\vee,
 // and vice versa.)
 // op1 may have many operands.  This can result in large expansions of term size.
 // return expression after distribution.
@@ -144,7 +144,7 @@ exprProto.distribute = function distribute(op1, op2, newOp2)
 	    //       recursion to distribute (+ (* a c) (* a d))
 	    // then flatten the +'s.
 	    // next R.e.: (* a (* b d)) -->  (* a b d)  [REALLY?}
-	    nTerm = makeExpr(op1, makeExpr(op1, nArgs).flatten());  
+	    nTerm = makeExpr(op1, makeExpr(op1, nArgs).flatten());
 	    nTerm = nTerm.distribute(op1, op2, newOp2);
 	    dArgs.push(nTerm);   // r.e. [(* a b d), (* a c d)]
 	}
@@ -260,7 +260,7 @@ function propTrivial(args, unit)
 function simpPropInverse(e, nullity)
 {
     var op = e.getOp();
-    
+
     if (op !== '\\wedge' && op !== '\\vee') {
 	return e;
     }
@@ -271,7 +271,7 @@ function simpPropInverse(e, nullity)
 
     if (sorted.length < 2) {
 	return e;
-    } 
+    }
 
     // scan through it looking for formula followed by negation.
     var curInd = prevInd + 1;
@@ -292,7 +292,7 @@ function simpPropInverse(e, nullity)
     return e;			// do nothing.
 }
 
-// simplify and & or.  
+// simplify and & or.
 // flatten, sort, remove duplicates, delete "one" elements,
 // return zero immediately, deal with expr and its negation
 // assume children have been normalized.
@@ -434,7 +434,7 @@ exprProto.getCore = function getCore()
 // JSON.stringify(newArgs, function(key, value) { if (key === 'core') { return undefined; } else { return value; }})
 
 // comparison function used to sort monomials to collect
-// terms in a sum.  
+// terms in a sum.
 function compareMonomialCores(e1, e2)
 {
     var c1 = e1.getCore();
@@ -570,7 +570,7 @@ function prenormSubtract(e)
     return plusExpr;
 }
 
-// get coefficient from a monomial. 
+// get coefficient from a monomial.
 // returns a number, NOT an expr.
 exprProto.getCoef = function getCoef() {
     var op = this.getOp();
@@ -644,7 +644,7 @@ function compareExprsForMult(e1, e2)
 }
 
 // Similar to simpPlus.  Normalized product terms always have exactly
-// one constant coefficient at the front, even if it is 1.  
+// one constant coefficient at the front, even if it is 1.
 function simpMult(e)
 {
     // find all constants and add them
@@ -710,7 +710,7 @@ function simpMult(e)
 	    nArgs.push(merged);
 	}
     }
-    
+
     args = nArgs;		// kill args value
 
     // Put the constant coefficient on front, if it is not 1.
@@ -807,7 +807,7 @@ function distributeRec(e, op1, op2)
 }
 
 // basic normalization extended with some distributive laws.
-// bottom-up recursive pass. meant to be applied to expressions that have already 
+// bottom-up recursive pass. meant to be applied to expressions that have already
 // been normalized (although it might work otherwise).
 // algebraically normalized exprs should always be normalized.
 function algebraicNormalize(e)
@@ -975,7 +975,7 @@ function substitute(e, varMap)
 	}
 	else {
 	    return e;
-	}	
+	}
     }
     else if (op === 'vardecllist') {
 	// don't substitute in declared vars
@@ -1149,7 +1149,7 @@ function freeVariables(e)
 	// no free vars in vardecls.  Probably don't get this case.
 	return {};
     }
-    
+
     var args = e.getArgs();
     var i, j, fv, keys, sym, vdlArgs, vardecl, symName;
     var free = {};		// new object for free vars for this expr.
@@ -1160,7 +1160,7 @@ function freeVariables(e)
     else if (op === '\\forall' || op === '\\exists' || op === '\\lambda') {
 	fv = freeVariables(args[1]); // free vars from body.
 	// shallow copy
-	Object.keys(fv).forEach(function (key) { free[key] = true; } );	
+	Object.keys(fv).forEach(function (key) { free[key] = true; } );
 	vdlArgs = args[0].getArgs();
 	// remove vars of binding construct from free.
 	for (i = 0; i < vdlArgs.length; i++) {
@@ -1199,7 +1199,7 @@ function eliminateUselessQuantifiers(e)
 	vdlArgs = args[0].getArgs();
 	varName = vdlArgs[0].getArg(0).getArg(0);
 	if (!fv[varName]) {
-	    // return body without the useless quantifier, 
+	    // return body without the useless quantifier,
 	    return body;
 	}
 	else {
@@ -1244,7 +1244,7 @@ function reorderQuantifiers(e)
         for(i = 0; i < varNames.length; i++) {
             body = makeExpr(quantifier, [makeVarDeclList(varNames[i]), body]);
         }
-        return body;    
+        return body;
     }
     else if (!isLeaf(e)) {
 	args = args.map(reorderQuantifiers);
@@ -1253,7 +1253,7 @@ function reorderQuantifiers(e)
     else {
 	return e;
     }
-} 
+}
 
 // Extract quantifier restrictions into antecedants.
 // e.g.  \\forall x \in S : P(x) ==> \\forall x \in #ANY : x \in S \implies P(x).
@@ -1310,12 +1310,12 @@ exprProto.normalize = function normalize() {
     }
 
     var __uniqueVarCount = 0;	// private counter for unique variables.
-    
+
     // allocate a new unique name.
     function newUName() {
-	return '#v_' + __uniqueVarCount++;	
+	return '#v_' + __uniqueVarCount++;
     }
-   
+
     function normalizeRec(e, varMap, normalizationRules) {
 	e = preNormalize(e);
 	var op = e.getOp();
@@ -1335,7 +1335,7 @@ exprProto.normalize = function normalize() {
 		vdArgs = vardecl.getArgs();
 		// normalize the type.  Previous vardecls should be bound, but not
 		// the current one.  This needs to be done before modifying varMap.
-		nType = normalizeRec(vdArgs[1], varMap, normalizationRules); 
+		nType = normalizeRec(vdArgs[1], varMap, normalizationRules);
 		oldName = vdArgs[0].getArg(0); // string name of symbol
 		uName = newUName();
 		varMap[oldName] = uName;
@@ -1409,9 +1409,9 @@ try {
     global.applyLambda = applyLambda;
     global.sortArgs = sortArgs;
     global.standardizeRenaming = standardizeRenaming;
+		global.eliminateUselessQuantifiers = eliminateUselessQuantifiers;
+		global.reorderQuantifiers = reorderQuantifiers;
 }
 catch (e) {
     // in browser, do nothing
 }
-
-

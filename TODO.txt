@@ -1,7 +1,7 @@
 DEFINITELY:
-- Fix instructions layout
 - Fix jumping names
-- Fix 
+- Fix checker storage
+- Use checker name to decide which parts need to match
 
 
 - What, if anything do you like about this system?
@@ -49,3 +49,6 @@ POSSIBLY: (need to investigate further)
 
 what did you think of the experience?
 do you think it helps you learn better?
+
+
+DILL LIST:
