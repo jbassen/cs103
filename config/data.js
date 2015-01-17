@@ -5,25 +5,27 @@ var Extension = require('../models/Extension');
 var Interaction = require('../models/Interaction');
 var User = require('../models/User');
 
-var assignment1 = new Assignment({
+
+var assignment2 = new Assignment({
   _id: 2,
   release: Date.now(),
   deadline: Date.now(),
-  name: 'HW 2a',
-  description: 'HW 2a Description',
-  exercises: JSON.stringify({"_ids": [7,8,9,10,11]})
-});
-assignment1.save();
-
-var assignment2 = new Assignment({
-  _id: 3,
-  release: Date.now(),
-  deadline: Date.now(),
-  name: 'HW 2b',
-  description: 'HW 2b Description',
+  name: 'HW 2 - Problem 1',
+  description: 'HW 2 - Problem 1',
   exercises: JSON.stringify({"_ids": [32,33,31,35,43,36,37,39,38,50]})
 });
 assignment2.save();
+
+var assignment3 = new Assignment({
+  _id: 3,
+  release: Date.now(),
+  deadline: Date.now(),
+  name: 'HW 2 - Problem 2',
+  description: 'HW 2 - Problem 2',
+  exercises: JSON.stringify({"_ids": [7,8,9,10,11]})
+});
+assignment3.save();
+
 
 // object7 = {
 //   instructions:
