@@ -9,7 +9,7 @@
 
 // find a node/browser solution to this.
 // KEVIN: comment out next line
-//var mathparse = require('../prparse/mathparse.js');
+var mathparse = require('../prparse/mathparse.js');
 
 /* global mathparse: false */
 /* global algebraicNormalize: false */
@@ -175,7 +175,7 @@ function printBindings(b)
     for (i = 0; i < symNames.length; i++) {
 	symName = symNames[i];
 	symBinding = b[symName];
-	console.log(symName + ": " + latexMathString(symBinding)); 
+	console.log(symName + ": " + latexMathString(symBinding));
     }
 }
 

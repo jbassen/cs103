@@ -5,6 +5,111 @@ var Extension = require('../models/Extension');
 var Interaction = require('../models/Interaction');
 var User = require('../models/User');
 
+object7 = {
+  instructions:
+  "// useless quantifiers\n"
+  + "// \\exists x: P <=> \\forall x: P\n",
+  formula: "\\exists x: P <=> \\forall x: P"
+}
+var exercise7 = new Exercise({
+  _id: 7,
+  type: 'proofchecker',
+  checker: 'folIdentityMode',
+  name: '3a: useless quantifiers',
+  problemJSON: JSON.stringify(object7)
+});
+exercise7.save();
+
+object8 = {
+  instructions:
+  "// \"distributing\" exists over implies\n"
+  + "// \\exists x: (P(x) -> Q(x)) <=> (\\forall x: P(x)) -> (\\exists x: Q(x))\n",
+  formula: "\\exists x: (P(x) -> Q(x)) <=> (\\forall x: P(x)) -> (\\exists x: Q(x))"
+}
+var exercise8 = new Exercise({
+  _id: 8,
+  type: 'proofchecker',
+  checker: 'folIdentityMode',
+  name: '3b: \"distributing\" exists over implies',
+  problemJSON: JSON.stringify(object8)
+});
+exercise8.save();
+
+object9 = {
+  instructions:
+  "// moving quantifiers to the front\n"
+  + "// \\forall x: ((not \\forall y: P(y)) or Q(x)) and \\forall x: R(x) <=> \\forall x: \\exists y: ((not P(y) or Q(x)) and R(x))\n",
+  formula: "\\forall x: ((not \\forall y: P(y)) or Q(x)) and \\forall x: R(x) <=> \\forall x: \\exists y: ((not P(y) or Q(x)) and R(x))"
+}
+var exercise9 = new Exercise({
+  _id: 9,
+  type: 'proofchecker',
+  checker: 'folIdentityMode',
+  name: '3c: moving quantifiers to the front',
+  problemJSON: JSON.stringify(object9)
+});
+exercise9.save();
+
+object10 = {
+  instructions:
+  "// a non-obvious tautology\n"
+  + "// \\exists x: (P(x) -> (\\forall y: P(y))) <=> T\n",
+  formula: "\\exists x: (P(x) -> (\\forall y: P(y))) <=> T"
+}
+var exercise10 = new Exercise({
+  _id: 10,
+  type: 'proofchecker',
+  checker: 'folIdentityMode',
+  name: '3d: a non-obvious tautolog',
+  problemJSON: JSON.stringify(object10)
+});
+exercise10.save();
+
+object11 = {
+  instructions:
+  "// combining implications\n"
+  + "// \\forall x : (P(x) -> Q(x)) and \\forall y: (P(y) \\implies R(y)) <=> \\forall x: (P(x) -> Q(x) and R(x))\n",
+  formula: "\\forall x : (P(x) -> Q(x)) and \\forall y: (P(y) \\implies R(y)) <=> \\forall x: (P(x) -> Q(x) and R(x))"
+}
+var exercise11 = new Exercise({
+  _id: 11,
+  type: 'proofchecker',
+  checker: 'folIdentityMode',
+  name: '3e: combining implications',
+  problemJSON: JSON.stringify(object11)
+});
+exercise11.save();
+
+
+
+// // template
+// object_ = {
+//   instructions:
+//   ""
+//   + "",
+//   formula: ""
+// }
+// var exercise1a = new Exercise({
+//   _id: _,
+//   type: 'proofchecker',
+//   checker: '_',
+//   name: '_',
+//   problemJSON: JSON.stringify(object_)
+// });
+// exercise_.save();
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // OUT OF DATE!!!
 // var testFormula = "P and (P or Q) <=> P";
@@ -218,66 +323,66 @@ var User = require('../models/User');
 
 
 
-object2a = {
-  instructions: "2.a instructions here",
-  world: ["Set",
-    ["Record",
-    { color: ["String", "blue"],
-    shape: ["String", "square"],
-    x: ["Number", 0],
-    y: ["Number", 0]}],
-    ["Record",
-    { color: ["String", "red"],
-    shape: ["String", "square"],
-    x: ["Number", 1],
-    y: ["Number", 1]}],
-    ["Record",
-    { color: ["String", "yellow"],
-    shape: ["String", "circle"],
-    x: ["Number", 2],
-    y: ["Number", 2]}],
-    ["Record",
-    { color: ["String", "red"],
-    shape: ["String", "square"],
-    x: ["Number", 3],
-    y: ["Number", 3]}],
-    ["Record",
-    { color: ["String", "blue"],
-    shape: ["String", "square"],
-    x: ["Number", 4],
-    y: ["Number", 4]}],
-    ["Record",
-    { color: ["String", "blue"],
-    shape: ["String", "square"],
-    x: ["Number", 0],
-    y: ["Number", 4]}],
-    ["Record",
-    { color: ["String", "red"],
-    shape: ["String", "square"],
-    x: ["Number", 1],
-    y: ["Number", 3]}],
-    ["Record",
-    { color: ["String", "blue"],
-    shape: ["String", "square"],
-    x: ["Number", 4],
-    y: ["Number", 0]}],
-    ["Record",
-    { color: ["String", "red"],
-    shape: ["String", "square"],
-    x: ["Number", 3],
-    y: ["Number", 1]}]
-    ],
-  formula: "",
-  blockNames: {}
-}
-var exercise2a = new Exercise({
-  _id: 7,
-  type: 'blocksworld',
-  checker: 'default',
-  name: '2a',
-  problemJSON: JSON.stringify(object2a)
-});
-exercise2a.save();
+// object2a = {
+//   instructions: "2.a instructions here",
+//   world: ["Set",
+//     ["Record",
+//     { color: ["String", "blue"],
+//     shape: ["String", "square"],
+//     x: ["Number", 0],
+//     y: ["Number", 0]}],
+//     ["Record",
+//     { color: ["String", "red"],
+//     shape: ["String", "square"],
+//     x: ["Number", 1],
+//     y: ["Number", 1]}],
+//     ["Record",
+//     { color: ["String", "yellow"],
+//     shape: ["String", "circle"],
+//     x: ["Number", 2],
+//     y: ["Number", 2]}],
+//     ["Record",
+//     { color: ["String", "red"],
+//     shape: ["String", "square"],
+//     x: ["Number", 3],
+//     y: ["Number", 3]}],
+//     ["Record",
+//     { color: ["String", "blue"],
+//     shape: ["String", "square"],
+//     x: ["Number", 4],
+//     y: ["Number", 4]}],
+//     ["Record",
+//     { color: ["String", "blue"],
+//     shape: ["String", "square"],
+//     x: ["Number", 0],
+//     y: ["Number", 4]}],
+//     ["Record",
+//     { color: ["String", "red"],
+//     shape: ["String", "square"],
+//     x: ["Number", 1],
+//     y: ["Number", 3]}],
+//     ["Record",
+//     { color: ["String", "blue"],
+//     shape: ["String", "square"],
+//     x: ["Number", 4],
+//     y: ["Number", 0]}],
+//     ["Record",
+//     { color: ["String", "red"],
+//     shape: ["String", "square"],
+//     x: ["Number", 3],
+//     y: ["Number", 1]}]
+//     ],
+//   formula: "",
+//   blockNames: {}
+// }
+// var exercise2a = new Exercise({
+//   _id: 7,
+//   type: 'blocksworld',
+//   checker: 'default',
+//   name: '2a',
+//   problemJSON: JSON.stringify(object2a)
+// });
+// exercise2a.save();
 
 
 // object_ = {

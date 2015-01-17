@@ -42,8 +42,22 @@ exports.getExercise = function(req, res, next) {
       }
       console.log(savedObject);
 
+      var title = exercise.name;
+      if(exercise.type === "blocksworld") {
+        title = "Blocks World (Alpha Version)";
+        console.log("1");
+      } else if(exercise.type === "proofchecker") {
+        if(exercise.checker === "propositionalIdentityMode") {
+          console.log("2");
+          title = "Propositional Identity Proof Checker (Alpha Version)";
+        } else if(exercise.checker === "folIdentityMode") {
+          console.log("3");
+          title = "Quantifier Identity Proof Checker (Alpha Version)";
+        }
+      }
+
       res.render(exercise.type, {
-        title: exercise.name,
+        title: title,
         name: exercise.name,
         problemJSON: exercise.problemJSON,
         username: req.user.username,
@@ -72,7 +86,8 @@ exports.postExercise = function(req, res, next) {
     if(exercise.type == "proofchecker") {
       feedbackObject = proofChecker.checkAndGradePropIDProof(
         req.body,
-        JSON.parse(exercise.problemJSON)
+        JSON.parse(exercise.problemJSON),
+        exercise.checker
       );
     } else if (exercise.type == "blocksworld") {
       feedbackObject = blocksChecker.checkAndGradeBlocksWorld(

@@ -6,7 +6,7 @@
 // Proof checker code.
 
 "use strict";
-var proofCheckerMode = "propositionalIdentityMode";
+//var proofCheckerMode = "propositionalIdentityMode";
 
 // Configuration parameters.
 // For different problems, we want the proof checker to have different levels
@@ -1376,7 +1376,7 @@ folIdentityJustifiers.quantElim = makeIdentityRuleXform(eliminateUselessQuantifi
 						    propObviousNormalize);
 
 // as in 'renaming', the transformation is irrelevant;
-// the action is in using reorderQuantifiers as the normalizer 
+// the action is in using reorderQuantifiers as the normalizer
 folIdentityJustifiers.quantReorder = makeIdentityRuleXform(function(e) { return e; },
 						     '\\logeq',
 						    function(e) {

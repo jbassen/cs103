@@ -86,8 +86,9 @@ var testAnswerObject = {
 // TODO: 1st arg is submitted object.  Extract proof text.
 // TODO: result is an object with status.
 // TODO: Check all paths
-function checkAndGradePropIDProof(answerObject, problemObject)
+function checkAndGradePropIDProof(answerObject, problemObject, checker)
 {
+  global.proofCheckerMode = checker;
     // console.log("problemObject: ", JSON.stringify(problemObject, null, 2));
     // need try/catch because parser throws errors.
     // Parse and check the proof.

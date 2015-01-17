@@ -7,8 +7,11 @@ X- Fix MathJax line breaks
 X- Add explanation box
 X- Add documentation cs103.herokuapp.com/blocksexplained
 X- Display math on first load
-- Create assignment 2
+
+X- Add symbols to docs
 - Get proof checker to accept flag
+- Change heading and title to "Quantifier Identity Proof Checker"
+- Create assignment 2
 
 - Fix checker storage
 - Use checker name to decide which parts of problem need to match
@@ -26,3 +29,9 @@ POSSIBLY: (need to investigate further)
 - move error handlers out of app.js
 -- consider using errorhandler package
 -- consider adding more error handlers?
+
+MORE:
+- talk to Chris
+- talk to John
+- advanced compilers assignment
+- grading interface
