@@ -28,9 +28,10 @@ exports.getHome = function(req, res, next) {
 
 
 exports.getAssignment = function(req, res, next) {
+  console.log(req.params._id);
 
   Assignment
-  .findOne({ id: req.params._id })
+  .findOne({ _id: req.params._id })
   .where('release').lt(Date.now())
   .exec(function(err, assignment) {
     if(!assignment) {

@@ -9,8 +9,8 @@ X- Add documentation cs103.herokuapp.com/blocksexplained
 X- Display math on first load
 
 X- Add symbols to docs
-- Get proof checker to accept flag
-- Change heading and title to "Quantifier Identity Proof Checker"
+X- Get proof checker to accept flag
+X- Change heading and title to "Quantifier Identity Proof Checker"
 - Create assignment 2
 
 - Fix checker storage

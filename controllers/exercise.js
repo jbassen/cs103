@@ -43,6 +43,7 @@ exports.getExercise = function(req, res, next) {
       console.log(savedObject);
 
       var title = exercise.name;
+      var docsURL = "";
       if(exercise.type === "blocksworld") {
         title = "Blocks World (Alpha Version)";
         console.log("1");
@@ -50,9 +51,11 @@ exports.getExercise = function(req, res, next) {
         if(exercise.checker === "propositionalIdentityMode") {
           console.log("2");
           title = "Propositional Identity Proof Checker (Alpha Version)";
+          docsURL = "http://web.stanford.edu/class/cs103/proofchecker/assignment1.html";
         } else if(exercise.checker === "folIdentityMode") {
           console.log("3");
           title = "Quantifier Identity Proof Checker (Alpha Version)";
+          docsURL = "http://web.stanford.edu/class/cs103/proofchecker/assignment2.html";
         }
       }
 
@@ -61,7 +64,8 @@ exports.getExercise = function(req, res, next) {
         name: exercise.name,
         problemJSON: exercise.problemJSON,
         username: req.user.username,
-        savedJSON: savedObject
+        savedJSON: savedObject,
+        docsURL: docsURL
       });
 
     });

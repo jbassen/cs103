@@ -5,80 +5,125 @@ var Extension = require('../models/Extension');
 var Interaction = require('../models/Interaction');
 var User = require('../models/User');
 
-object7 = {
-  instructions:
-  "// useless quantifiers\n"
-  + "// \\exists x: P <=> \\forall x: P\n",
-  formula: "\\exists x: P <=> \\forall x: P"
-}
-var exercise7 = new Exercise({
-  _id: 7,
-  type: 'proofchecker',
-  checker: 'folIdentityMode',
-  name: '3a: useless quantifiers',
-  problemJSON: JSON.stringify(object7)
+var assignment1 = new Assignment({
+  _id: 2,
+  release: Date.now(),
+  deadline: Date.now(),
+  name: 'HW 2a',
+  description: 'HW 2a Description',
+  exercises: JSON.stringify({"_ids": [7,8,9,10,11]})
 });
-exercise7.save();
+assignment1.save();
 
-object8 = {
-  instructions:
-  "// \"distributing\" exists over implies\n"
-  + "// \\exists x: (P(x) -> Q(x)) <=> (\\forall x: P(x)) -> (\\exists x: Q(x))\n",
-  formula: "\\exists x: (P(x) -> Q(x)) <=> (\\forall x: P(x)) -> (\\exists x: Q(x))"
-}
-var exercise8 = new Exercise({
-  _id: 8,
-  type: 'proofchecker',
-  checker: 'folIdentityMode',
-  name: '3b: \"distributing\" exists over implies',
-  problemJSON: JSON.stringify(object8)
+var assignment2 = new Assignment({
+  _id: 3,
+  release: Date.now(),
+  deadline: Date.now(),
+  name: 'HW 2b',
+  description: 'HW 2b Description',
+  exercises: JSON.stringify({"_ids": [32,33,31,35,43,36,37,39,38,50]})
 });
-exercise8.save();
+assignment2.save();
 
-object9 = {
-  instructions:
-  "// moving quantifiers to the front\n"
-  + "// \\forall x: ((not \\forall y: P(y)) or Q(x)) and \\forall x: R(x) <=> \\forall x: \\exists y: ((not P(y) or Q(x)) and R(x))\n",
-  formula: "\\forall x: ((not \\forall y: P(y)) or Q(x)) and \\forall x: R(x) <=> \\forall x: \\exists y: ((not P(y) or Q(x)) and R(x))"
-}
-var exercise9 = new Exercise({
-  _id: 9,
-  type: 'proofchecker',
-  checker: 'folIdentityMode',
-  name: '3c: moving quantifiers to the front',
-  problemJSON: JSON.stringify(object9)
-});
-exercise9.save();
-
-object10 = {
-  instructions:
-  "// a non-obvious tautology\n"
-  + "// \\exists x: (P(x) -> (\\forall y: P(y))) <=> T\n",
-  formula: "\\exists x: (P(x) -> (\\forall y: P(y))) <=> T"
-}
-var exercise10 = new Exercise({
-  _id: 10,
-  type: 'proofchecker',
-  checker: 'folIdentityMode',
-  name: '3d: a non-obvious tautolog',
-  problemJSON: JSON.stringify(object10)
-});
-exercise10.save();
-
-object11 = {
-  instructions:
-  "// combining implications\n"
-  + "// \\forall x : (P(x) -> Q(x)) and \\forall y: (P(y) \\implies R(y)) <=> \\forall x: (P(x) -> Q(x) and R(x))\n",
-  formula: "\\forall x : (P(x) -> Q(x)) and \\forall y: (P(y) \\implies R(y)) <=> \\forall x: (P(x) -> Q(x) and R(x))"
-}
-var exercise11 = new Exercise({
-  _id: 11,
-  type: 'proofchecker',
-  checker: 'folIdentityMode',
-  name: '3e: combining implications',
-  problemJSON: JSON.stringify(object11)
-});
-exercise11.save();
+// object7 = {
+//   instructions:
+//   "// useless quantifiers\n"
+//   + "// prove the following identity:\n"
+//   + "// \\exists x: P <=> \\forall x: P\n"
+//   + "\n"
+//   + "P1: proof\n"
+//   + "C1:  // fill in your answer here\n"
+//   + "end\n",
+//   formula: "\\exists x: P <=> \\forall x: P"
+// }
+// var exercise7 = new Exercise({
+//   _id: 7,
+//   type: 'proofchecker',
+//   checker: 'folIdentityMode',
+//   name: '3a: useless quantifiers',
+//   problemJSON: JSON.stringify(object7)
+// });
+// exercise7.save();
+//
+// object8 = {
+//   instructions:
+//   "// \"distributing\" exists over implies\n"
+//   + "// prove the following identity:\n"
+//   + "// \\exists x: (P(x) -> Q(x)) <=> (\\forall x: P(x)) -> (\\exists x: Q(x))\n"
+//   + "\n"
+//   + "P1: proof\n"
+//   + "C1:  // fill in your answer here\n"
+//   + "end\n",
+//   formula: "\\exists x: (P(x) -> Q(x)) <=> (\\forall x: P(x)) -> (\\exists x: Q(x))"
+// }
+// var exercise8 = new Exercise({
+//   _id: 8,
+//   type: 'proofchecker',
+//   checker: 'folIdentityMode',
+//   name: '3b: \"distributing\" exists over implies',
+//   problemJSON: JSON.stringify(object8)
+// });
+// exercise8.save();
+//
+// object9 = {
+//   instructions:
+//   "// moving quantifiers to the front\n"
+//   + "// prove the following identity:\n"
+//   + "// \\forall x: ((not \\forall y: P(y)) or Q(x)) and \\forall x: R(x) <=> \\forall x: \\exists y: ((not P(y) or Q(x)) and R(x))\n"
+//   + "\n"
+//   + "P1: proof\n"
+//   + "C1:  // fill in your answer here\n"
+//   + "end\n",
+//   formula: "\\forall x: ((not \\forall y: P(y)) or Q(x)) and \\forall x: R(x) <=> \\forall x: \\exists y: ((not P(y) or Q(x)) and R(x))"
+// }
+// var exercise9 = new Exercise({
+//   _id: 9,
+//   type: 'proofchecker',
+//   checker: 'folIdentityMode',
+//   name: '3c: moving quantifiers to the front',
+//   problemJSON: JSON.stringify(object9)
+// });
+// exercise9.save();
+//
+// object10 = {
+//   instructions:
+//   "// a non-obvious tautology\n"
+//   + "// prove the following identity:\n"
+//   + "// \\exists x: (P(x) -> (\\forall y: P(y))) <=> T\n"
+//   + "\n"
+//   + "P1: proof\n"
+//   + "C1:  // fill in your answer here\n"
+//   + "end\n",
+//   formula: "\\exists x: (P(x) -> (\\forall y: P(y))) <=> T"
+// }
+// var exercise10 = new Exercise({
+//   _id: 10,
+//   type: 'proofchecker',
+//   checker: 'folIdentityMode',
+//   name: '3d: a non-obvious tautolog',
+//   problemJSON: JSON.stringify(object10)
+// });
+// exercise10.save();
+//
+// object11 = {
+//   instructions:
+//   "// combining implications\n"
+//   + "// prove the following identity:\n"
+//   + "// \\forall x : (P(x) -> Q(x)) and \\forall y: (P(y) \\implies R(y)) <=> \\forall x: (P(x) -> Q(x) and R(x))\n"
+//   + "\n"
+//   + "P1: proof\n"
+//   + "C1:  // fill in your answer here\n"
+//   + "end\n",
+//   formula: "\\forall x : (P(x) -> Q(x)) and \\forall y: (P(y) \\implies R(y)) <=> \\forall x: (P(x) -> Q(x) and R(x))"
+// }
+// var exercise11 = new Exercise({
+//   _id: 11,
+//   type: 'proofchecker',
+//   checker: 'folIdentityMode',
+//   name: '3e: combining implications',
+//   problemJSON: JSON.stringify(object11)
+// });
+// exercise11.save();
 
 
 
