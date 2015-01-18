@@ -98,6 +98,7 @@ exports.getReset = function(req, res) {
   if (req.isAuthenticated()) {
     return res.redirect('/');
   }
+  console.log("!!!");
   User
   .findOne({ resetPasswordToken: req.params.token })
   .where('resetPasswordExpires').gt(Date.now())
@@ -107,14 +108,14 @@ exports.getReset = function(req, res) {
     }
     res.render('reset', {
       title: 'Password Reset',
-      username: req.user.username
+      username: user.username
     });
   });
 };
 
 
 exports.postReset = function(req, res, next) {
-  req.assert('password', 'Password must be at least 8 characters long').len(8);
+  req.assert('password', 'Password cannot be blank').notEmpty();
   req.assert('confirm', 'Passwords must match.').equals(req.body.password);
 
   var errors = req.validationErrors();
