@@ -31,7 +31,11 @@ POSSIBLY: (need to investigate further)
 -- consider adding more error handlers?
 
 MORE:
-- talk to Chris
-- talk to John
-- advanced compilers assignment
 - grading interface
+- talk to Chris
+- advanced compilers assignment
+
+- page with usernames
+-- page with exercises (early and onTime)
+--- proof checker display
+--- blocks world display
