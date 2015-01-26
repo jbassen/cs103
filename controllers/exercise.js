@@ -133,3 +133,7 @@ exports.postExercise = function(req, res, next) {
   });
 
 }
+
+exports.gradeBlocks = function(req, res, next) {
+  res.render("gradeblocks");
+}

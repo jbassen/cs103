@@ -39,3 +39,51 @@ MORE:
 -- page with exercises (early and onTime)
 --- proof checker display
 --- blocks world display
+
+
+BACK-END:
+- Node / NPM
+- Express
+- Passport
+- Lo-Dash
+- Async
+- Mongoose
+- Handlebars
+- Parsimmon
+- Papertrail
+** Use templates for
+
+FRONT-END:
+- Browserify
+- JQuery
+- Ace
+(No Bower/Bootstrap)
+- exists(){}, forall(){}, not, and, or, xor, =, !=, ->, <->
+- Red, Blue, Yellow, Square, Triangle, Circle
+- Above, Below, LeftOf, RightOf, SameRow, SameCol
+- bracketed scoping
+
+DATABASE:
+- MongoDB (compose.io)
+
+RESEARCH:
+- problem ordering
+- problem generation
+- crowdsourcing problems
+- knowledge components
+- a/b testing
+- grading
+- instructor dashboard
+- save multiple paths?
+
+
+TAHODO:
+- contacts
+- clean
+- pack
+- lytics schedule
+- grading
+- 243 hw
+- 243 reading/lectures
+- chris
+- 2am

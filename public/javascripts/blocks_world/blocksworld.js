@@ -70,7 +70,9 @@ $(window).load(function(){
 	$('#c').offset(getUnusedNameOffset('c'));
 
 	// JON'S CODE
-	$('#instructions').text(problemObject.instructions);
+	if (! jQuery.isEmptyObject(problemObject)) {
+		$('#instructions').text(problemObject.instructions);
+	}
 
 	if (jQuery.isEmptyObject(savedObject)) {
 		$('#inputFormula1').val(problemObject.formula);
@@ -89,9 +91,25 @@ $(window).load(function(){
 		namesToWorld(savedObject.blockNames);
 	}
 
+	document.getElementById("check").style.visibility="hidden";
+	document.getElementById("resetProblem").style.visibility="hidden";
+
 	console.log("offset: " + JSON.stringify($('#unusedNamesLabel').offset()));
 	displayMath($('#inputFormula1').val());
 });
+
+function insertSubmission() {
+	var submissionObject = JSON.parse($('#submission').val());
+	console.log(JSON.stringify(submissionObject));
+	$('#inputFormula1').val(submissionObject.formula);
+	SRFLAtoWorld(submissionObject.world);
+	$("#receiptdisplay").html(submissionObject.time);
+	if(submissionObject.explanation) {
+		$('#explanation').val(submissionObject.explanation);
+	}
+	namesToWorld(submissionObject.blockNames);
+	displayMath($('#inputFormula1').val());
+}
 
 // JON'S CODE
 function resetProblem() {

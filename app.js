@@ -68,6 +68,7 @@ var userCtrl = require('./controllers/user');
 var navigationCtrl = require('./controllers/navigation');
 var exerciseCtrl = require('./controllers/exercise');
 var buildCtrl = require('./controllers/build');
+// var gradeCtrl = require('./controllers/grade');
 
 
 // ROUTES (EXPRESS)
@@ -86,7 +87,11 @@ app.get('/exercise/:_id', passportConf.isAuthed, exerciseCtrl.getExercise);
 app.post('/exercise/:_id', passportConf.isAuthed, exerciseCtrl.postExercise);
 app.get('/build/:type/:_id?', passportConf.isAuthed, buildCtrl.getBuild);
 app.post('/build/:type/:_id', passportConf.isAuthed, buildCtrl.postBuild);
-app.get('/blocksexplained', passportConf.isAuthed, exerciseCtrl.getBlocksExplained);
+//app.get('/blocksexplained', passportConf.isAuthed, exerciseCtrl.getBlocksExplained);
+app.get('/gradeblocks', passportConf.isAuthed, exerciseCtrl.gradeBlocks);
+
+// app.get('/grade/:_id', passportConf.isAuthed, gradeCtrl.getSubmissions);
+// app.get('/grade/:_id/:username/:deadline', passportConf.isAuthed, gradeCtrl.getSubmission);
 
 
 // ERROR HANDLERS
