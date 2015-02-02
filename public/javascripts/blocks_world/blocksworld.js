@@ -91,8 +91,8 @@ $(window).load(function(){
 		namesToWorld(savedObject.blockNames);
 	}
 
-	document.getElementById("check").style.visibility="hidden";
-	document.getElementById("resetProblem").style.visibility="hidden";
+	//document.getElementById("check").style.visibility="hidden";
+	//document.getElementById("resetProblem").style.visibility="hidden";
 
 	console.log("offset: " + JSON.stringify($('#unusedNamesLabel').offset()));
 	displayMath($('#inputFormula1').val());

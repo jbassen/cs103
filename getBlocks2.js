@@ -10,7 +10,7 @@ mongoose.connect(process.env.MONGOHQ_URL);
 var gradeObject = {};
 
 //var exercises = [3,4,5,6];
-var earlyDeadline = new Date(2015, 0, 21, 00, 05, 0).getTime();
+var earlyDeadline = new Date(2015, 0, 20, 00, 05, 0).getTime();
 var onTimeDeadline = new Date(2015, 0, 23, 12, 35, 0).getTime();
 
 // find all usernames
