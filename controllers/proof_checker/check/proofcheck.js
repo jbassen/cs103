@@ -285,7 +285,7 @@ function makeIdentityRuleXform(xForm, eqOp, normalizeFun)
 	    conclusion.ok = "checks";
 	}
 	else {
-	    conclusion.ok = "Unable to prove equivalence.\n";
+	    conclusion.ok = "Unable to prove equivalence.";
 	}
     };
     return identityRule;

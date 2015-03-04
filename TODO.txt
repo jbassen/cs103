@@ -77,6 +77,130 @@ RESEARCH:
 - save multiple paths?
 
 
+RIGHT NOW, JUST FOR PROOF CHECKER...
+1) submission times vs success (for the hardest problem from each hw)
+2) submission distance from completion, by line (do people progress?)
+3) number of characters changed between edits
+
+4) switching between problems vs success
+
+
+FUTURE DIRECTIONS:
+- Mitchell Stevens spoke up against using "tracks," and I share his philosophy
+-- prefer to cluster students and intervene as appropriate
+-- would prefer that they all learn the same things for a given class
+-- but at different paces, maybe following different (longer) paths, as needed
+-- if they want to learn more, could take more advanced classes afterwards
+
+- goals:
+1) get students to successfully answer specified kinds of problems
+2) get students to retain knowledge
+3) reduce drop-out
+4) do this as efficiently as possible for an individual student
+5) do this as efficiently as possible for the instructor
+
+- shortcomings of MOOCs:
+-- not tailored to individual knowledge states (Khan does, even uses pre-tests)
+-- not really customizable to individuals' goals
+-- lack of A/B testing
+
+- shortcomings of Khan Academy:
+-- no motivation for learning the math
+-- student must have goals ahead of time
+-- (meant as supplementary activity)
+- "Khan Academy teaches only one part of mathematics—procedures—and that isn't the most important part. Writing about mathematics, developing a disposition for mathematical thinking, demonstrating a conceptual understanding of mathematical topics are all more important than procedures. That said, procedures are still important, and Khan Academy provides one venue where students can learn them." -http://blogs.edweek.org/edweek/edtechresearcher/2012/06/dont_use_khan_academy_without_watching_mmt2k_first.html
+
+
+- plan for problem-solving class:
+-- use pre-test, assessments and track use of material to...
+--- find holes in course material (a student that starts the course not knowing X can't get through topic Y)
+--- find "bad" problems
+--- figure out where learning is actually taking place
+--- figure out what to show students to help them get "unstuck"
+---
+--- do A/B testing
+
+
+
+-- pre-test
+-- record all student use of course materials
+*** problem: non-interactive activities don't tell you what a student is getting
+*** solution: add interactive activities to track non-interactive activities
+-- use "prior" (course plan) to route students through material
+*** problem: they fail at things you think they should succeed at:
+*** solution: use crowd-sourcing / testing to find out what they don't know
+**** then try to route them through better material
+-- post-test students to determine success/efficiency/drop-out
+-- A/B test material to see if it increases success/efficiency/drop-out
+-- generate feedback
+-- pay attention to behavioral problems (from event times, and responses)
+--- e.g., cheating, procrastination, lack of motivation
+--- A/B test different ways of dealing with this
+
+> logic proof problems:
+-- different representations for different levels
+-- learn to assess style (the way they organize problem solving)
+-- learn buggy rules (label bugs)
+-- test cases for what's working and not working? -> student debugs accordingly
+>  programming:
+-- different representations for different levels
+-- learn to assess style (the way they organize problem solving)
+-- learn buggy rules (label bugs)
+-- test cases for what's working and not working? -> student debugs accordingly
+> writing/language:
+-- learn to assess style
+-- learn buggy rules
+-- flow charts that can be debugged / peer assessed
+
+
+-- detecting certain kinds of errors
+-- hints when specific tests have failed
+--
+
+
+
+- figure out what features make a problem hard
+- figure out where students get stuck
+- automatic problem generation?
+-- for PDEs? fitted to individual student, based on what they're slow with?
+- A/B test different kinds of educational theorem provers?
+- analytical framework for material and problems?
+- crowdsourcing what students find difficult
+- crowdsourcing students' misunderstandings
+- make system like a real tutor:
+-- use questions to diagnose missing knowledge
+-- route students through material that enables them to solve this problem type
+
+* self-contained teaching material and assessment material
+1) use assessment material to figure out what they don't know
+** can crowdsource specifics of what they're not understanding
+** can also route them through problems that test each required KC
+2) use teaching material to try to get them to learn the material
+** use whatever technique you want to match teaching material to KCs
+** can A/B test different teaching materials
+
+TWO MODELS (BOTH WITH PRIORS):
+1) worry about assigning knowledge componets
+2) or don't
+
+For 1:
+- crowdsource/ML what students are/aren't getting
+- label each item accordingly
+For 2:
+- don't. just figure out which ones help more, and leave it at that.
+- less good. different students are likely to have different diagnosable needs.
+
+
+
+* self-contained material
+- have lesson plan and push students through it (figure out what they can't do)
+
+, where you find out what students can't do
+-
+
+
+
+
 NEWTODO:
 - proof checker records
 (7,8,9,10,11)
@@ -97,3 +221,18 @@ NEWTODO:
 
 PVS
 ACM2
+
+
+- update the server after every action
+- keep the browser up to date with the server
+- if you pick the right exercises, it shouldn't matter if you're a "M_" or an "Elvis"...
+-- the exercise should be chosen so that it forces learning
+
+
+
+
+
+Emma
+Running Shoes
+Casual Shoes
+Advisor Form

@@ -97,7 +97,7 @@ function checkAndGradePropIDProof(answerObject, problemObject, checker)
     var results = [];
     var proofText = answerObject.proof;
 
-    console.log("checkAndGrade...");
+    //console.log("checkAndGrade...");
 
     var desiredFormulaStr = problemObject.formula;
     try {
@@ -167,13 +167,13 @@ function checkAndGradePropIDProof(answerObject, problemObject, checker)
     }
     catch (err) {
 
-	console.log("checkAndGrade catch");
+	//console.log("checkAndGrade catch");
 	// Return HTML for the error message
 	// This displays the error in a typewriter font, which is necessary
 	// to make parser errors readable.
         // DEBUGGING CODE:
 
-	console.log(err.message + err.stack);
+	//console.log(err.message + err.stack);
 	// We end up here with parse errors and some other internal errors.
 	// If a parse error, the error will be the whole proof with annotation about the
 	// location of the error.
