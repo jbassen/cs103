@@ -10,15 +10,52 @@ var usernames = require('./usernames');
 
 var proofChecker = require('./controllers/proof_checker/nodeversion/gradeproof');
 
-var maxDelta = 300000;//5mins
-var shortDelta = maxDelta * 6;//30mins
-var longDelta = shortDelta * 2 * 4;//4hrs
+var maxDelta = 120000;// 2 mins
+var startEx = 3;
+var boundEx = 12;
+
+var rules = [
+  "deMorganExists",
+  "deMorganForall",
+  "deMorganAnd",
+  "deMorganOr",
+
+  "distribExistsAnd",
+  "distribExistsOr",
+  "distribForallAnd",
+  "distribForallOr",
+  "distribOrAnd",
+  "distribAndOr",
+
+  "obvious",
+  "renaming",
+
+  "impliesOr",
+  "bicondImplies",
+
+  "quantElim",
+  "quantReorder",
+
+  "orInverse",
+  "andInverse",
+
+  "andIdentity",
+  "orIdentity",
+
+  "andDomination",
+  "orDomination",
+
+  "andIdempotence",
+  "orIdempotence",
+
+  "badRule"
+]
 
 mongoose.connect(process.env.MONGOHQ_URL);
 
 Exercise
 .find()
-.where('_id').gte(3).lt(12)
+.where('_id').gte(startEx).lt(boundEx)
 .sort({ '_id': 1})
 .exec(function(err, exs) {
 
@@ -35,26 +72,39 @@ Exercise
   var submissions = {};
   _.forEach(usernames, function(v,username){
     submissions[username] = {};
-    for(var j=3; j<12; j++) {
+    for(var j=startEx; j<boundEx; j++) {
       submissions[username][j.toString()] = [];
     }
   });
 
-  var specials = {}; //special (mystery) people
-
   Interaction
   .find()
-  .where('exercise').gte(3).lt(12)
+  .where('exercise').gte(startEx).lt(boundEx)
   .sort({ 'exercise': 1, 'username': 1, 'time': 1 })
   .exec(function(err, subs) {
 
     mongoose.connection.close();
 
+    for(var i = subs.length-1; i >= 0; i--) {
+
+      console.log("" + (i+1) + " / " + subs.length);
+
+      if( ! _.has(usernames, subs[i].username) ) {
+        subs.splice(i, 1);
+      } else if(i != 0) {
+        if(subs[i-1].answer === subs[i].answer && subs[i-1].username === subs[i].username) {
+          console.log(subs[i-1].answer);
+          console.log(subs[i].answer);
+          subs.splice(i, 1);
+        }
+      }
+
+    }
+
     var willPass = false;
     var timeStart = 0;
     var timeSum = 0;
     var attempt = 0;
-    var nonZero = 0;
     var finalSteps = [];
     var finalSub = "";
 
@@ -62,33 +112,14 @@ Exercise
 
       console.log("" + (i+1) + " / " + subs.length);
 
-      if( ! _.has(usernames, subs[i].username) ) {
-        specials[subs[i].username] = "";
-        continue;
-      }
-
       if (timeStart === 0) {
         timeStart = subs[i].time.getTime();
-        timeDelta = 0;
+        timeDelta = maxDelta;
       } else {
         timeDelta = subs[i].time.getTime() - subs[i-1].time.getTime();
-
-        var breaking = false;
-        var longBreaking = false;
-        if(timeDelta > shortDelta) {
-          breaking = true;
-        }
-        if(timeDelta > longDelta) {
-          longBreaking = true;
-        }
-
         if (timeDelta > maxDelta) {
-          timeDelta = 0;
+          timeDelta = maxDelta;
         }
-      }
-
-      if( _.has(JSON.parse(subs[i].grade), "message") ) {
-        willPass = true;
       }
       timeSum += timeDelta;
 
@@ -106,7 +137,6 @@ Exercise
       currentSub = JSON.parse(subs[i].answer).proof;
 
       var currentSteps = [];
-      var firstBadStep = "";
       var stepStatuses = [];
 
       var fixList = currentSub.split("\\neg");
@@ -126,7 +156,6 @@ Exercise
             currentSteps.push(rule[0]);
             if(j === 0) {
               stepStatuses.push("bad");
-              firstBadStep = rule[0];
             }
           }
         }
@@ -157,25 +186,19 @@ Exercise
           if(tokens[tokens.length - 1] === "&#x2713") {
             stepStatuses.push("good");
           } else if(tokens[tokens.length - 1] === "&#x2717") {
-            if(firstBadStep.length === 0) {
-              firstBadStep = currentSteps[stepStatuses.length];
-            }
             stepStatuses.push("bad");
           }
         }
       } else if(status === "unparseable"){
-        if(currentSteps.length > 0) {
-          firstBadStep = currentSteps[0];
-        }
         for(var j=stepStatuses.length; j< currentSteps.length; j++) {
           stepStatuses.push("bad"); //unparsed, but assumed bad for now
         }
       } else if(status === "pass") {
         for(var j=stepStatuses.length; j< currentSteps.length; j++) {
-          stepStatuses.push("good"); //unparsed, but assumed bad for now
+          stepStatuses.push("good"); //if passing, all's good
         }
       } else {
-        console.log("seargent fail!");
+        console.log("seargent error!");
       }
 
       if(currentSteps.length !== stepStatuses.length) {
@@ -199,96 +222,57 @@ Exercise
         timeMillis: timeMillis,
         timeString: timeString,
         timeDelta: timeDelta,
-        timeSum: 0,
+        timeSum: timeSum,
         isPassing: isPassing,
         currentSub: currentSub,
-        currentSteps: currentSteps, //
-        status: status, //
-        stepStatuses: stepStatuses, //
-        firstBadStep: firstBadStep, //
+        currentSteps: currentSteps,
+        status: status,
+        stepStatuses: stepStatuses,
         timeStart: timeStart,
-        timeAve: 0,
         attempt: attempt,
         willAttempt: 0,
         timeTotal: 0,
         willPass: false,
+        currentRule: "",
+        currentRuleStatus: "",
         finalSub: "",
-        finalSteps: [],
-        breaking: breaking,
-        longBreaking: longBreaking,
-        breaks: 0,
-        breaksOverTime: 0,
-        longBreaks: 0
+        finalSteps: []
       });
 
       attempt += 1;
-      if (timeDelta > 0) {
-        nonZero += 1;
-      }
+
 
       if (i === subs.length - 1 || subs[i].username !== subs[i+1].username) {
 
-        var timeAve = 0;
-        if (nonZero > 0 ) {
-          timeAve = Math.floor(timeSum / nonZero);
-        }
-
-        var adjTimeSum = 0;
-
-        var breaks = 0;
-        var breaksOverTime = 0;
-        var longBreaks = 0;
-
-        for(var j=0; j<submissions[username][exercise].length; j++) {
+        for(var j=1; j<submissions[username][exercise].length; j++) {
 
           if(submissions[username][exercise][j].status === "unparseable") {
-            if(j !== 0) {
-              var firstBadIndex = 0;
-              for(var k=0; k<submissions[username][exercise][j].currentSteps.length; k++) {
-                if(k<submissions[username][exercise][j-1].currentSteps.length) {
-                  if(submissions[username][exercise][j].currentSteps[k] === submissions[username][exercise][j-1].currentSteps[k]) {
-                    submissions[username][exercise][j].stepStatuses[k] = submissions[username][exercise][j-1].stepStatuses[k];
-                    firstBadIndex += 1;
-                  } else {
-                    break;
-                  }
+            for(var k=0; k<submissions[username][exercise][j].currentSteps.length; k++) {
+              if(k<submissions[username][exercise][j-1].currentSteps.length) {
+                if(submissions[username][exercise][j].currentSteps[k] === submissions[username][exercise][j-1].currentSteps[k]) {
+                  submissions[username][exercise][j].stepStatuses[k] = submissions[username][exercise][j-1].stepStatuses[k];
+                } else {
+                  break; //keep the status of the rest of the steps as they are
                 }
               }
-
-              if(firstBadIndex < submissions[username][exercise][j].currentSteps.length) {
-                submissions[username][exercise][j].firstBadStep = submissions[username][exercise][j].currentSteps[firstBadIndex];
-              }
-
             }
           }
 
-          if(nonZero === 0) {
-            submissions[username][exercise][j].timeDelta = maxDelta;
-            adjTimeSum += maxDelta;
-          } else if(submissions[username][exercise][j].timeDelta === 0) {
-            submissions[username][exercise][j].timeDelta = timeAve;
-            adjTimeSum += timeAve;
-          } else {
-            adjTimeSum += submissions[username][exercise][j].timeDelta;
-          }
-          submissions[username][exercise][j].timeSum = adjTimeSum;
+        }
 
-          if(submissions[username][exercise][j].breaking) {
-            breaks += 1;
-          }
-          if(submissions[username][exercise][j].longBreaking) {
-            longBreaks += 1;
-          }
+
+        var currentRules = {};
+        var currentGoodRules = {};
+        var currentBadRules = {};
+        for(var r=0; r<rules.length; r++) {
+          currentRules[rule[r]] = 0;
+          currentGoodRules[rule[r]] = 0;
+          currentBadRules[rule[r]] = 0;
         }
 
         for(var j=0; j<submissions[username][exercise].length; j++) {
-          submissions[username][exercise][j].timeTotal = adjTimeSum;
           submissions[username][exercise][j].willPass = willPass;
           submissions[username][exercise][j].willAttempt = attempt;
-          submissions[username][exercise][j].timeAve = timeAve;
-          submissions[username][exercise][j].breaks = breaks;
-          submissions[username][exercise][j].breaksOverTime = breaks / adjTimeSum;
-          submissions[username][exercise][j].longBreaks = longBreaks;
 
           if(finalSub !== "") {
             submissions[username][exercise][j].finalSteps = currentSteps;
@@ -298,15 +282,67 @@ Exercise
             submissions[username][exercise][j].finalSub = finalSub;
           }
 
+
+          var lastRules = currentRules;
+          var lastGoodRules = currentGoodRules;
+          var lastBadRules = currentBadRules;
+          var currentRules = {};
+          var currentGoodRules = {};
+          var currentBadRules = {};
+          for(var r=0; r<rules.length; r++) {
+            currentRules[rule[r]] = 0;
+            currentGoodRules[rule[r]] = 0;
+            currentBadRules[rule[r]] = 0;
+          }
+
+          for(var k=0; k<submissions[username][exercise][j].currentSteps.length; k++) {
+
+            if(! _.has(currentRules, submissions[username][exercise][j].currentSteps[k]) ) {
+              submissions[username][exercise][j].currentSteps[k] = "badRule";
+            }
+
+            if(submissions[username][exercise][j].currentRule !== "") {
+              lastRules[submissions[username][exercise][j].currentSteps[k]] -= 1;
+              if(submissions[username][exercise][j].stepStatuses[k] === "good") {
+                lastGoodRules[submissions[username][exercise][j].currentSteps[k]] -= 1;
+              } else {
+                lastBadRules[submissions[username][exercise][j].currentSteps[k]] -= 1;
+              }
+            }
+
+            if(lastRules[submissions[username][exercise][j].currentSteps[k]] < 0
+              || lastGoodRules[submissions[username][exercise][j].currentSteps[k]] < 0
+              || lastBadRules[submissions[username][exercise][j].currentSteps[k]] < 0
+            ) {
+              submissions[username][exercise][j].currentRule = submissions[username][exercise][j].currentSteps[k];
+              submissions[username][exercise][j].currentRuleStatus = submissions[username][exercise][j].stepStatuses[k];
+            }
+
+            currentRules[submissions[username][exercise][j].currentSteps[k]] += 1;
+            if(submissions[username][exercise][j].stepStatuses[k] === "good") {
+              currentGoodRules[submissions[username][exercise][j].currentSteps[k]] += 1;
+            } else {
+              currentBadRules[submissions[username][exercise][j].currentSteps[k]] += 1;
+            }
+
+          }
+
+          if(j !== 0) {
+            if(submissions[username][exercise][j].currentRule === "") {
+              submissions[username][exercise][j].currentRule = submissions[username][exercise][j-1].currentRule;
+              submissions[username][exercise][j].currentRuleStatus = submissions[username][exercise][j-1].currentRuleStatus;
+            }
+          }
+
         }
 
         willPass = false;
         timeStart = 0;
         timeSum = 0;
         attempt = 0;
-        nonZero = 0;
         finalSteps = [];
         finalSub = "";
+        timeTotal = timeSum;
       }
 
     }
@@ -314,7 +350,7 @@ Exercise
     var dataStr = "exports.data = ";
     dataStr += JSON.stringify(submissions);
 
-    fs.writeFile("../.js", dataStr, function(err) {
+    fs.writeFile("../smorgasbord.js", dataStr, function(err) {
       if(err) {
         console.log(err);
       } else {
